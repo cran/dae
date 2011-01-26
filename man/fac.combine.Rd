@@ -3,7 +3,7 @@
 \title{Combines several factors into one}
 \description{Combines several \code{factors} into one whose \code{levels} are the 
 combinations of the used \code{levels} of the individual \code{factors}.}
-\usage{fac.combine(factors, order="standard", combine.levels=FALSE, sep=",")}
+\usage{fac.combine(factors, order="standard", combine.levels=FALSE, sep=",", ...)}
 \arguments{
  \item{factors}{A \code{list} of \code{factors} all of the same length.}
  \item{order}{Either \code{standard} or \code{yates}. The order in which the 
@@ -20,7 +20,9 @@ combinations of the used \code{levels} of the individual \code{factors}.}
    use the integers from 1 to the product of the numbers of combinations 
    of used \code{levels} of the individual \code{factors}.}
  \item{sep}{A \code{character} string to separate the levels when 
-\code{combine.levels = TRUE}.}}
+\code{combine.levels = TRUE}.}
+ \item{...}{Further arguments passed to the \code{factor} call dreating the new \code{factor}.}
+}
 \value{A \code{factor} whose \code{levels} are formed form the observed 
    combinations of the \code{levels} of the individual \code{factors}.}
 \author{Chris Brien}

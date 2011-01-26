@@ -10,7 +10,6 @@
              "\code{\link[=projector-class]{projector}}" object, computing the 
              projector's degrees of freedom and adding them to the object.}
 \usage{projector(Q)}
-\usage{\method{print}{projector}{Q}}
 \arguments{
  \item{Q}{The \code{matrix} to be made into a projector.}
 }

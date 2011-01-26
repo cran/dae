@@ -1,10 +1,11 @@
 #"as.numfac" <- function(factor) {as.numeric(as.vector(factor))}
 
 "as.numfac" <- function(factor) {as.numeric(levels(factor))[factor]} 
+#see factor help
 
 "mpone" <- function(factor) {2*as.numeric(factor)-3}
 
-"fac.recode" <- function(factor, newlevels)
+"fac.recode" <- function(factor, newlevels, ...)
 #function to form a new factor by changing the levels of factor
 { lev.fac <- levels(factor)
   nlev <- length(lev.fac)
@@ -13,11 +14,11 @@
   new.fac <- as.character(factor)
   for (i in 1:nlev)
   { new.fac[new.fac == lev.fac[i]] <- newlevels[i]}
-  new.fac <- factor(new.fac)
+  new.fac <- factor(new.fac, ...)
   return(new.fac)
 }
 
-"fac.combine" <- function(factors, order="standard", combine.levels=FALSE, sep=",")
+"fac.combine" <- function(factors, order="standard", combine.levels=FALSE, sep=",", ...)
 {
 #
 # test arguments
@@ -59,9 +60,9 @@
 		radix <- radix * nlev
 	}
   if (combine.levels)
-  	new.fac <- factor(new.fac, labels=radix.lev)
+  	new.fac <- factor(new.fac, labels=radix.lev, ...)
  	else
-  	new.fac <- factor(new.fac)
+  	new.fac <- factor(new.fac, ...)
 	return(new.fac)
 }
 
@@ -107,7 +108,7 @@
   new.factors <- data.frame(factor.names)
 }
 
-"fac.nested" <- function(nesting.fac, levels=NA, labels=NA)
+"fac.nested" <- function(nesting.fac, levels=NA, labels=NA, ...)
 {
 	n <- length(nesting.fac)
 	reps <- table(nesting.fac)
@@ -119,6 +120,6 @@
    nested.fac[nesting.fac == levs[i]] <- 1:reps[i]
   	if (length(levels) == 1 && is.na(levels)) levels <- 1:no.lev.within
 	if (length(labels) == 1 && is.na(labels)) labels <- as.character(levels)
-	nested.fac <- factor(nested.fac, levels=levels, labels=labels)
+	nested.fac <- factor(nested.fac, levels=levels, labels=labels, ...)
 	return(nested.fac)
 }

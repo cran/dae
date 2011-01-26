@@ -56,11 +56,11 @@ PBIBD2.lay <- fac.layout(unrandomized = PBIBD2.unit,
 
 ## obtain projectors for units
 Q.G <- projector(matrix(1, nrow=24, ncol=24)/24)                         
-Q.B <- projector(meanop(PBIBD2.lay$Blocks) - Q.G)
+Q.B <- projector(fac.meanop(PBIBD2.lay$Blocks) - Q.G)
 Q.BP <- projector(diag(1, nrow=24) - Q.B - Q.G)
 
 ## obtain projector for trt
-Q.T <- projector(meanop(PBIBD2.lay$trt) - Q.G)
+Q.T <- projector(fac.meanop(PBIBD2.lay$trt) - Q.G)
 
 ## obtain the projection operators for the interblock analysis
 PBIBD2.Bops <- proj2.ops(Q.B, Q.T)

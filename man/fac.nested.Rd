@@ -6,7 +6,7 @@
   factor \code{nesting.fac}. All elements of \code{nesting.fac} having the same 
   level are numbered from 1 to the number of different elements having that 
   level.}
-\usage{fac.nested(nesting.fac, levels=NA, labels=NA)}
+\usage{fac.nested(nesting.fac, levels=NA, labels=NA, ...)}
 \arguments{
  \item{nesting.fac}{The \code{factor} within each of whose \code{levels} the 
        created \code{factor} is to be generated.}
@@ -17,6 +17,7 @@
        \code{nesting.fac}, represented as characters.}
  \item{labels}{Optional \code{vector} of values to use as \code{labels} for the 
        \code{levels} of the \code{factor}. The default is \code{as.character(levels)}.} 
+ \item{...}{Further arguments passed to the \code{factor} call dreating the new \code{factor}.}
 }
 \value{A \code{factor} that is a character \code{vector} with class attribute 
        "\code{\link[=factor-class]{factor}}" and a \code{levels} attribute which 

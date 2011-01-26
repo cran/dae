@@ -98,32 +98,7 @@ print.projector <- function(x, ...)
   cat("degfree: ",x@degfree,"\n")
   invisible(x)
 }
-#setMethod("print", signature=(x = "projector"), print.projector)
 setMethod("show", "projector", function(object) print.projector(object))
-
-meanop <- function(factor)
-{
-#computes the projection matrix that produces the means corresponding to a (generalized) factor
-  if (!is.factor(factor))
-    stop("Must supply a single factor as the argument")
-  n <- length(factor)
-	repl <- table(factor)
-  lev.fac <- levels(factor)
-  if (0 %in% repl)
-  { lev.fac <- names(repl)[!(repl == 0)]
-  }
-  fact.new <- factor(factor, labels=lev.fac)
-	l.fac <- length(lev.fac)
-	X.fac <- matrix(rep(fact.new, times=l.fac), ncol=l.fac, dimnames=list(1:n, lev.fac))
-	X.fac <- sapply(1:l.fac, function(i, X.fac) as.numeric(X.fac[,i] == lev.fac[i]), X.fac=X.fac)
-	repl.new <- table(fact.new)
-	div <- diag(1/repl.new, nrow=length(repl.new))
-	M.fac <- X.fac %*% div %*% t(X.fac)
-	M.fac <- projector(M.fac)
-	if (degfree(M.fac) != l.fac)
-	   stop("Degrees of freedom of projector not equal to observed number of levels of ",deparse(substitute(factor)),"\n")
-	M.fac
-}
 
 proj2.decomp <- function(Q1, Q2)
 { #A procedure to compute the eigenvalues and eigenvectors for the decomposition 

@@ -3,11 +3,12 @@
 \title{Recodes the values of a factor using each value in a supplied vector to 
         replace the corresponding level of the factor}
 \description{Recodes factor values using values in a vector.}
-\usage{fac.recode(factor, newlevels)}
+\usage{fac.recode(factor, newlevels, ...)}
 \arguments{
  \item{factor}{The \code{factor} to be recoded.}
  \item{newlevels}{A \code{vector }of length \code{levels(factor)} containing values to use in 
                   the recoding.}
+ \item{...}{Further arguments passed to the \code{factor} call dreating the new \code{factor}.}
 }
 \value{A \code{factor}.}
 \author{Chris Brien}

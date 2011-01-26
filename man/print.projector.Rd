@@ -5,7 +5,6 @@
 \description{Print an object of class "\code{\link[=projector-class]{projector}}", 
              displaying the matrix and its degrees of freedom (rank).}
 \usage{print.projector(x, ...)}
-\usage{\method{print}{projector}{x, ...}}
 \arguments{
  \item{x}{The object of class "\code{\link[=projector-class]{projector}}" to be printed.}
  \item{...}{Further arguments passed to or from other methods.}

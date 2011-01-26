@@ -1,6 +1,6 @@
 Package: dae
-Version: 1.0-1
-Date: 2010-02-05
+Version: 2.1-2
+Date: 2011-01-26
 Title: Functions useful in the design and ANOVA of experiments
 Author: Chris Brien <Chris.Brien@unisa.edu.au>.
 Maintainer: Chris Brien <Chris.Brien@unisa.edu.au>
@@ -13,6 +13,6 @@ Description: This package includes a number of functions that aid in
 License: GPL (>= 2)
 Lazyload: yes
 URL: http://chris.brien.name
-Packaged: 2010-02-05 10:40:46 UTC; briencj
+Packaged: 2011-01-26 08:26:04 UTC; briencj
 Repository: CRAN
-Date/Publication: 2010-02-05 11:52:39
+Date/Publication: 2011-01-26 11:28:23
