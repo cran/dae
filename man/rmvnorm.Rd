@@ -4,7 +4,7 @@
 \description{Generates a vector of random values from an n-dimensional 
              multivariate normal distribution whose mean is given by the 
              n-vector \code{mean} and variance by the 
-             n xn symmetric matrix \code{V}.}
+             n x n symmetric matrix \code{V}.}
 \usage{rmvnorm(mean, V)}
 \arguments{
  \item{mean}{The mean vector of the multivariate normal distribution from which 
@@ -15,7 +15,9 @@
 \value{An \code{\link{vector}} of length n, equal to the length of \code{mean}.}
 \details{
 The method is:
- a) obtain the upper-triangular factor of the Cholesky decompostion of \code{V};
+ a) uses the eigenvalue decomposition of the variance matrix, \code{V}, to form 
+    the matrix that transforms an iid vector of values to a vector with variance 
+    \code{V};
  b) generate a vector of length equal to \code{mean} of standard normal values;
  c) premultiply the vector of standard normal values by the transpose of the 
     upper triangular factor and, to the result, add \code{mean}.

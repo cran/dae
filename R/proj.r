@@ -10,7 +10,7 @@ set.daeTolerance <- function(tolerance = daeTolerance)
 
 #function to test whether all elements are zero
 "is.allzero" <- function(x)
-{ all(x < daeTolerance)
+{ all(abs(x) < daeTolerance)
 }
 
 correct.degfree <- function(object)
@@ -113,8 +113,14 @@ proj2.decomp <- function(Q1, Q2)
 	eff <- eigen(Q121, symmetric=T)
 	nonzero.eff <- eff$values[eff$values > daeTolerance]
 	r <- length(nonzero.eff)
-	nonzero.eigen <- eff$vectors[,1:r]
-	nonzero.eigen <- (abs(nonzero.eigen) > daeTolerance)* nonzero.eigen
+	if (r==0)
+	{ nonzero.eff <- 0
+	  nonzero.eigen <- NULL
+	}
+	else
+	{ nonzero.eigen <- eff$vectors[,1:r]
+	  nonzero.eigen <- (abs(nonzero.eigen) > daeTolerance)* nonzero.eigen
+	}
 	list(efficiencies = nonzero.eff, eigenvectors = nonzero.eigen)
 }
 
@@ -146,22 +152,27 @@ decomp.relate <- function(decomp1, decomp2)
   #compute efficiencies
   decomp <- proj2.decomp(Q1, Q2)
   Eff.Q1.Q2 <- decomp$efficiencies 
-  if (length(Eff.Q1.Q2) == 0) #check matrices are orthogonal
-  { stop("Matrices are orthogonal.")
-  }
-  EffUnique.Q1.Q2 <- unique(Eff.Q1.Q2)
-  K <- length(EffUnique.Q1.Q2)
-  if (K == 1 & EffUnique.Q1.Q2[1] == 1) #check for just confounded (i.e. eff = 1)
-  { Qconf <- projector(Q2)
-    Qres <- projector(Q1 - Q2)
-  }
-  else      #compute projection operators for partially confounded case
-  { I <- diag(1, nrow = n, ncol = n)
+  if (length(Eff.Q1.Q2) == 1 & Eff.Q1.Q2[1]==0) #check matrices are orthogonal
+  { Qconf <- projector(matrix(0, nrow = n, ncol = n))
     Qres <- Q1
-    for(i in 1:K)
-      Qres <- (Q1 %*% (I - Q2/EffUnique.Q1.Q2[i]) %*% Qres)
-    Qres <- projector(Qres)
-    Qconf <- projector(Q1 - Qres)
+    Eff.Q1.Q2 <- 0
+    warning("Matrices are orthogonal.")
+  }
+  else
+  { EffUnique.Q1.Q2 <- unique(round(Eff.Q1.Q2/daeTolerance,0)*daeTolerance)
+    K <- length(EffUnique.Q1.Q2)
+    if (K == 1 & EffUnique.Q1.Q2[1] == 1) #check for just confounded (i.e. eff = 1)
+    { Qconf <- projector(Q2)
+      Qres <- projector(Q1 - Q2)
+    }
+    else      #compute projection operators for partially confounded case
+    { I <- diag(1, nrow = n, ncol = n)
+      Qres <- Q1
+      for(i in 1:K)
+        Qres <- (Q1 %*% (I - Q2/EffUnique.Q1.Q2[i]) %*% Qres)
+      Qres <- projector(Qres)
+      Qconf <- projector(Q1 - Qres)
+    }
   }
   list(efficiencies = Eff.Q1.Q2, eigenvectors=decomp$eigenvectors, Qconf = Qconf, Qres = Qres)
 }

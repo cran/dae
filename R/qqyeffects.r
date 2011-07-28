@@ -77,21 +77,15 @@
 # next line adds a line through 75th percentile
 #	slope<- quantile(feffects[setdiff(1:length(feffects), labeff)], 0.75)/quantile(quants[setdiff(1:length(feffects), labeff)], 0.75)
 #
-# compute slope for regression line and unselected points and plot 
-# (also goes through origin for half-normal plot)
+# compute slope for regression line through the origin for unselected points and plot 
 #
 	feffects.error <- feffects[setdiff(1:length(feffects), labeff)]
 	quants.error <- quants[setdiff(1:length(feffects), labeff)]
-	if (full == F)
-	{
-		slope <- sum(feffects.error*quants.error)/sum(quants.error*quants.error)
-		abline(0, slope)
-	}
-	else
-	{
-		coeffs <- coef(lm(feffects.error ~ quants.error))
-		abline(coeffs[1], coeffs[2])
-	}
+	slope <- sum(feffects.error*quants.error)/sum(quants.error*quants.error)
+	abline(0, slope)
+#	The next two lines fit the regression line through the unselected points
+#		coeffs <- coef(lm(feffects.error ~ quants.error))
+#		abline(coeffs[1], coeffs[2])
 #
 # print out names of labelled effects (in case illegible on plot)
 #

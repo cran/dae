@@ -12,8 +12,9 @@
   if (nlev != length(newlevels))
   { stop("Must supply a new level for every level in the supplied factor")}
   new.fac <- as.character(factor)
+  old.fac <- new.fac
   for (i in 1:nlev)
-  { new.fac[new.fac == lev.fac[i]] <- newlevels[i]}
+  { new.fac[old.fac == lev.fac[i]] <- newlevels[i]}
   new.fac <- factor(new.fac, ...)
   return(new.fac)
 }
