@@ -4,12 +4,13 @@
 \description{A function that sets the value such that, in \pkg{dae} functions, 
 values less than it are considered to be zero. Initially, \code{daeTolerance} 
 is set to 1e-10.}
-\usage{set.daeTolerance(tolerance = daeTolerance)}
+\usage{set.daeTolerance(tolerance)}
 \arguments{
  \item{tolerance}{The value to which \code{daeTolerance} is to be set.}
 }
 \value{The value of {daeTolerance} is returned invisibly.}
 \author{Chris Brien}
+\seealso{\code{\link{get.daeTolerance}}.}
 \examples{
 ## set daeTolerance.
 set.daeTolerance(.Machine$double.eps ^ 0.5)

@@ -6,7 +6,7 @@
   pattern.}
 \usage{fac.ar1mat(factor, rho)}
 \arguments{
- \item{factor}{The (generalized) \code{factor} for which the correlation between 
+ \item{factor}{The (generalized) \code{\link{factor}} for which the correlation between 
                its levels displays an ar1 pattern.}
  \item{rho}{The correlation parameter for the ar1 process.}
 }

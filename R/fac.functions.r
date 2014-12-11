@@ -1,7 +1,12 @@
 #"as.numfac" <- function(factor) {as.numeric(as.vector(factor))}
 
-"as.numfac" <- function(factor) {as.numeric(levels(factor))[factor]} 
-#see factor help
+"as.numfac" <- function(factor)
+{ levs <- levels(factor)
+  if (any(is.na(suppressWarnings(as.numeric(levs[!is.na(levs)])))))
+     warning("Some levels do not have values that are numeric in nature")
+  #see factor help
+  as.numeric(levels(factor))[factor]
+}
 
 "mpone" <- function(factor) {2*as.numeric(factor)-3}
 
@@ -44,24 +49,23 @@
 #reassign factor so unused levels removed
 	{ f <- factor(factors[[i]])
     nlev <- length(levels(f))
-		new.fac <- (as.numeric(f)-1) * radix + new.fac
+    new.fac <- (as.numeric(f)-1) * radix + new.fac
     if (combine.levels)
-      if (which.ord == 1)
-      { if (i == counter[1])
-          radix.lev <- paste(rep(levels(f), each=radix), rep(radix.lev, times=nlev), sep="")
-        else
-          radix.lev <- paste(rep(levels(f), each=radix), rep(radix.lev, times=nlev), sep=sep)
-      }
+      if (i == counter[1])
+          radix.lev <- paste(levels(f))
       else
-      { if (i == counter[1])
-          radix.lev <- paste(rep(radix.lev, times=nlev), rep(levels(f), each=radix), sep="")
+      { if (which.ord == 1)
+          radix.lev <- paste(rep(levels(f), each=radix), rep(radix.lev, times=nlev), sep=sep)
         else
           radix.lev <- paste(rep(radix.lev, times=nlev), rep(levels(f), each=radix), sep=sep)
       }
 		radix <- radix * nlev
 	}
   if (combine.levels)
-  	new.fac <- factor(new.fac, labels=radix.lev, ...)
+  { obslevs <- unique(new.fac)
+    obslevs <- obslevs[order(obslevs)] 
+  	new.fac <- factor(new.fac, labels=radix.lev[obslevs], ...)
+  }	
  	else
   	new.fac <- factor(new.fac, ...)
 	return(new.fac)

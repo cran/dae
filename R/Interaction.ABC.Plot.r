@@ -17,29 +17,24 @@
                                 data[[match(name.g, names(data))]], 
                                 data[[match(name.t, names(data))]]), FUN=mean, simplify=T)))
   dimnames(data.means)[[2]] <- c(name.x, name.g, name.t, name.r)
-  attach(data.means)
-  on.exit(detach("data.means"))
+  levels.x <- levels(data.means[[name.x]])
+  if (any(is.na(levels.x)))
+    stop("The x.factor has NA as a level")
+  if (any(is.na(as.numeric(levels.x))))
+    data.means[[name.x]] <- fac.recode(data.means[[name.x]], 1:length(levels.x))
+  data.means[[name.x]] <- as.numeric(data.means[[name.x]])
 # set up arguments for plot
   if (missing(xlab)) xlab <- deparse(substitute(x.factor))
   if (missing(ylab)) ylab <- deparse(substitute(response))
   if (missing(key.title)) key.title <- deparse(substitute(groups.factor))
   formula.plot <- formula(paste(deparse(substitute(response)), " ~ as.numeric(", 
       deparse(substitute(x.factor)), ") | ", deparse(substitute(trace.factor))))
-# initiate plot and set options for lines
-  trellis.device()
-  superpose.line <- trellis.par.get("superpose.line")
-  superpose.line$col <- rep(1, 7)
-  superpose.line$lty <- 1:7
-  superpose.line$lwd <- rep(lwd, 7)
-  trellis.par.set("superpose.line", superpose.line)
-#  guiModify(class="GraphSheet", GraphSheetColor="Transparent")
 # do the plot
-  xyplot(formula.plot, groups=groups.factor, main=title, xlab = xlab, ylab=ylab, 
-    panel = function(x,y,subscripts,groups) {
-                  panel.superpose(x,y,subscripts,groups, type="l")},
-    key=list(title=key.title, cex.title=1, transparent=T, columns=columns, 
-             text=list(levels(as.factor(groups.factor))),
-             lines=Rows(trellis.par.get("superpose.line"), 1:no.g)),
-    strip = function(...) strip.default(..., strip.names=c(T,T), style=1),
-    as.table=T)
+  lbl.fn <- function(variable, value) {
+  value <- paste(name.t,": ", as.character(value), sep="")
+  return(value)}
+  int.plot <- ggplot(data=data.means, aes_string(x = name.x, y = name.r, linetype=name.g, colour=name.g)) +
+                     geom_line() + geom_point() +
+                     facet_grid(formula(paste("~ ", name.t, sep="")),, labeller = lbl.fn)
+  print(int.plot)
 }

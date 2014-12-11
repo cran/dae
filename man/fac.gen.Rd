@@ -4,14 +4,14 @@
 \description{Generate all combinations of several factors.}
 \usage{fac.gen(generate, each=1, times=1, order="standard")}
 \arguments{
- \item{generate}{A \code{list} of named objects and numbers that specify the 
-                     \code{factors} whose \code{levels} are to be generated and 
+ \item{generate}{A \code{\link{list}} of named objects and numbers that specify the 
+                     \code{\link{factor}s} whose \code{levels} are to be generated and 
                      the pattern in these \code{levels}.If a component of the 
-                     \code{list} is named, then the component 
+                     \code{\link{list}} is named, then the component 
                      should be either a) a single \code{numeric} value that is the 
                      number of \code{levels}, b) a numeric \code{vector} that contains the 
-                     \code{levels} of the \code{factor}, or c) a character \code{vector} that 
-                     contains the \code{labels} of the \code{levels} of the \code{factor}.}
+                     \code{levels} of the \code{\link{factor}}, or c) a character \code{vector} that 
+                     contains the \code{labels} of the \code{levels} of the \code{\link{factor}}.}
  \item{each}{The number of times to replicate consecutively the elements of the 
                      \code{levels} generated according to pattern specified by the 
                      \code{generate} argument.}
@@ -20,21 +20,21 @@
                      \code{generate} argument.}
  \item{order}{Either \code{standard} or \code{yates}. The order in which the 
                      speed of cycling through the \code{levels} is to move;
-                     combinations of the \code{factors} are to be considered as numbered; 
+                     combinations of the \code{\link{factor}s} are to be considered as numbered; 
                      \code{standard} cycles through the levels of the first 
                      factor slowest and the last factor moving fastest; 
                      \code{yates} cycles through the levels of the first factor 
                      fastest and last factor moving slowest.}
 }
-\value{A \code{data.frame} of generated \code{levels} with columns 
+\value{A \code{\link{data.frame}} of generated \code{levels} with columns 
        corresponding to the code{factors} in the \code{generate} list.}
-\details{The \code{levels} of each \code{factor} are generated in a hierarchical 
-      pattern where the \code{levels} of one \code{factor} are held constant 
-      while those of the adjacent \code{factor} are cycled through the complete 
+\details{The \code{levels} of each \code{\link{factor}} are generated in a hierarchical 
+      pattern where the \code{levels} of one \code{\link{factor}} are held constant 
+      while those of the adjacent \code{\link{factor}} are cycled through the complete 
       set once. If a number is supplied instead of a name, the pattern is 
-      generated as if a \code{factor} with that number of \code{levels} had been 
+      generated as if a \code{\link{factor}} with that number of \code{levels} had been 
       supplied in the same position as the number. However, no \code{levels} are 
-      stored for this unamed \code{factor}.}
+      stored for this unamed \code{\link{factor}}.}
 \section{Warning}{Avoid using factor names F and T as these might be confused
                   with FALSE and TRUE.}
 \author{Chris Brien}

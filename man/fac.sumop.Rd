@@ -2,21 +2,21 @@
 \alias{fac.sumop}
 \title{computes the summation matrix that produces sums corresponding to a factor}
 \description{Computes the matrix that produces the sums 
-             corresponding to a (generalized) \code{factor}.}
+             corresponding to a (generalized) \code{\link{factor}}.}
 \usage{fac.sumop(factor)}
 \arguments{
- \item{factor}{The (generalized) \code{factor} whose sums the summation matrix
+ \item{factor}{The (generalized) \code{\link{factor}} whose sums the summation matrix
                computes from an observation-length vector.}
 }
 \value{A symmetric matrix.}
 \details{
-The design matrix \bold{X} for a (generalized) \code{factor} is formed with a 
-column for each \code{level} of the (generalized) \code{factor}, this column 
+The design matrix \bold{X} for a (generalized) \code{\link{factor}} is formed with a 
+column for each \code{level} of the (generalized) \code{\link{factor}}, this column 
 being its indicator variable. The summation matrix is formed as 
 \code{X \%*\% t(X)}.
 
-A generalized \code{factor} is a \code{factor} formed from the combinations of 
-the \code{levels} of several original \code{factors}. Generalized \code{factors} 
+A generalized \code{\link{factor}} is a \code{\link{factor}} formed from the combinations of 
+the \code{levels} of several original \code{\link{factor}s}. Generalized \code{\link{factor}s} 
 can be formed using \code{\link{fac.combine}}.}
 \author{Chris Brien}
 \seealso{\code{\link{fac.combine}}, \code{\link{fac.meanop}} in package \pkg{dae}.}

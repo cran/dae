@@ -2,7 +2,7 @@
 \alias{resid.errors}
 \title{Extract the residuals for a fitted model}
 \description{An alias for the generic function \code{\link{residuals}}. When it is 
-     available so will the method \code{\link{residuals.aovlist}}, which is provided 
+     available, the method \code{\link{residuals.aovlist}} extracts residuals, which is provided 
      in the package \pkg{dae} to cover \code{aovlist} objects.}
 \usage{resid.errors(object, ...)}
 \arguments{

@@ -1,16 +1,18 @@
 \name{fac.recode}
 \alias{fac.recode}
-\title{Recodes the values of a factor using each value in a supplied vector to 
-        replace the corresponding level of the factor}
-\description{Recodes factor values using values in a vector.}
+\title{Recodes the \code{levels} and values of a factor using the value in position 
+        i of the \code{newlevels} vector to replace the ith 
+        \code{level} of the \code{\link{factor}}.}
+\description{Recodes factor \code{levels} using values in a vector. The new levels do 
+             not have to be unique.}
 \usage{fac.recode(factor, newlevels, ...)}
 \arguments{
- \item{factor}{The \code{factor} to be recoded.}
+ \item{factor}{The \code{\link{factor}} to be recoded.}
  \item{newlevels}{A \code{vector }of length \code{levels(factor)} containing values to use in 
                   the recoding.}
- \item{...}{Further arguments passed to the \code{factor} call dreating the new \code{factor}.}
+ \item{...}{Further arguments passed to the \code{\link{factor}} call dreating the new \code{\link{factor}}.}
 }
-\value{A \code{factor}.}
+\value{A \code{\link{factor}}.}
 \author{Chris Brien}
 \seealso{\code{\link{as.numfac}} and \code{\link{mpone}} in package \pkg{dae}, 
 \code{\link{factor}}, \code{\link{relevel}}.}

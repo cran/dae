@@ -1,20 +1,41 @@
-daeTolerance = 1e-10
+daeEnv <- new.env()
+assign("daeTolerance", 1e-10, envir=daeEnv)
 
-set.daeTolerance <- function(tolerance = daeTolerance)
-{ proj <- environment(set.daeTolerance)
-  unlockBinding("daeTolerance", proj)
-  daeTolerance <<- tolerance
-  lockBinding("daeTolerance", proj)
-  invisible(daeTolerance)
+#set.daeTolerance <- function(tolerance = daeTolerance)
+#{ proj <- environment(set.daeTolerance)
+#  unlockBinding("daeTolerance", proj)
+#  daeTolerance <<- tolerance
+#  lockBinding("daeTolerance", proj)
+#  invisible(daeTolerance)
+#}
+
+set.daeTolerance <- function(tolerance)
+{ tol <- get("daeTolerance", envir=daeEnv)
+  if (!is.numeric(tolerance))
+    stop("non-numeric argument")
+  tol <- tolerance
+  if (length(tolerance) !=  1)
+  { tol <- tolerance[1]  
+    warning("multiple values supplied - only first used")
+  }
+  assign("daeTolerance", tol, envir = daeEnv)
+  invisible(tol)
 }
+
+get.daeTolerance <- function()
+{ tol <- get("daeTolerance", envir=daeEnv)
+  return(tol)
+}
+
 
 #function to test whether all elements are zero
 "is.allzero" <- function(x)
-{ all(abs(x) < daeTolerance)
+{ daeTolerance <- get("daeTolerance", envir=daeEnv)
+  all(abs(x) < daeTolerance)
 }
 
 correct.degfree <- function(object)
-{
+{ daeTolerance <- get("daeTolerance", envir=daeEnv)
 #check that degrees of freedom are correct
   check.df <- FALSE
   if (!is.projector(object))
@@ -48,7 +69,8 @@ validProjector <- function(object)
 }
 
 projector <- function(Q)
-{ p <- new("projector", .Data=Q)
+{ daeTolerance <- get("daeTolerance", envir=daeEnv)
+  p <- new("projector", .Data=Q)
   validity <- validProjector(p)
   if (class(validity) == "character")
      stop(validity)
@@ -84,7 +106,8 @@ degfree <- function(object)
   if (length(value) == 1)
     object@degfree <- as.integer(value)
   else
-  { e <- eigen(object@.Data, symmetric=T, only.values=T)
+  { daeTolerance <- get("daeTolerance", envir=daeEnv)
+    e <- eigen(object@.Data, symmetric=T, only.values=T)
 	  nonzero.e <- e$values[e$values > daeTolerance]
 	  object@degfree <- length(nonzero.e)
   }
@@ -109,7 +132,8 @@ proj2.decomp <- function(Q1, Q2)
     stop("Must supply valid objects of class projector")
   if (nrow(Q1) != nrow(Q2))
     stop("Matrices not conformable.")
-	Q121 <- Q1 %*% Q2 %*% Q1
+  daeTolerance <- get("daeTolerance", envir=daeEnv)
+  Q121 <- Q1 %*% Q2 %*% Q1
 	eff <- eigen(Q121, symmetric=T)
 	nonzero.eff <- eff$values[eff$values > daeTolerance]
 	r <- length(nonzero.eff)
@@ -136,6 +160,7 @@ decomp.relate <- function(decomp1, decomp2)
 { #A procedure to examine the the relationship between the eigenvectors in 
   #decomp1 and decomp2
   #decomp is a list produced by proj2.decomp or proj2.ops
+  daeTolerance <- get("daeTolerance", envir=daeEnv)
   relmat <- crossprod(decomp1$eigenvectors, decomp2$eigenvectors)
   relmat <- (abs(relmat) > daeTolerance)* relmat
   dimnames(relmat) <- list(as.character(round(decomp1$efficiencies,4)), as.character(round(decomp2$efficiencies,4)))
@@ -159,7 +184,8 @@ decomp.relate <- function(decomp1, decomp2)
     warning("Matrices are orthogonal.")
   }
   else
-  { EffUnique.Q1.Q2 <- unique(round(Eff.Q1.Q2/daeTolerance,0)*daeTolerance)
+  { daeTolerance <- get("daeTolerance", envir=daeEnv)
+    EffUnique.Q1.Q2 <- unique(round(Eff.Q1.Q2/daeTolerance,0)*daeTolerance)
     K <- length(EffUnique.Q1.Q2)
     if (K == 1 & EffUnique.Q1.Q2[1] == 1) #check for just confounded (i.e. eff = 1)
     { Qconf <- projector(Q2)

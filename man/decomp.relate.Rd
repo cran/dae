@@ -7,18 +7,18 @@
              \code{\link{proj2.decomp}} have the same Q1.}
 \usage{decomp.relate(decomp1, decomp2)}
 \arguments{
- \item{decomp1}{A \code{list} containing components efficiencies and eigenvectors such as 
+ \item{decomp1}{A \code{\link{list}} containing components efficiencies and eigenvectors such as 
                 is produced by \code{\link{proj2.decomp}}.}
- \item{decomp2}{Another \code{list} containing components efficiencies and eigenvectors such as 
-                is produced by \code{\link{proj2.decomp}}.}
+ \item{decomp2}{Another \code{\link{list}} containing components efficiencies and eigenvectors 
+                such as is produced by \code{\link{proj2.decomp}}.}
 }
-\value{A \code{matrix} that is r1 x r2 where r1 and r2 are the numbers of efficiencies 
+\value{A \code{\link{matrix}} that is r1 x r2 where r1 and r2 are the numbers of efficiencies 
        of \code{decomp1} and \code{decomp2}, respectively. The \code{rownames} 
-       and \code{columnnames} of the \code{matrix} are the values of the 
+       and \code{columnnames} of the \code{\link{matrix}} are the values of the 
        efficiency factors from \code{decomp1} and \code{decomp2}, respectively.}
 
 \details{
-Each element of the r1 x r2 \code{matrix} is the sum of crossproducts of a pair of 
+Each element of the r1 x r2 \code{\link{matrix}} is the sum of crossproducts of a pair of 
 eigenvectors, one from each of the two decompositions. A sum is regarded as zero 
 if it is less than \code{daeTolerance}, which is initially set to 1e-10. 
 The function \code{\link{set.daeTolerance}} can be used to change \code{daeTolerance}.}

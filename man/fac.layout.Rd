@@ -2,40 +2,42 @@
 \alias{fac.layout}
 \title{Generate a randomized layout for an experiment}
 \description{Generate a layout for an experiment consisting of randomized 
-             \code{factors} that are randomized to the unrandomized \code{factors}, 
-             taking into account the nesting, for the design, between the 
-             unrandomized factors.}
+             \code{\link{factor}s} that are randomized to the unrandomized 
+             \code{\link{factor}s}, taking into account the nesting, for 
+             the design, between the unrandomized factors.}
 \usage{fac.layout(unrandomized, nested.factors=NULL, randomized, seed=NULL)}
 \arguments{
- \item{unrandomized}{A \code{data.frame} or a \code{list} of \code{factors}, 
-                     along with their \code{levels}. If 
-                     a \code{list}, the name of each component of the 
-                     \code{list} is a \code{factor} name and the component is 
-                     either a single \code{numeric} value that is the number of 
-                     \code{levels}, a numeric \code{vector} that contains the 
-                     \code{levels} of the \code{factor} or a character 
-                     \code{vector} that contains the \code{labels} of the 
-                     \code{levels} of the \code{factor}.}
- \item{nested.factors}{A \code{list} of the unrandomized \code{factors} that are 
-                       nested in other \code{factors} in \code{unrandomized}. 
-                       The name of each component is the name of a \code{factor} 
-                       that is nested and the component is a character \code{vector} 
-                       containing the \code{factors} within which it is nested. 
+ \item{unrandomized}{A \code{\link{data.frame}} or a \code{\link{list}} of 
+                     \code{\link{factor}s}, along with their \code{levels}. If 
+                     a \code{\link{list}}, the name of each component of the 
+                     \code{\link{list}} is a \code{\link{factor}} name and the 
+                     component is either a single \code{numeric} value that 
+                     is the number of \code{levels}, a numeric \code{vector} 
+                     that contains the \code{levels} of the \code{\link{factor}} 
+                     or a character code{vector} that contains the \code{labels} 
+                     of the \code{levels} of the \code{\link{factor}}.}
+ \item{nested.factors}{A \code{\link{list}} of the unrandomized \code{\link{factor}s} 
+                       that are nested in other \code{\link{factor}s} in 
+                       \code{unrandomized}. The name of each component is the 
+                       name of a \code{\link{factor}} that is nested and the 
+                       component is a character \code{vector} containing the 
+                       \code{\link{factor}s} within which it is nested. 
                        It is emphasized that the nesting is a property of the 
                        design that is being employed (it is only partly based 
                        on the intrinsic nesting.}
- \item{randomized}{A \code{factor} or a \code{data.frame} containing the values 
-                   of the \code{factor(s)} to be randomized.}
+ \item{randomized}{A \code{\link{factor}} or a \code{\link{data.frame}} 
+                   containing the values of the \code{\link{factor}(s)} to be 
+                   randomized.}
  \item{seed}{A single value, interpreted as an integer, that specifies the 
                        starting value of the random number generator.}
 }
-\value{A \code{data.frame} consisting of the values for Units and Permutation 
+\value{A \code{\link{data.frame}} consisting of the values for Units and Permutation 
        \code{vectors} along with the values for the unrandomized and randomized 
-       \code{factors} that specify the randomized layout for the experiment.}
+       \code{\link{factor}s} that specify the randomized layout for the experiment.}
 \details{This \code{functon} uses the method of randomization described by Bailey 
         (1981). That is, a permutation of the units that 
         respects the nesting for the design is obtained. This permutation is 
-        applied jointly to the unrandomized and randomized \code{factors} to produce 
+        applied jointly to the unrandomized and randomized \code{\link{factor}s} to produce 
         the randomized layout. The Units and Permutation \code{vectors} enable one to 
         swap between this permutation and the randomized layout.
 }

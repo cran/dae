@@ -2,14 +2,14 @@
 \alias{mpone}
 \title{Converts the first two levels of a factor into the numeric values
        -1 and +1}
-\description{Converts the first two \code{levels} of a \code{factor} into the numeric
+\description{Converts the first two \code{levels} of a \code{\link{factor}} into the numeric
              values -1 and +1.}
 \usage{mpone(factor)}
 \arguments{
- \item{factor}{The \code{factor} to be converted.}
+ \item{factor}{The \code{\link{factor}} to be converted.}
 }
 \value{A numeric \code{vector}.}
-\section{Warning}{If the \code{factor} has more than two \code{levels} they will 
+\section{Warning}{If the \code{\link{factor}} has more than two \code{levels} they will 
       be coerced to numeric values.}
 \author{Chris Brien}
 \seealso{\code{\link{mpone}} in package \pkg{dae}, \code{\link{factor}}, 

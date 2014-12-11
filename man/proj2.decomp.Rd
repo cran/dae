@@ -18,7 +18,7 @@ Q1 \%*\% Q2 \%*\% Q1 (James and Wilkinson, 1971). An eigenvalue is regarded
 as zero if it is less than \code{daeTolerance}, which is initially set to 1e-10. 
 The function \code{\link{set.daeTolerance}} can be used to change \code{daeTolerance}.
 
-The component eigenvectors is an n x r \code{matrix}, where n is the order of the 
+The component eigenvectors is an n x r \code{\link{matrix}}, where n is the order of the 
 projectors and r is the number of nonzero canonical efficiency factors; 
 it contains the eigenvectors of Q1 corresponding to the nonzero canonical 
 efficiency factors. The eigenvectors for Q2 can be obtained by premultiplying 

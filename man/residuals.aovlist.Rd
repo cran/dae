@@ -5,7 +5,7 @@
 \description{Extracts the residuals from \code{error.term} or, if \code{error.term} 
              is not specified, the last \code{error.term} in the analysis. It is a 
              method for the generic function \code{\link{residuals}}.}
-\usage{residuals.aovlist(object, error.term=NULL, ...)}
+\usage{\method{residuals}{aovlist}(object, error.term=NULL, ...)}
 \arguments{
  \item{object}{An \code{aovlist} object created from a call to \code{\link{aov}}.}
  \item{error.term}{The term from the \code{Error} function for which the 

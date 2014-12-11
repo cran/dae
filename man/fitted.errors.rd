@@ -2,9 +2,9 @@
 \alias{fitted.errors}
 \title{Extract the fitted values for a fitted model}
 \description{An alias for the generic function \code{\link{fitted}}. When it is 
-     available so will the method \code{\link{fitted.aovlist}}, which is provided 
+     available, the method \code{\link{fitted.aovlist}} extracts the fitted values, which is provided 
      in the \pkg{dae} package to cover \code{aovlist} objects.}
-\usage{fitted.errors(object, ...)}
+\usage{\method{fitted}{errors}(object, ...)}
 \arguments{
  \item{object}{An \code{object} for which the extraction of model fitted values is meaningful.}
  \item{...}{Further arguments passed to or from other methods.}

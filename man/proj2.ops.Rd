@@ -16,7 +16,7 @@
 \value{A \code{list} with the following components:
 \enumerate{
 \item{\bold{efficiencies:} a \code{vector} containing the nonzero canonical efficiency factors;}
-\item{\bold{eigenvectors:} an n x r \code{matrix}, where n is the order of the projectors and 
+\item{\bold{eigenvectors:} an n x r \code{\link{matrix}}, where n is the order of the projectors and 
             r is the number of nonzero canonical efficiency factors; it contains 
             the eigenvectors of Q1 corresponding to the nonzero canonical 
             efficiency factors.} 

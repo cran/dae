@@ -1,5 +1,5 @@
 extab <- function(table, index.factors, order="standard")
-# result is a variate to that receives values from table variate
+# result is a variate that receives values from table variate
 {
 #
 # test arguments

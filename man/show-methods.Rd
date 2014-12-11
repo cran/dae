@@ -16,7 +16,7 @@
 \description{Methods for function \code{show} in Package \pkg{dae}}
 \section{Methods}{
 \describe{
- \item{\code{signature(object = "projector")}}{Prints the \code{matrix} and its degrees of freedom.}
+ \item{\code{signature(object = "projector")}}{Prints the \code{\link{matrix}} and its degrees of freedom.}
 }}
 \seealso{\code{\link[=projector-class]{projector}} for further information about this class.}
 \keyword{methods}

@@ -2,12 +2,12 @@
 \alias{interaction.ABC.plot}
 \title{Plots an interaction plot for three factors}
 \description{Plots a \code{function} (the mean by default) of the \code{response} for
-       the combinations of the three \code{factors} specified as the \code{x.factor}
+       the combinations of the three \code{\link{factor}s} specified as the \code{x.factor}
        (plotted on the x axis of each plot), the \code{groups.factor} (plotted
        as separate lines in each plot) and the \code{trace.factor} (its \code{levels}
        are plotted in different plots). Interaction plots for more than three
-       \code{factors} can be produced by using \code{\link{fac.combine}} to combine all but
-       two of them into a single \code{factor} that is specified as the
+       \code{\link{factor}s} can be produced by using \code{\link{fac.combine}} to combine all but
+       two of them into a single \code{\link{factor}} that is specified as the
        \code{trace.factor}.}
 \usage{interaction.ABC.plot(response, x.factor, groups.factor, 
        trace.factor,data, fun="mean", title="A:B:C Interaction Plot", 
@@ -16,10 +16,11 @@
  \item{response}{A numeric \code{vector} containing the response variable from 
                  which a function (the mean by
                  default) is computed for plotting on the y-axis.}
- \item{x.factor}{The \code{factor} to be plotted on the x-axis of each plot.}
- \item{groups.factor}{The \code{factor} plotted as separate lines in each plot.}
- \item{trace.factor}{The \code{factor} for whose \code{levels} there are separate plots.}
- \item{data}{A \code{data.frame} containing the three \code{factors} and the \code{response}.}
+ \item{x.factor}{The \code{\link{factor}} to be plotted on the x-axis of each plot.}
+ \item{groups.factor}{The \code{\link{factor}} plotted as separate lines in each plot.}
+ \item{trace.factor}{The \code{\link{factor}} for whose \code{levels} there are separate plots.}
+ \item{data}{A \code{\link{data.frame}} containing the three \code{factors} and the 
+             \code{response}.}
  \item{fun}{The \code{function} to be computed from the \code{response} for each
             combination of the three factors \code{x.factor},
             \code{groups.factor} and \code{trace.factor}. By default, the mean
@@ -34,11 +35,11 @@
  \item{lwd}{The width of the \code{lines}. By default it is 4.}
  \item{columns}{The number of columns for arranging the several plots for the
                  levels of the \code{groups.factor}. By default it is 2.}
- \item{\dots}{Other arguments that are passed down to the function \code{xyplot}.}
+ \item{\dots}{Other arguments that are passed down to the function \code{\link{xyplot}}.}
 }
 \value{An object of class "\code{\link[=Lattice]{trellis}}", which is 
        automatically plotted by \code{print.trellis}.}
-\note{A \code{data.frame} called \code{data.means} is created, attached and detached
+\note{A \code{\link{data.frame}} called \code{data.means} is created, attached and detached
       during execution of this function.
 }
 \author{Chris Brien}

@@ -6,7 +6,7 @@
      for all the fitted terms in the model, stopping at \code{error.term} 
      if this is specified. It is a method for the generic function 
      \code{\link{fitted}}.}
-\usage{fitted.aovlist(object, error.term=NULL, ...)}
+\usage{\method{fitted}{aovlist}(object, error.term=NULL, ...)}
 \arguments{
  \item{object}{An \code{aovlist} object created from a call to \code{\link{aov}}.}
  \item{error.term}{The term from the \code{Error} function down to which effects 

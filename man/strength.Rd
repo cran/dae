@@ -7,7 +7,7 @@
 \arguments{
  \item{nodays}{The number of days over which the experiment is to be run.}
  \item{noruns}{The number of runs to be performed on each day of the experiment.}
- \item{temperature}{A \code{factor} that encapsulates the layout by giving the
+ \item{temperature}{A \code{\link{factor}} that encapsulates the layout by giving the
                     temperature to be investigated for each run on each day.
                     These must be ordered so that the temperatures for the
                     first day are given in the order in which they are to be

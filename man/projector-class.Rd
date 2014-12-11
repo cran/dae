@@ -23,7 +23,7 @@ Objects can be created by calls of the form \code{new("projector", data, nrow, n
 However, this does not add the degrees of freedom to the object. These can be 
 added using the replacement function \code{\link[=degfree]{degfree<-}}.  
 Alternatively, the function \code{\link{projector}} creates the new object 
-from a \code{matrix}, adding its degrees of freedom at the same time.
+from a \code{\link{matrix}}, adding its degrees of freedom at the same time.
 }
 \section{Slots}{
   \describe{

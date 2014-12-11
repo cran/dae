@@ -5,12 +5,12 @@
 "\code{\link[=projector-class]{projector}}".}
 \usage{is.projector(object)}
 \arguments{
- \item{object}{The \code{matrix} to be made into a projector.}
+ \item{object}{The \code{\link{matrix}} to be made into a projector.}
 }
-\details{The function \code{is.projector} tests whether the object consists of a \code{matrix} 
-         that is square, symmetric and idempotent. In checking symmetry and 
-         idempotency, the equality of the matrix with either its transpose or square 
-         is tested. In this, a difference in elements is 
+\details{The function \code{is.projector} tests whether the object consists of a 
+         \code{\link{matrix}} that is square, symmetric and idempotent. In checking 
+         symmetry and idempotency, the equality of the matrix with either its 
+         transpose or square is tested. In this, a difference in elements is 
          considered to be zero if it is less than \code{daeTolerance}, which is 
          initially set to 1e-10. The function \code{\link{set.daeTolerance}} can 
          be used to change \code{daeTolerance}.}
