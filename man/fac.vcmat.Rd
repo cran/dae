@@ -7,7 +7,7 @@
   equal either zero or sigma2 and displays compound symmetry.}
 \usage{fac.vcmat(factor, sigma2)}
 \arguments{
- \item{factor}{The (generalized) \code{\link{factor}} for which the varaince 
+ \item{factor}{The (generalized) \code{\link{factor}} for which the variance 
                matrix is required.}
  \item{sigma2}{The variance component, being the of the random effects for the 
                factor.}

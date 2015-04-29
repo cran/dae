@@ -8,9 +8,7 @@
  \item{x}{An \code{object} whose elements are to be tested.}
 }
 \details{
-All the elements of \code{x} are tested as being less than \code{daeTolerance}, 
-which is initially set to 1e-10. The function \code{\link{set.daeTolerance}} can 
-be used to change \code{daeTolerance}.}
+The mean of the absolute values of the elements of \code{x} is tested to determine if it is less than \code{daeTolerance}, which is initially set to \code{.Machine$double.eps ^ 0.5} (about 1.5E-08). The function \code{\link{set.daeTolerance}} can be used to change \code{daeTolerance}.}
 \value{A \code{logical}.}
 \author{Chris Brien}
 \examples{

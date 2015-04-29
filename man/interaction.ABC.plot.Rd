@@ -30,21 +30,18 @@
              \code{x.factor}.}
  \item{ylab}{\code{Label} for the y-axis. By default it is the name of the
              \code{response}.}
- \item{key.title}{\code{Label} for the xkey to the lines in each plot. By default it
+ \item{key.title}{\code{Label} for the key (legend) to the lines in each plot. By default it
                   is the name of the \code{groups.factor}.}
  \item{lwd}{The width of the \code{lines}. By default it is 4.}
  \item{columns}{The number of columns for arranging the several plots for the
                  levels of the \code{groups.factor}. By default it is 2.}
- \item{\dots}{Other arguments that are passed down to the function \code{\link{xyplot}}.}
+ \item{\dots}{Other arguments that are passed down to \code{\link{ggplot}} methods.}
 }
-\value{An object of class "\code{\link[=Lattice]{trellis}}", which is 
-       automatically plotted by \code{print.trellis}.}
-\note{A \code{\link{data.frame}} called \code{data.means} is created, attached and detached
-      during execution of this function.
-}
+\value{An object of class "\code{ggplot}", which can be plotted using \code{print}.}
 \author{Chris Brien}
 \seealso{\code{\link{fac.combine}} in package \pkg{dae}, \code{\link{interaction.plot}}.}
 \examples{
+\dontrun{
 ## plot for generated data
 ## use ?ABC.Interact.dat for data set details
 data(ABC.Interact.dat)
@@ -59,7 +56,7 @@ interaction.ABC.plot(Main.Grass, x.factor=Period,
                      groups.factor=Spring, trace.factor=Summer,
                      data=SPLGrass.dat,
                      title="Effect of Period, Spring and Summer on Main Grass")
-}
+}}
 \keyword{aplot}
 \keyword{hplot}
 \keyword{design}

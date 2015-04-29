@@ -7,7 +7,8 @@
              described in \code{\link{factor}}.  Use \code{\link{as.numeric}} to convert the 
              \code{\link{factor}} to a numeric \code{vector} with integers 1, 2, ... corresponding 
              to the positions in the list of levels. You can also use \code{\link{fac.recode}} to 
-             recode the levels to numeric values.}
+             recode the levels to numeric values. If the a \code{numeric} is supplied, it is 
+             left unchanged.}
 \usage{as.numfac(factor)}
 \arguments{
  \item{factor}{The \code{\link{factor}} to be converted.}

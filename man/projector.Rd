@@ -1,8 +1,8 @@
 \name{projector}
 \alias{projector}
 \title{Create projectors}
-\description{The class "\code{\link[=projector-class]{projector}}" is the subclass 
-             of the class "\code{\link[=matrix-class]{matrix}}" 
+\description{The class "\code{\link[=projector-class]{projector}}" is the 
+             subclass of the class "\code{\link[=matrix-class]{matrix}}" 
              in which matrices are square, symmetric and idempotent. 
              
              The function \code{projector} tests whether a \code{\link{matrix}} 
@@ -14,13 +14,14 @@
  \item{Q}{The \code{\link{matrix}} to be made into a projector.}
 }
 \value{An object of Class "\code{\link[=projector-class]{projector}}" that 
-       consists of a square, summetric,  idempotent \code{\link{matrix}} and degrees of 
-       freedom (rank) of the \code{matrix.}}
-\details{In checking that the \code{\link{matrix}} is square, symmetric and idempotent, 
-         the equality of the \code{\link{matrix}} with either its transpose or square 
-         is tested. In this, a difference in elements is 
+       consists of a square, summetric,  idempotent \code{\link{matrix}} and 
+       degrees of freedom (rank) of the \code{matrix.}}
+\details{In checking that the \code{\link{matrix}} is square, symmetric and 
+         idempotent, the equality of the \code{\link{matrix}} with either its 
+         transpose or square is tested. In this, a difference in elements is 
          considered to be zero if it is less than \code{daeTolerance}, which is 
-         initially set to 1e-10. The function \code{\link{set.daeTolerance}} can 
+         initially set to \code{.Machine$double.eps ^ 0.5} (about 1.5E-08). 
+         The function \code{\link{set.daeTolerance}} can 
          be used to change \code{daeTolerance}.}
 \author{Chris Brien}
 \seealso{\code{\link{degfree}}, \code{\link{correct.degfree}} in package \pkg{dae}.

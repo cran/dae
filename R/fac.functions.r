@@ -1,11 +1,14 @@
 #"as.numfac" <- function(factor) {as.numeric(as.vector(factor))}
 
 "as.numfac" <- function(factor)
-{ levs <- levels(factor)
-  if (any(is.na(suppressWarnings(as.numeric(levs[!is.na(levs)])))))
-     warning("Some levels do not have values that are numeric in nature")
-  #see factor help
-  as.numeric(levels(factor))[factor]
+{ if (!is.numeric(factor))
+  { levs <- levels(factor)
+    if (any(is.na(suppressWarnings(as.numeric(levs[!is.na(levs)])))))
+      warning("Some levels do not have values that are numeric in nature")
+    #see factor help
+    factor <- as.numeric(levels(factor))[factor]
+  }
+  return(factor)
 }
 
 "mpone" <- function(factor) {2*as.numeric(factor)-3}

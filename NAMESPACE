@@ -1,9 +1,13 @@
 export(as.numfac,
+       blockboundary.plot,
        correct.degfree,
        decomp.relate,
        degfree,
        "degfree<-",
        design.plot,
+       efficiencies.pcanon,
+       efficiencies.p2canon,
+       efficiency.criteria,
        elements,
        extab,
        fac.ar1mat,
@@ -20,30 +24,51 @@ export(as.numfac,
        fitted.aovlist,
        fitted.errors,
        get.daeTolerance,
+       harmonic.mean,
        interaction.ABC.plot,
        is.allzero,
        is.projector,
        mat.ar1,
+       mat.banded,
        mat.dirprod,
+       mat.dirsum,
+       mat.exp,
        mat.I,
        mat.J,
        mpone,
        no.reps,
-       blockboundary.plot,
        power.exp,
        print.projector,
+       print.summary.p2canon,
+       print.summary.pcanon,
        projector,
+       projs.combine.p2canon,
+       projs.structure,
+       projs.2canon,
+       projs.canon,
+       proj2.combine,
        proj2.decomp,
        proj2.efficiency,
-       proj2.ops,
+       proj2.eigen,
        qqyeffects,
        residuals.aovlist,
        resid.errors,
        rmvnorm,
        set.daeTolerance,
        strength,
+       summary.p2canon,
+       summary.pcanon,
        tukey.1df,
        yates.effects)
 exportClasses(projector)
 importFrom(methods, setMethod)
 import(ggplot2)
+S3method(print, projector)
+S3method(print, summary.p2canon)
+S3method(print, summary.pcanon)
+S3method(fitted, aovlist)
+S3method(residuals, aovlist)
+S3method(fitted, aovlist, fitted.errors)
+S3method(residuals, aovlist, resid.errors)
+S3method(summary, p2canon)
+S3method(summary, pcanon)

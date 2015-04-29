@@ -12,7 +12,7 @@
  \item{rho}{The correlation on the first off-diagonal.}
 }
 \value{A correlation \code{\link{matrix}} whose elements follow an ar1 pattern.}
-\seealso{\code{\link{mat.I}}, \code{\link{mat.J}}}
+\seealso{\code{\link{mat.I}}, \code{\link{mat.J}}, \code{\link{mat.exp}}, \code{\link{mat.banded}}}
 \examples{
     corr <- mat.ar1(order=4, rho=0.4)
 }

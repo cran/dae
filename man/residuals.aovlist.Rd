@@ -27,7 +27,7 @@ RCBDPen.dat$Treat <- factor(rep(c("A","B","C","D"), times=5))
 RCBDPen.dat$Yield <- c(89,88,97,94,84,77,92,79,81,87,87,
                        85,87,92,89,84,79,81,80,88)
 
-## perform the analysis of varaince
+## perform the analysis of variance
 RCBDPen.aov <- aov(Yield ~ Blend + Treat + Error(Blend/Flask), RCBDPen.dat)
 summary(RCBDPen.aov)
 

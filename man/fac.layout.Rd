@@ -5,7 +5,8 @@
              \code{\link{factor}s} that are randomized to the unrandomized 
              \code{\link{factor}s}, taking into account the nesting, for 
              the design, between the unrandomized factors.}
-\usage{fac.layout(unrandomized, nested.factors=NULL, randomized, seed=NULL)}
+\usage{fac.layout(unrandomized, nested.factors=NULL, randomized, 
+                  seed=NULL, unit.permutation=TRUE)}
 \arguments{
  \item{unrandomized}{A \code{\link{data.frame}} or a \code{\link{list}} of 
                      \code{\link{factor}s}, along with their \code{levels}. If 
@@ -30,16 +31,22 @@
                    randomized.}
  \item{seed}{A single value, interpreted as an integer, that specifies the 
                        starting value of the random number generator.}
+ \item{unit.permutation}{A \code{logical} indicating whether to include the 
+                    \code{.Unit} and \code{.Permutation} columns in the 
+                    \code{\link{data.frame}}.}
 }
-\value{A \code{\link{data.frame}} consisting of the values for Units and Permutation 
-       \code{vectors} along with the values for the unrandomized and randomized 
+\value{A \code{\link{data.frame}} consisting of the values for \code{.Units} 
+       and \code{.Permutation} \code{vectors}, provided \code{unit.permutation} 
+       is \code{TRUE}, along with the values for the unrandomized and randomized 
        \code{\link{factor}s} that specify the randomized layout for the experiment.}
 \details{This \code{functon} uses the method of randomization described by Bailey 
         (1981). That is, a permutation of the units that 
         respects the nesting for the design is obtained. This permutation is 
         applied jointly to the unrandomized and randomized \code{\link{factor}s} to produce 
-        the randomized layout. The Units and Permutation \code{vectors} enable one to 
-        swap between this permutation and the randomized layout.
+        the randomized layout. The \code{.Units} and \code{.Permutation} \code{vectors}
+        enable one to swap between this permutation and the randomized layout. 
+        The \emph{i}th value in \code{.Permutation} gives the unit to which unit 
+        \emph{i} was assigned in the randomization. 
 }
 \author{Chris Brien}
 \seealso{\code{\link{fac.gen}} in package \pkg{dae}.}
@@ -52,7 +59,7 @@ LS.unit <- data.frame(row = ordered(rep(c("I","II","III","IV"), times=4)),
 LS.ran <- data.frame(treat = factor(c(1:4, 2,3,4,1, 3,4,1,2, 4,1,2,3)))
 data.frame(LS.unit, LS.ran)
 LS.lay <- fac.layout(unrandomized=LS.unit, randomized=LS.ran, seed=7197132) 
-LS.lay[LS.lay$Permutation,]
+LS.lay[LS.lay$.Permutation,]
 
 ## generate a randomized layout for a replicated randomized complete 
 ## block design, with the block factors arranged in standard order for 
@@ -69,20 +76,19 @@ RCBD.lay <- fac.layout(unrandomized=RCBD.unit,
                        nested.factors=RCBD.nest, 
                        randomized=tr, seed=9719532)
 #sort into the original standard order
-RCBD.perm <- RCBD.lay[RCBD.lay$Permutation,]
+RCBD.perm <- RCBD.lay[RCBD.lay$.Permutation,]
 #resort into randomized order
-RCBD.lay <- RCBD.perm[order(RCBD.perm$Units),]
+RCBD.lay <- RCBD.perm[order(RCBD.perm$.Units),]
 
 ## generate a layout for a split-unit experiment in which: 
 ## - the main-unit factor is A with 4 levels arranged in 
 ##   a randomized complete block design with 2 blocks;
 ## - the split-unit factor is B with 3 levels.
-SPL.unit <- list(block = 2, main.unit = 4, split.unit = 3)
-SPL.nest <- list(main.unit = "block", split.unit = c("block", "main.unit"))
-SPL.trt <- fac.gen(list(A = 4, B = 3), times = 2)
-SPL.lay <- fac.layout(unrandomized=SPL.unit, 
-                       nested.factors=SPL.nest, 
-                       randomized=SPL.trt, seed=155251978)
+SPL.lay <- fac.layout(unrandomized=list(block = 2, main.unit = 4, split.unit = 3), 
+                       nested.factors=list(main.unit = "block", 
+                                           split.unit = c("block", "main.unit")), 
+                       randomized=fac.gen(list(A = 4, B = 3), times = 2), 
+                       seed=155251978, unit.permutation=FALSE)
 }
 \keyword{design}
 \keyword{factor}

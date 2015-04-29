@@ -11,8 +11,8 @@
 \details{
 The degrees of freedom of the projector are obtained as its number of nonzero 
 eigenvalues. An eigenvalue is regarded as zero if it is less than 
-\code{daeTolerance}, which is initially set to 1e-10. The function 
-\code{\link{set.daeTolerance}} can be used to change \code{daeTolerance}.}
+\code{daeTolerance}, which is initially set to.Machine$double.eps ^ 0.5 (about 1.5E-08). 
+The function \code{\link{set.daeTolerance}} can be used to change \code{daeTolerance}.}
 \author{Chris Brien}
 \seealso{\code{\link{degfree}}, \code{\link{projector}} in package \pkg{dae}.
 

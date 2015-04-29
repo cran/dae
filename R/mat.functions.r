@@ -27,11 +27,34 @@
 #correlation parameter rho
 { n <- order*order
   ar1 <- matrix(rep(rho, n), nrow=order, ncol=order)
-  row.no <- matrix(rep(1:order, times=order), nrow=order, ncol=order)
-  col.no <- matrix(rep(1:order, each=order), nrow=order, ncol=order)
-  power <- abs(row.no - col.no)
+  power <- abs(outer(1:order, 1:order, "-"))
   ar1 <- ar1^power
+  return(ar1)
 }
+
+"mat.exp" <- function(coordinates, rho) 
+  { order <- length(coordinates)
+    n <- order * order
+    mat <- matrix(rep(rho, n), nrow = order, ncol = order)
+    rownames(mat) <- colnames(mat) <- coordinates
+    power  <- abs(outer(coordinates,coordinates,'-'))
+    mat <- mat^power
+    return(mat)
+  }
+
+
+"mat.banded" <- function(x, nrow, ncol)
+  #Function to form a banded matrix from a vector of values
+  #- band 1 is the diagonal, band 2 the first subdiagonal and so on
+{ nband <- length(x)
+  if (nband > min(nrow, ncol))
+    stop("Have supplied values for more than ",min(nrow, ncol) ," bands")
+  matrix <- matrix(0, nrow=nrow, ncol=ncol)
+  for (i in 1:nband)
+    matrix[row(matrix)==col(matrix)+i | row(matrix)+i == col(matrix)] <- x[i]
+  return(matrix)
+}
+
 
 "mat.dirprod" <- function(A, B)
 #function create the direct product of A and B
@@ -41,4 +64,27 @@
   Bexp <- eval(parse(text=paste("cbind(", paste(rep("B", cA), collapse=","), ")")))
   Bexp <- eval(parse(text=paste("rbind(", paste(rep("Bexp", rA), collapse=","), ")")))
   Aexp*Bexp
+}
+
+
+"mat.dirsum" <- function(matrices)
+  #Function to form the direct sum of a list of matrices
+{ if (!is.list(matrices))
+    stop("Must supply a list for matrices")
+  if (!all(unlist(lapply(matrices, is.matrix))))
+    stop("All elements of the matrices list must be matrices")
+  nr <- lapply(matrices, nrow)
+  nc <- lapply(matrices, ncol)
+  m <- sum(unlist(nr))
+  n <- sum(unlist(nc))
+  dsum <- matrix(0, nrow=m, ncol=n)
+  r1 <- r2 <- c1 <- c2 <- 0
+  for (i in 1:length(matrices))
+  { r1 <- r2 + 1
+    c1 <- c2 + 1
+    r2 <- r2 + nr[[i]]
+    c2 <- c2 + nc[[i]]
+    dsum[r1:r2, c1:c2] <- matrices[[i]]
+  }
+  return(dsum)  
 }

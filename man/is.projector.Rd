@@ -12,7 +12,8 @@
          symmetry and idempotency, the equality of the matrix with either its 
          transpose or square is tested. In this, a difference in elements is 
          considered to be zero if it is less than \code{daeTolerance}, which is 
-         initially set to 1e-10. The function \code{\link{set.daeTolerance}} can 
+         initially set to \code{.Machine$double.eps ^ 0.5} (about 1.5E-08). 
+         The function \code{\link{set.daeTolerance}} can 
          be used to change \code{daeTolerance}.}
 \value{\code{TRUE} or \code{FALSE} depending on whether the object is a valid object of class 
        "\code{\link[=projector-class]{projector}}".}

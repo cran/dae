@@ -20,8 +20,8 @@ degfree(object) <- value}
 
 When the degrees of freedom of the projector are to be calculated, they are obtained 
 as the number of nonzero eigenvalues. An eigenvalue is regarded as zero if it is 
-less than \code{daeTolerance}, which is initially set to 1e-10. The function 
-\code{\link{set.daeTolerance}} can be used to change \code{daeTolerance}.}
+less than \code{daeTolerance}, which is initially set to \code{.Machine$double.eps ^ 0.5} 
+(about 1.5E-08). The function \code{\link{set.daeTolerance}} can be used to change \code{daeTolerance}.}
 \value{An object of class "\code{\link[=projector-class]{projector}}" that consists 
        of a square, summetric, idempotent matrix and degrees of freedom (rank) of the matrix.}
 \author{Chris Brien}

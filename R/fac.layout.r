@@ -200,7 +200,7 @@ function(unrandomized, unr.names, unr.levels, nested.factors=NULL, randomized, s
 }
 
 "fac.layout" <- 
-function(unrandomized, nested.factors=NULL, randomized, seed=NULL)
+function(unrandomized, nested.factors=NULL, randomized, seed=NULL, unit.permutation = TRUE)
 {
 #generate a layout for a design consisting of randomized factors that are 
 #randomized to the unrandomized factors, taking into account the nesting between
@@ -303,13 +303,21 @@ function(unrandomized, nested.factors=NULL, randomized, seed=NULL)
     perm.dat[perm.unrand] <- perm.dat
     perm.derand.dat <- vector("numeric", length=n)
     perm.derand.dat[perm.dat] <- 1:n
-    faclay <- data.frame(Units = 1:n, Permutation = order(perm.derand.dat),
-                                              faclay[perm.derand.dat, ])
+    if (unit.permutation)
+      faclay <- data.frame(.Units = 1:n, .Permutation = order(perm.derand.dat),
+                           faclay[perm.derand.dat, ])
+    else
+      faclay <- faclay[perm.derand.dat, ]
+    
   }
   else  #get in standard order for unr.names
   { perm.derand <- do.call(order, facrand)
     faclay <- data.frame(facrand, randomized)
-    faclay <- data.frame(Units = 1:n, Permutation = order(perm.derand), faclay[perm.derand, ])
+    if (unit.permutation)
+      faclay <- data.frame(.Units = 1:n, .Permutation = order(perm.derand), 
+                           faclay[perm.derand, ])
+    else
+      faclay <- faclay[perm.derand, ]
   }
   if (is.factor(randomized))
     names(faclay)[length(faclay)] <- deparse(substitute(randomized))
