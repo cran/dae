@@ -50,6 +50,7 @@ export(as.numfac,
        proj2.decomp,
        proj2.efficiency,
        proj2.eigen,
+       proj2.ops,
        qqyeffects,
        residuals.aovlist,
        resid.errors,
@@ -67,8 +68,8 @@ S3method(print, projector)
 S3method(print, summary.p2canon)
 S3method(print, summary.pcanon)
 S3method(fitted, aovlist)
+S3method(fitted, errors)
 S3method(residuals, aovlist)
-S3method(fitted, aovlist, fitted.errors)
 S3method(residuals, aovlist, resid.errors)
 S3method(summary, p2canon)
 S3method(summary, pcanon)

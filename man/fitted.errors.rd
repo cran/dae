@@ -4,9 +4,13 @@
 \description{An alias for the generic function \code{\link{fitted}}. When it is 
      available, the method \code{\link{fitted.aovlist}} extracts the fitted values, which is provided 
      in the \pkg{dae} package to cover \code{aovlist} objects.}
-\usage{\method{fitted}{errors}(object, ...)}
+\usage{\method{fitted}{errors}(object, error.term=NULL, ...)}
 \arguments{
- \item{object}{An \code{object} for which the extraction of model fitted values is meaningful.}
+ \item{object}{An \code{aovlist} object created from a call to \code{\link{aov}}.}
+ \item{error.term}{The term from the \code{Error} function down to which effects 
+      are extracted for adding to the fitted values. The order of terms is as 
+      given in the ANOVA table. If \code{error.term} is \code{NULL} effects are 
+      extracted from all \code{Error} terms.}
  \item{...}{Further arguments passed to or from other methods.}
 }
 \value{A numeric vector of fitted values.}

@@ -4,10 +4,9 @@
 \description{An alias for the generic function \code{\link{residuals}}. When it is 
      available, the method \code{\link{residuals.aovlist}} extracts residuals, which is provided 
      in the package \pkg{dae} to cover \code{aovlist} objects.}
-\usage{resid.errors(object, ...)}
+\usage{resid.errors(...)}
 \arguments{
- \item{object}{An \code{object} for which the extraction of residuals is meaningful.}
- \item{...}{Further arguments passed to or from other methods.}
+ \item{...}{Arguments passed to \code{\link{residuals.aovlist}}.}
 }
 \value{A numeric \code{vector} containing the residuals.}
 \note{See \code{\link{residuals.aovlist}} for specific information about the 

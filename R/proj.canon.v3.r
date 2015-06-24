@@ -144,6 +144,8 @@ print.summary.p2canon <- function(x, ...)
     y$order <- gsub("NA", "  ", y$order)
   }
   print.data.frame(y, na.print="  ", right=FALSE, row.names=FALSE)
+  if (!attr(x, which="orthogonal"))
+    cat("\nThe design is not orthogonal\n\n")
   invisible(x)
 }
 
@@ -271,6 +273,7 @@ print.summary.p2canon <- function(x, ...)
   anycriteria <- !("none" %in% kcriteria)
   
   #Form data frame for summary table
+  orthogonaldesign <- TRUE
   nc <- 3
   if (anycriteria)
   { nc <- nc + length(kcriteria)
@@ -293,6 +296,8 @@ print.summary.p2canon <- function(x, ...)
       { kdf <- degfree(object[[i]][[j]]$Qproj)
         if (kdf > 0)
         { nconf.terms <- nconf.terms + 1
+          if (abs(1 - unlist(object[[i]][[j]][["adjusted"]]["aefficiency"])) > 1e-04)
+            orthogonaldesign <- FALSE
           if (anycriteria)
             summary <- rbind(summary,
                              data.frame(Source = i,
@@ -346,6 +351,7 @@ print.summary.p2canon <- function(x, ...)
   class(summary) <- c("summary.p2canon", "data.frame")
   attr(summary, which = "title") <- 
     "\n\nSummary table of the decomposition (based on adjusted quantities)\n\n"
+  attr(summary, which = "orthogonal") <- orthogonaldesign
   return(summary)
 }
 

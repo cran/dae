@@ -44,7 +44,8 @@
 }
 
 "fac.rand.cross" <- 
-function(unrandomized, unr.names, unr.levels, nested.factors=NULL, randomized, seed=NULL)
+function(unrandomized, unr.names, unr.levels, nested.factors=NULL, except=NULL, 
+         randomized, seed=NULL)
 { if (is.data.frame(randomized))
     n <- nrow(randomized)
   else
@@ -60,7 +61,10 @@ function(unrandomized, unr.names, unr.levels, nested.factors=NULL, randomized, s
 #generate random factor values
   nunr <- ncol(facgen)
   for(i in 1:nunr)
-  { rno <- runif(unr.levels[i])[as.integer(facgen[[i]])]
+  { if (!(names(unr.names)[i] %in% except))
+      rno <- runif(unr.levels[i])[as.integer(facgen[[i]])]
+    else
+      rno <- as.integer(facgen[[i]])
     if(i == 1)
       facrand <- data.frame(rno)
     else
@@ -74,7 +78,8 @@ function(unrandomized, unr.names, unr.levels, nested.factors=NULL, randomized, s
 }
 
 "fac.rand.nest" <- 
-function(unrandomized, unr.names, unr.levels, nested.factors=NULL, randomized, seed=NULL)
+function(unrandomized, unr.names, unr.levels, nested.factors=NULL, except=NULL, 
+         randomized, seed=NULL)
 { nnested <- length(nested.factors)
   names.nested <- names(nested.factors)
 #check nested factors for transitivity
@@ -124,7 +129,7 @@ function(unrandomized, unr.names, unr.levels, nested.factors=NULL, randomized, s
         unr.nestord <- c(unr.nestord, knames)
       }
     }
-   }  
+   } 
 #now sort nested factors for number of nesting factors and add to list in this order
   if(!is.null(nested.factors))
   { nested.sort <- sort(sapply(nested.factors, FUN=length))
@@ -148,29 +153,33 @@ function(unrandomized, unr.names, unr.levels, nested.factors=NULL, randomized, s
 #generate random factor values with the factors in nested order
   facgen <- fac.gen(generate=unr.nestord)
   for(i in 1:nunr)
-  { knest <- match(names(unr.nestord)[i], names.nested)
-    if(is.na(knest))   #nonnested factor
-    { rno <- runif(unr.levels.nestord[i])[as.integer(facgen[[i]])]
-    }
-    else     #nested factor
-    { kfac <- length(nested.factors[[knest]])+1
-      kfacnos <- rep(1, length=kfac)
-      kfacnos[1] <- i
-      for (j in 1:(kfac-1))
-      { kfacnos[j+1] <- match(nested.factors[[knest]][j], names(unr.nestord))
-        if(is.na(kfacnos[j+1]))
-         stop("Nesting factor not in list of unrandomized factors.")
+  { if (names(unr.nestord)[i] %in% except)
+      rno <- as.integer(facgen[[i]])
+    else
+    { knest <- match(names(unr.nestord)[i], names.nested)
+      if(is.na(knest))   #nonnested factor
+      { rno <- runif(unr.levels.nestord[i])[as.integer(facgen[[i]])]
       }
-      sort(kfacnos)
-      #determine number of random nos required and 
-      #generate radix to expand to n-vector
-      radix <- rep(1, length=n)
-      each <- 1
-      for (j in kfac:1)
-      { radix <- radix + (as.integer(facgen[[kfacnos[j]]])-1)*each
-        each <- each*unr.levels.nestord[kfacnos[j]]
+      else     #nested factor
+      { kfac <- length(nested.factors[[knest]])+1
+        kfacnos <- rep(1, length=kfac)
+        kfacnos[1] <- i
+        for (j in 1:(kfac-1))
+        { kfacnos[j+1] <- match(nested.factors[[knest]][j], names(unr.nestord))
+          if(is.na(kfacnos[j+1]))
+            stop("Nesting factor not in list of unrandomized factors.")
+        }
+        sort(kfacnos)
+        #determine number of random nos required and 
+        #generate radix to expand to n-vector
+        radix <- rep(1, length=n)
+        each <- 1
+        for (j in kfac:1)
+        { radix <- radix + (as.integer(facgen[[kfacnos[j]]])-1)*each
+          each <- each*unr.levels.nestord[kfacnos[j]]
+        }
+        rno <- runif(each)[radix]
       }
-      rno <- runif(each)[radix]
     }
     if(i == 1)
       facrand <- data.frame(rno)
@@ -200,7 +209,7 @@ function(unrandomized, unr.names, unr.levels, nested.factors=NULL, randomized, s
 }
 
 "fac.layout" <- 
-function(unrandomized, nested.factors=NULL, randomized, seed=NULL, unit.permutation = TRUE)
+function(unrandomized, nested.factors=NULL, except=NULL, randomized, seed=NULL, unit.permutation = TRUE)
 {
 #generate a layout for a design consisting of randomized factors that are 
 #randomized to the unrandomized factors, taking into account the nesting between
@@ -246,6 +255,13 @@ function(unrandomized, nested.factors=NULL, randomized, seed=NULL, unit.permutat
     unr.names <- facs.reps$factors
     nunr <- length(unr.names)
   }
+#if except is not NULL, check that it contains only unrandomized factors
+  if (!is.null(except))
+  { if (!is.character(except))
+      stop("except must be a character vector")
+    if (!all(except %in% names(unr.names)))
+      stop("except must contain the names of only unrandomized factors")
+  }
 #form vector of numbers of levels
   unr.levels <- rep(1, times=nunr)
   for (i in 1:nunr)
@@ -266,7 +282,7 @@ function(unrandomized, nested.factors=NULL, randomized, seed=NULL, unit.permutat
   if(is.null(nested.factors))
    facrand <- fac.rand.cross(unrandomized=unrandomized, unr.names=unr.names, 
                              unr.levels=unr.levels, nested.factors=nested.factors, 
-                             seed=seed, randomized=randomized)
+                             except=except, seed=seed, randomized=randomized)
  else
   { if(!is.list(nested.factors))
       stop("nested.factors must be a list.")
@@ -277,7 +293,7 @@ function(unrandomized, nested.factors=NULL, randomized, seed=NULL, unit.permutat
       stop("All elements of the nested.factors list must be of class character")
     facrand <- fac.rand.nest(unrandomized=unrandomized, unr.names=unr.names, 
                              unr.levels=unr.levels, nested.factors=nested.factors, 
-                             seed=seed, randomized=randomized)
+                             except=except, seed=seed, randomized=randomized)
   }
   #form layout which is to be in standard or data frame order for the 
   #unrandomized factors supplied in unrandomized i.e. in unr.names order

@@ -85,8 +85,8 @@ print.projector <- function(x, ...)
 }
 setMethod("show", "projector", function(object) print.projector(object))
 
-proj2.decomp <- function()
-{ cat("/nproj2.decomp deprecated - see proj2.eigen")
+proj2.decomp <- function(...)
+{ .Deprecated(new = "proj2.eigen", package = "dae")
   invisible()
 }
 
@@ -134,8 +134,8 @@ decomp.relate <- function(decomp1, decomp2)
   relmat
 }
 
-proj2.ops <- function()
-{ cat("/nproj2.ops deprecated - see proj2.combine")
+proj2.ops <- function(...)
+{ .Deprecated(new = "proj2.combine", package = "dae")
   invisible()
 }
 

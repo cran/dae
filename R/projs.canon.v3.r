@@ -138,6 +138,7 @@
   ktiers <- lapply(terms, length)
   nc <- ntiers*2
   srcdf.names <- as.vector(outer(c("Source", "df"), as.character(1:ntiers), paste, sep=""))
+  orthogonaldesign <- TRUE
   if (anycriteria)
   { nc <- nc + length(kcriteria)
     res.criteria <- vector(mode = "list", length = length(kcriteria))
@@ -165,20 +166,35 @@
         summary[[kcomb[kl]*2+2]][kl] <- degfree(object[[kcomb[kl]]][[label]][["Q1res"]])
       else
         summary[[kcomb[kl]*2+2]][kl] <- object[[kcomb[kl]]][[label]][["Q1res"]]
-      if (anycriteria)
-      { if (ktiers[[kl]]  == 1)
-          stop("Have a Residual in the first formula - include a factor for the units")
-        else
-        { lastNonResidual <- max(c(1:ktiers[[kl]])["Residual" != terms[[kl]]])
-          if (lastNonResidual  > 1)
-          { pcomb <- 1
-            label <- makeCombinedSource(terms[[kl]][1:(lastNonResidual-1)])
-            term2 <- terms[[kl]][lastNonResidual]
-            pcomb <- findDecomposition(pcomb, term2, label, object, ncomb) 
+      if (ktiers[[kl]]  == 1)
+        stop("Have a Residual in the first formula - include a factor for the units")
+      else
+      { lastNonResidual <- max(c(1:ktiers[[kl]])["Residual" != terms[[kl]]])
+        if (lastNonResidual  > 1)
+        { pcomb <- 1
+          label <- makeCombinedSource(terms[[kl]][1:(lastNonResidual-1)])
+          term2 <- terms[[kl]][lastNonResidual]
+          pcomb <- findDecomposition(pcomb, term2, label, object, ncomb) 
+          if (abs(1 - unlist(object[[pcomb]][[label]][[term2]][["adjusted"]]["aefficiency"])) > 1e-04)
+            orthogonaldesign <- FALSE
+          if (anycriteria)
             summary[kl, kcriteria] <- unlist(object[[pcomb]][[label]][[term2]][["adjusted"]][kcriteria])
-          }
         }
       }
+#      if (anycriteria)
+#      { if (ktiers[[kl]]  == 1)
+#          stop("Have a Residual in the first formula - include a factor for the units")
+#        else
+#        { lastNonResidual <- max(c(1:ktiers[[kl]])["Residual" != terms[[kl]]])
+#          if (lastNonResidual  > 1)
+#          { pcomb <- 1
+#            label <- makeCombinedSource(terms[[kl]][1:(lastNonResidual-1)])
+#            term2 <- terms[[kl]][lastNonResidual]
+#            pcomb <- findDecomposition(pcomb, term2, label, object, ncomb) 
+#            summary[kl, kcriteria] <- unlist(object[[pcomb]][[label]][[term2]][["adjusted"]][kcriteria])
+#          }
+#        }
+#      }
     }
     else  #Not a Residual
     { #Get first tier source and df
@@ -221,6 +237,8 @@
             kcomb[kl] <- kcomb[kl] + 1
           }
         }
+        if (abs(1 - unlist(object[[kcomb[kl]]][[label]][[term2]][["adjusted"]]["aefficiency"])) > 1e-04)
+          orthogonaldesign <- FALSE
       }
       if (anycriteria & ktiers[[kl]] > 1)
         summary[kl, kcriteria] <- unlist(object[[kcomb[kl]]][[label]][[term2]][["adjusted"]][kcriteria])
@@ -230,6 +248,7 @@
   attr(summary, which = "title") <- 
     "\n\nSummary table of the decomposition (based on adjusted quantities)\n\n"
   attr(summary, which = "ntiers") <- ntiers
+  attr(summary, which = "orthogonal") <- orthogonaldesign
   return(summary)
 }
 
@@ -275,6 +294,8 @@ print.summary.pcanon <- function(x, ...)
     y$order <- gsub("NA", "  ", y$order)
   }
   print.data.frame(y, na.print="  ", right=FALSE, row.names=FALSE)
+  if (!attr(x, which="orthogonal"))
+    cat("\nThe design is not orthogonal\n\n")
   invisible(x)
 }
 

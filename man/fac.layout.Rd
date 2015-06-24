@@ -5,8 +5,8 @@
              \code{\link{factor}s} that are randomized to the unrandomized 
              \code{\link{factor}s}, taking into account the nesting, for 
              the design, between the unrandomized factors.}
-\usage{fac.layout(unrandomized, nested.factors=NULL, randomized, 
-                  seed=NULL, unit.permutation=TRUE)}
+\usage{fac.layout(unrandomized, nested.factors=NULL, except=NULL, 
+                  randomized, seed=NULL, unit.permutation=TRUE)}
 \arguments{
  \item{unrandomized}{A \code{\link{data.frame}} or a \code{\link{list}} of 
                      \code{\link{factor}s}, along with their \code{levels}. If 
@@ -17,7 +17,8 @@
                      that contains the \code{levels} of the \code{\link{factor}} 
                      or a character code{vector} that contains the \code{labels} 
                      of the \code{levels} of the \code{\link{factor}}.}
- \item{nested.factors}{A \code{\link{list}} of the unrandomized \code{\link{factor}s} 
+ \item{nested.factors}{A \code{\link{list}} of the unrandomized 
+                       \code{\link{factor}s} 
                        that are nested in other \code{\link{factor}s} in 
                        \code{unrandomized}. The name of each component is the 
                        name of a \code{\link{factor}} that is nested and the 
@@ -26,6 +27,9 @@
                        It is emphasized that the nesting is a property of the 
                        design that is being employed (it is only partly based 
                        on the intrinsic nesting.}
+ \item{except}{A \code{\link{character} vector} containing the names 
+               unrandomized \code{\link{factor}s} that are to be excepted 
+               from the randomization.}
  \item{randomized}{A \code{\link{factor}} or a \code{\link{data.frame}} 
                    containing the values of the \code{\link{factor}(s)} to be 
                    randomized.}
@@ -38,15 +42,24 @@
 \value{A \code{\link{data.frame}} consisting of the values for \code{.Units} 
        and \code{.Permutation} \code{vectors}, provided \code{unit.permutation} 
        is \code{TRUE}, along with the values for the unrandomized and randomized 
-       \code{\link{factor}s} that specify the randomized layout for the experiment.}
-\details{This \code{functon} uses the method of randomization described by Bailey 
-        (1981). That is, a permutation of the units that 
-        respects the nesting for the design is obtained. This permutation is 
-        applied jointly to the unrandomized and randomized \code{\link{factor}s} to produce 
-        the randomized layout. The \code{.Units} and \code{.Permutation} \code{vectors}
-        enable one to swap between this permutation and the randomized layout. 
-        The \emph{i}th value in \code{.Permutation} gives the unit to which unit 
-        \emph{i} was assigned in the randomization. 
+       \code{\link{factor}s} that specify the randomized layout for the 
+       experiment.}
+\details{This \code{functon} uses the method of randomization described by 
+         Bailey (1981). That is, a permutation of the units that respects the 
+         nesting for the design, but does not permute any of the factors in the 
+         \code{except vector}, is obtained. This permutation is 
+         applied to the unrandomized \code{\link{factor}s} and then a 
+         \code{\link{data.frame}} containing both the permuted unrandomized and 
+         unpermuted randomized \code{\link{factor}s} is formed. To produce the 
+         randomized layout, the rows of the joint \code{\link{data.frame}} are 
+         reordered so that its unrandomized \code{\link{factor}s} are in either 
+         standard order or, if a \code{\link{data.frame}} was suppled to 
+         \code{unrandomized}, data frame order. 
+
+         The \code{.Units} and \code{.Permutation} \code{vectors} enable one to 
+         swap between this permutation and the randomized layout. 
+         The \emph{i}th value in \code{.Permutation} gives the unit to which 
+         unit \emph{i} was assigned in the randomization. 
 }
 \author{Chris Brien}
 \seealso{\code{\link{fac.gen}} in package \pkg{dae}.}

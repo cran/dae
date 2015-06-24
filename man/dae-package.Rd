@@ -6,27 +6,26 @@
 Functions Useful in the Design and ANOVA of Experiments
 }
 \description{
-The content falls into the following natural groupings: (i) Data, (ii) Factor 
-manipulation functions, (iii) Design functions, (iv) ANOVA functions, 
-(v) Matrix functions, (vi) Projector and canonical efficiency functions, and 
-(vii) Miscellaneous functions. The document 'daeDesignRandomization.pdf', available 
-in the doc subdirectory of the installation directory for 'dae', describes the use 
-of the package for generating randomized layouts for experiments.  The ANOVA 
-functions facilitate the extraction of information when the 'Error' function
-has been used in the call to 'aov'.
+The content falls into the following groupings: (i) Data, (ii) Factor manipulation 
+    functions, (iii) Design functions, (iv) ANOVA functions, (v) Matrix functions, 
+    (vi) Projector and canonical efficiency functions, and (vii) Miscellaneous functions. 
+    A document 'daeDesignRandomization.pdf', available in the doc subdirectory of the
+    installation directory for 'dae', describes the use of the package for generating randomized 
+    layouts for experiments. The ANOVA functions facilitate the extraction of information when 
+    the 'Error' function has been used in the call to 'aov'.
 }
 \details{
 \tabular{ll}{
 Package: \tab dae\cr
-Version: \tab 2.7-0\cr
-Date: \tab 2015-04-29\cr
+Version: \tab 2.7-2\cr
+Date: \tab 2015-06-24\cr
 Depends: \tab 
 R (>= 2.10.0),
 ggplot2,
 methods\cr
 License: \tab GPL (>=2)\cr
 URL: \tab http://chris.brien.name\cr
-Built: \tab R 3.1.0; 2015-04-09 UTC; windows\cr
+Built: \tab R 3.2.0; 2015-05-26 UTC; windows\cr
 }
 
 Index:
@@ -104,47 +103,58 @@ mat.dirsum              Forms the direct sum of a list of matrices
 
 (vi) Projector and canonical efficiency functions
 
+Projector class:
+
+projector               Create projectors
+projector-class         Class projector
+is.projector            Tests whether an object is a valid object of
+                        class projector
+print.projector         Print projectors
 correct.degfree         Check the degrees of freedom in an object of
                         class projector
-decomp.relate           Examines the relationship between the
-                        eigenvectors for two decompositions
 degfree                 Degrees of freedom extraction and replacement
+
+Accepts two or more formulae:
+
+projs.canon             A canonical analysis of the relationships between
+                        two or more sets of projectors
+summary.pcanon          A summary of the results of an analysis of
+                        the relationships between two or more sets of 
+                        projectors
+print.summary.pcanon    Prints the values in an 'summary.pcanon' object
 efficiencies.pcanon     Extracts the canonical efficiency factors from a 
                         list of class 'pcanon'
+
+Accepts exactly two formulae:
+
+projs.2canon            A canonical analysis of the relationships between
+                        two sets of projectors
+projs.combine.p2canon   Extract, from a p2canon object, the projectors
+summary.p2canon         A summary of the results of an analysis of
+                        the relationships between two sets of projectors
+print.summary.p2canon   Prints the values in an 'summary.p2canon' object
+                        that give the combined decomposition
 efficiencies.p2canon    Extracts the canonical efficiency factors from
                         a list of class 'p2canon'.
+
+Others:
+
+decomp.relate           Examines the relationship between the
+                        eigenvectors for two decompositions
 efficiency.criteria     Computes efficiency criteria from a set of
                         efficiency factors
 fac.meanop              computes the projection matrix that produces
                         means
-is.projector            Tests whether an object is a valid object of
-                        class projector
-print.projector         Print projectors
 proj2.eigen             Canonical efficiency factors and eigenvectors
                         in joint decomposition of two projectors
 proj2.efficiency        Computes the canonical efficiency factors for
                         the joint decomposition of two projectors
 proj2.combine           Compute the projection and Residual operators
                         for two, possibly nonorthogonal, projectors
-projector               Create projectors
-projector-class         Class projector
 projs.structure         Orthogonalised projectors for the terms in a formula
-projs.canon             A canonical analysis of the relationships between
-                        two or more sets of projectors
-projs.2canon            A canonical analysis of the relationships between
-                        two sets of projectors
-projs.combine.p2canon   Extract, from a p2canon object, the projectors
-print.summary.pcanon    Prints the values in an 'summary.pcanon' object
-print.summary.p2canon   Prints the values in an 'summary.p2canon' object
-                        that give the combined decomposition
-show-methods            Methods for Function show in Package dae
-summary.pcanon          A summary of the results of an analysis of
-                        the relationships between two or more sets of 
-                        projectors
-summary.p2canon         A summary of the results of an analysis of
-                        the relationships between two sets of projectors
+show-methods            Methods for Function 'show' in Package dae
 
-(vii) Micellaneous functions
+(vii) Miscellaneous functions
 
 extab                   Expands the values in table to a vector
 get.daeTolerance        Gets the value of daeTolerance for the package
