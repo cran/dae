@@ -51,7 +51,7 @@
     stop("Have supplied values for more than ",min(nrow, ncol) ," bands")
   matrix <- matrix(0, nrow=nrow, ncol=ncol)
   for (i in 1:nband)
-    matrix[row(matrix)==col(matrix)+i | row(matrix)+i == col(matrix)] <- x[i]
+    matrix[row(matrix)==col(matrix)+i-1 | row(matrix)+i-1 == col(matrix)] <- x[i]
   return(matrix)
 }
 

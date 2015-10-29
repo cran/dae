@@ -18,7 +18,7 @@
 }
 \value{A single \code{numeric} value containing the computed power.}
 \author{Chris Brien}
-\seealso{\code{\link{no.reps}} in package \pkg{dae}.}
+\seealso{\code{\link{no.reps}}, \code{\link{detect.diff}} in package \pkg{dae}.}
 \examples{
 ## Compute power for a randomized complete block design with four treatments 
 ## and five blocks. 

@@ -15,18 +15,11 @@ The content falls into the following groupings: (i) Data, (ii) Factor manipulati
     the 'Error' function has been used in the call to 'aov'.
 }
 \details{
-\tabular{ll}{
-Package: \tab dae\cr
-Version: \tab 2.7-2\cr
-Date: \tab 2015-06-24\cr
-Depends: \tab 
-R (>= 2.10.0),
-ggplot2,
-methods\cr
-License: \tab GPL (>=2)\cr
-URL: \tab http://chris.brien.name\cr
-Built: \tab R 3.2.0; 2015-05-26 UTC; windows\cr
-}
+
+The DESCRIPTION file:
+
+\packageDESCRIPTION{dae}
+
 
 Index:
 \preformatted{
@@ -67,6 +60,8 @@ blockboundary.plot      This function plots a block boundary on a plot
 design.plot             This function plots treatments within a matrix.
 fac.layout              Generate a randomized layout for an experiment
 no.reps                 Computes the number of replicates for an
+                        experiment
+detect.diff             Computes the detectable difference for an
                         experiment
 power.exp               Computes the power for an experiment
 
@@ -169,8 +164,8 @@ set.daeTolerance        Sets the value of daeTolerance for the package
 }
 }
 \author{
-Chris Brien <Chris.Brien@unisa.edu.au>.
+\packageAuthor{dae}
 
-Maintainer: Chris Brien <Chris.Brien@unisa.edu.au>
+Maintainer: \packageMaintainer{dae}
 }
 \keyword{ package }

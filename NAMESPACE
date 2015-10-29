@@ -5,6 +5,7 @@ export(as.numfac,
        degfree,
        "degfree<-",
        design.plot,
+       detect.diff,
        efficiencies.pcanon,
        efficiencies.p2canon,
        efficiency.criteria,
@@ -62,7 +63,13 @@ export(as.numfac,
        tukey.1df,
        yates.effects)
 exportClasses(projector)
-importFrom(methods, setMethod)
+importFrom("graphics", "abline", "identify", "lines", "mtext", "par",
+             "plot", "polygon", "text")
+importFrom("methods", "as", "new", "setMethod", "validObject")
+importFrom("stats", "aov", "as.formula", "coef", "fitted", "formula",
+             "lm", "model.frame", "model.matrix", "na.omit", "optimize",
+             "pf", "ppoints", "proj", "qf", "qnorm", "qqplot",
+             "residuals", "rnorm", "runif", "var")
 import(ggplot2)
 S3method(print, projector)
 S3method(print, summary.p2canon)

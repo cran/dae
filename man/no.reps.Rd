@@ -6,7 +6,7 @@
 \usage{
 no.reps(multiple=1., df.num=1.,
         df.denom=expression((df.num + 1.) * (r - 1.)), delta=1.,
-        sigma=1., alpha=0.05, power=0.8, tol=0.025, print=FALSE)
+        sigma=1., alpha=0.05, power=0.8, tol=0.1, print=FALSE)
 }
 \arguments{
  \item{multiple}{The multiplier, m, which when multiplied by the number of
@@ -30,14 +30,14 @@ no.reps(multiple=1., df.num=1.,
  \item{print}{\code{TRUE} or \code{FALSE} to have or not have a table of power 
               calculation details printed out.}
 }
-\value{A single \code{numeric} value containing the computed number of pure replicates.}
+\value{A list containing \code{nreps}, a single \code{numeric} value containing the computed number of pure replicates, and \code{power}, a single \code{numeric} value containing the power for the computed number of pure replicates.}
 \author{Chris Brien}
-\seealso{\code{\link{power.exp}} in package \pkg{dae}.}
+\seealso{\code{\link{power.exp}}, \code{\link{detect.diff}} in package \pkg{dae}.}
 \examples{
 ## Compute the number of replicates (blocks) required for a randomized 
 ## complete block design with four treatments. 
 no.reps(multiple = 1, df.num = 3,
-         df.denom = expression(df.num * (r - 1)), delta = 5,
-	       sigma = sqrt(20), print = TRUE)
+        df.denom = expression(df.num * (r - 1)), delta = 5,
+	      sigma = sqrt(20), print = TRUE)
 }
 \keyword{design}

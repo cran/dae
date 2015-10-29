@@ -6,19 +6,21 @@
              canonical efficiency factors for the joint decomposition of two or 
              more sets of projectors (Brien and Bailey, 2009) obtained using 
              \code{\link{projs.canon}}.}
-\usage{\method{summary}{pcanon}(object, which.criteria = c("aefficiency", "eefficiency"), ...)}
+\usage{\method{summary}{pcanon}(object, which.criteria = c("aefficiency", "eefficiency", "order"), ...)}
 \arguments{
  \item{object}{A \code{list} of class \code{pcanon} produced by \code{projs.canon}.}
- \item{which.criteria}{A character \code{vector} nominating the efficiency criteria to be 
-                       included in the summary. It can be \code{none}, \code{all} or some 
-                       combination of \code{aefficiency}, \code{mefficiency}, 
-                       \code{eefficiency}, \code{sefficiency} and \code{order}.}
+ \item{which.criteria}{A character \code{vector} nominating the efficiency 
+                       criteria to be included in the summary. It can be 
+                       \code{none}, \code{all} or some combination of 
+                       \code{aefficiency}, \code{mefficiency}, 
+                       \code{eefficiency}, \code{sefficiency}, \code{order}
+                       and \code{dforthog}.}
  \item{...}{further arguments affecting the summary produced.}
 }
-\value{An object of classes \code{summary.pcanon} and \code{data.frame}, whose rows correspond 
-       to subspaces in the decomposition; it is of the nature of a skeleton analysis of variance 
-       table. It has an \code{attribute} named \code{ntiers} that is equal to the 
-       number of tiers.}
+\value{An object of classes \code{summary.pcanon} and \code{data.frame}, whose 
+       rows correspond to subspaces in the decomposition; it is of the nature of 
+       a skeleton analysis of variance table. It has an \code{attribute} named 
+       \code{ntiers} that is equal to the number of tiers.}
 \references{Brien, C. J. and R. A. Bailey (2009). Decomposition tables for 
             multitiered experiments. I. A chain of randomizations.  
             \emph{The Annals of Statistics}, \bold{36}, 4184 - 4213.}

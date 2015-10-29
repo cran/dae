@@ -1,6 +1,7 @@
 "interaction.ABC.plot" <- function(response, x.factor, groups.factor, trace.factor, data, 
                                    fun="mean", title="A:B:C Interaction Plot", 
-                                   xlab, ylab, key.title, lwd=4, columns=2, ...)
+                                   xlab, ylab, key.title, lwd=4, columns=2, 
+                                   ggplotFuncs = NULL, ...)
 {
   # form data.frame containing the means of the response variable for the three factors
   name.r <- deparse(substitute(response))
@@ -38,8 +39,11 @@
     return(value)}
   int.plot <- ggplot(data=data.means, 
                      aes_string(x = name.x, y = name.r, linetype=name.g, colour=name.g, group=name.g), ...) +
-    geom_line() + geom_point() + 
-  labs(xlab = xlab, ylab = ylab, title = title, group=key.title) +
-    facet_grid(formula(paste("~ ", name.t, sep="")),, labeller = lbl.fn)
+                     geom_line() + geom_point() + 
+                     labs(xlab = xlab, ylab = ylab, title = title, group=key.title) +
+                     facet_grid(formula(paste("~ ", name.t, sep="")),, labeller = lbl.fn)
+  if (!is.null(ggplotFuncs))
+    for (f in ggplotFuncs)
+      int.plot <- int.plot + f
   print(int.plot)
 }

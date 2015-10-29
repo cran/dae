@@ -1,10 +1,11 @@
 Package: dae
-Version: 2.7-2
-Date: 2015-06-24
+Version: 2.7-5
+Date: 2015-10-29
 Title: Functions Useful in the Design and ANOVA of Experiments
 Author: Chris Brien <Chris.Brien@unisa.edu.au>.
 Maintainer: Chris Brien <Chris.Brien@unisa.edu.au>
-Depends: R (>= 2.10.0), ggplot2, methods
+Depends: R (>= 2.10.0), ggplot2
+Imports: graphics, methods, stats
 Description: The content falls into the following groupings: (i) Data, (ii) Factor manipulation 
     functions, (iii) Design functions, (iv) ANOVA functions, (v) Matrix functions, 
     (vi) Projector and canonical efficiency functions, and (vii) Miscellaneous functions. 
@@ -15,6 +16,6 @@ Description: The content falls into the following groupings: (i) Data, (ii) Fact
 License: GPL (>= 2)
 URL: http://chris.brien.name
 NeedsCompilation: no
-Packaged: 2015-06-24 01:10:45 UTC; briencj
+Packaged: 2015-10-29 11:14:28 UTC; briencj
 Repository: CRAN
-Date/Publication: 2015-06-24 11:15:26
+Date/Publication: 2015-10-29 14:13:53

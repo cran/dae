@@ -6,19 +6,30 @@
        projectors (Brien and Bailey, 2009), orthogonalizing projectors in a set 
        to those earlier in the set of projectors with 
        which they are partially aliased.}
-\usage{projs.canon(formulae, orthogonalize = "differencingfirst", 
-                   omit.projectors = c("p2canon", "combined"), data = NULL, ...)}
+\usage{
+projs.canon(formulae, orthogonalize = "differencing", 
+            which.criteria = c("aefficiency","eefficiency","order"), 
+            omit.projectors = c("p2canon", "combined"), data = NULL, ...)}
 \arguments{
  \item{formulae}{An object of class \code{list} whose compoents are of class \code{formula}.}
  \item{orthogonalize}{A string indicating the method for orthogonalizing a 
                       projector to those for terms that occurred previously 
                       in the formula. Two options are available:  
-                      \code{differencingfirst}; \code{eigenmethods}.}
- \item{omit.projectors}{A \code{character vector} of the types of  projectors to omit 
-                      from the returned \code{pcanon} object. If \code{p2canon} is 
-                      included in the vector then the projectors in these objects 
-                      will be replaced with a \code{numeric} containing their 
-                      degrees of freedom. If \code{combined} is included in the vector 
+                      \code{differencing}; \code{eigenmethods}.}
+ \item{which.criteria}{A character \code{vector} nominating the efficiency 
+                       criteria to be included in the summary of aliasing 
+                       between terms within a structure. It can be 
+                       \code{none}, \code{all} or some combination of 
+                       \code{aefficiency}, \code{mefficiency}, 
+                       \code{eefficiency}, \code{sefficiency}, \code{order}
+                       and \code{dforthog}. If \code{none}, no summary is 
+                       printed.}
+ \item{omit.projectors}{A \code{character vector} of the types of  projectors to 
+                      omit from the returned \code{pcanon} object. If 
+                      \code{pcanon} is included in the vector then the 
+                      projectors in these objects will be replaced with a 
+                      \code{numeric} containing their degrees of freedom. 
+                      If \code{combined} is included in the vector 
                       then the projectors for the combined decomposition will be 
                       replaced with a \code{numeric} containing their degrees of 
                       freedom. If \code{none} is included in the vector then no 

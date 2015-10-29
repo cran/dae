@@ -11,7 +11,7 @@
        \code{trace.factor}.}
 \usage{interaction.ABC.plot(response, x.factor, groups.factor, 
        trace.factor,data, fun="mean", title="A:B:C Interaction Plot", 
-       xlab, ylab, key.title, lwd=4, columns=2, ...)}
+       xlab, ylab, key.title, lwd=4, columns=2, ggplotFuncs = NULL, ...)}
 \arguments{
  \item{response}{A numeric \code{vector} containing the response variable from 
                  which a function (the mean by
@@ -35,6 +35,10 @@
  \item{lwd}{The width of the \code{lines}. By default it is 4.}
  \item{columns}{The number of columns for arranging the several plots for the
                  levels of the \code{groups.factor}. By default it is 2.}
+ \item{ggplotFuncs}{A \code{\link{list}}, each element of which contains the 
+                results of evaluating a \code{\link{ggplot}} function. 
+                It is created by calling the \code{\link{list}} function with 
+                a \code{\link{ggplot}} function call for each element.}
  \item{\dots}{Other arguments that are passed down to \code{\link{ggplot}} methods.}
 }
 \value{An object of class "\code{ggplot}", which can be plotted using \code{print}.}
@@ -42,11 +46,6 @@
 \seealso{\code{\link{fac.combine}} in package \pkg{dae}, \code{\link{interaction.plot}}.}
 \examples{
 \dontrun{
-## plot for generated data
-## use ?ABC.Interact.dat for data set details
-data(ABC.Interact.dat)
-interaction.ABC.plot(MOE, A, B, C, data=ABC.Interact.dat)
-
 ## plot for Example 14.1 from Mead, R. (1990). The Design of Experiments: 
 ## Statistical Principles for Practical Application. Cambridge, 
 ## Cambridge University Press.  
@@ -56,6 +55,18 @@ interaction.ABC.plot(Main.Grass, x.factor=Period,
                      groups.factor=Spring, trace.factor=Summer,
                      data=SPLGrass.dat,
                      title="Effect of Period, Spring and Summer on Main Grass")
+
+## plot for generated data
+## use ?ABC.Interact.dat for data set details
+data(ABC.Interact.dat)
+## Add standard errors for plotting 
+## - here data contains a single value for each combintion of A, B and C
+## - need to supply name for data twice 
+ABC.Interact.dat$se <- rep(c(0.5,1), each=4)
+interaction.ABC.plot(MOE, A, B, C, data=ABC.Interact.dat,
+                     ggplotFunc=list(geom_errorbar(data=ABC.Interact.dat, 
+                                                   aes(ymax=MOE+se, ymin=MOE-se), 
+                                                   width=0.2)))
 }}
 \keyword{aplot}
 \keyword{hplot}

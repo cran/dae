@@ -6,21 +6,25 @@
              canonical efficiency factors for the joint decomposition of two 
              sets of projectors (Brien and Bailey, 2009) obtained using 
              \code{\link{projs.2canon}}.}
-\usage{\method{summary}{p2canon}(object, which.criteria = c("aefficiency", "eefficiency"), ...)}
+\usage{
+\method{summary}{p2canon}(object, which.criteria = c("aefficiency", "eefficiency", "order"), ...)}
 \arguments{
- \item{object}{A \code{list} of class \code{p2canon} produced by \code{projs.2canon}.}
- \item{which.criteria}{A character \code{vector} nominating the efficiency criteria to be 
-                       included in the summary. It can be \code{none}, \code{all} or some 
-                       combination of \code{aefficiency}, \code{mefficiency}, 
-                       \code{eefficiency}, \code{sefficiency} and \code{order}.}
+ \item{object}{A \code{list} of class \code{p2canon} produced by 
+               \code{projs.2canon}.}
+ \item{which.criteria}{A character \code{vector} nominating the efficiency 
+                       criteria to be included in the summary. It can be 
+                       \code{none}, \code{all} or some combination of 
+                       \code{aefficiency}, \code{mefficiency}, 
+                       \code{eefficiency}, \code{sefficiency}, \code{order} 
+                       and \code{dforthog}.}
  \item{...}{further arguments affecting the summary produced.}
 }
-\value{An object of classes \code{summary.p2canon} and \code{data.frame}, whose rows correspond 
-       to the pairs of projectors, one from the 
+\value{An object of classes \code{summary.p2canon} and \code{data.frame}, whose 
+       rows correspond to the pairs of projectors, one from the 
        \code{Q1} argument and the other from the \code{Q2} argument from 
-       \code{\link{projs.2canon}}; only pairs with non-zero efficiency factors  are 
-       included. In addition, a line is included for each nonzero Residual \code{Q1} 
-       projector.}
+       \code{\link{projs.2canon}}; only pairs with non-zero efficiency factors  
+       are included. In addition, a line is included for each nonzero Residual 
+       \code{Q1} projector.}
 \references{Brien, C. J. and R. A. Bailey (2009). Decomposition tables for 
             multitiered experiments. I. A chain of randomizations.  
             \emph{The Annals of Statistics}, \bold{36}, 4184 - 4213.}
