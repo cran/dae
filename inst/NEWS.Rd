@@ -1,5 +1,11 @@
 \name{news}
 \title{News for Package dae}
+\section{Changes in dae version 2.7-6 (2015-11-02)}{
+  \itemize{
+    \item Allow a single formula to be specified in formula of projs.canon.
+    \item Improved proj2.combine to equate Qconf to Q1 when all of Q1 is confounded by Q2. 
+  }
+}
 \section{Changes in dae version 2.7-5 (2015-10-29)}{
   \itemize{
     \item Fix bug in mat.banded in which the elements were being placed starting with the first subdiagonal instead of the diagonal. 

@@ -290,6 +290,10 @@ print.summary.p2canon <- function(x, ...)
             results[[i]][[j]][["pairwise"]][["efficiencies"]] <- Q1Q2.eff
             results[[i]][[j]][["pairwise"]][criteria] <- efficiency.criteria(Q1Q2.eff)
             
+            if (degfree(adj.Q1Q2$Qres) == 0)
+            { adj.Q1Q2$Qres <- matrix(0, nrow=nrow(adj.Q1Q2$Qres), ncol=ncol(adj.Q1Q2$Qres))
+              adj.Q1Q2$Qres <- projector(adj.Q1Q2$Qres)
+            }
             results[[i]][["Q1res"]] <- adj.Q1Q2$Qres
           
             #store adjusted efficiencies

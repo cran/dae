@@ -139,6 +139,7 @@ proj2.ops <- function(...)
   invisible()
 }
 
+
 "proj2.combine" <- function(Q1, Q2)
 { #A procedure to compute the Residual operator for P remove Q when P and Q are nonorthogonal.
   #  Corresponding projection operator for Q in P is also obtained.
@@ -146,35 +147,42 @@ proj2.ops <- function(...)
   if (n != nrow(Q2))
     stop("Matrices not conformable.")
   isproj <- is.projector(Q1) & is.projector(Q2)
-  #compute efficiencies
-  decomp <- proj2.eigen(Q1, Q2)
-  Eff.Q1.Q2 <- decomp$efficiencies 
-  if (length(Eff.Q1.Q2) == 1 & Eff.Q1.Q2[1]==0) #check matrices are orthogonal
-  { Qconf <- projector(matrix(0, nrow = n, ncol = n))
-    Qres <- Q1
-    Eff.Q1.Q2 <- 0
-    warning("Matrices are orthogonal.")
-  }
-  else
-  { daeTolerance <- get("daeTolerance", envir=daeEnv)
-    EffUnique.Q1.Q2 <- remove.repeats(Eff.Q1.Q2)
-    K <- length(EffUnique.Q1.Q2)
-    #check for all confounded (i.e. eff = 1)
-    if (K == 1 & EffUnique.Q1.Q2[1] == 1 & length(Eff.Q1.Q2) == degfree(Q2))
-    { Qconf <- projector(Q2)
-      Qres <- projector(Q1 - Q2)
+  Qconf <- projector(matrix(0, nrow = n, ncol = n))
+  Qres <- Q1
+  Eff.Q1.Q2 <- 0
+  eigenvec <- NULL
+  if (degfree(Q1) > 0)
+  { #compute efficiencies
+    decomp <- proj2.eigen(Q1, Q2)
+    Eff.Q1.Q2 <- decomp$efficiencies 
+    if (length(Eff.Q1.Q2) == 1 & Eff.Q1.Q2[1]==0) #check matrices are orthogonal
+    { warning("Matrices are orthogonal.")
     }
-    else      #compute projection operators for partially confounded case
-    { Qres <- Q1
-      Q121 <- Q1 %*% Q2 %*% Q1
-      for(eff in EffUnique.Q1.Q2[1:K])
-      { Qres <- Qres %*% (Q1 - (Q121/eff))
-        Qres <- (Qres + t(Qres))/2  #force symmetry because know that it must be
-      }  
-      Qres <- projector(Qres)
-      Qconf <- projector(Q1 - Qres)
+    else
+    { daeTolerance <- get("daeTolerance", envir=daeEnv)
+      EffUnique.Q1.Q2 <- remove.repeats(Eff.Q1.Q2)
+      K <- length(EffUnique.Q1.Q2)
+      #check for all confounded (i.e. eff = 1)
+      if (K == 1 & EffUnique.Q1.Q2[1] == 1 & length(Eff.Q1.Q2) == degfree(Q2))
+      { Qconf <- projector(Q2)
+        Qres <- projector(Q1 - Q2)
+      } else if(length(Eff.Q1.Q2) == degfree(Q1)) # all of Q1 is confounded by Q2
+      { Qconf <- projector(Q1)
+        Qres <- projector(matrix(0, nrow = nrow(Q1), ncol = ncol(Q1)))
+      } else      #compute projection operators for partially confounded case
+      { Qres <- Q1
+        Q121 <- Q1 %*% Q2 %*% Q1
+        for(eff in EffUnique.Q1.Q2[1:K])
+        { Qres <- Qres %*% (Q1 - (Q121/eff))
+          Qres <- (Qres + t(Qres))/2  #force symmetry because know that it must be
+        }  
+        eff <- eigen(Qres, symmetric=T)
+        eff <- eff$values[eff$values > daeTolerance[["eigen.tol"]]]
+        Qres <- projector(Qres)
+        Qconf <- projector(Q1 - Qres)
+      }
     }
+    eigenvec <- decomp$eigenvectors
   }
-  list(efficiencies = Eff.Q1.Q2, eigenvectors=decomp$eigenvectors, Qconf = Qconf, Qres = Qres)
+  list(efficiencies = Eff.Q1.Q2, eigenvectors=eigenvec, Qconf = Qconf, Qres = Qres)
 }
-

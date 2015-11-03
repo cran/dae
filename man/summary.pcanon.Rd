@@ -14,7 +14,8 @@
                        \code{none}, \code{all} or some combination of 
                        \code{aefficiency}, \code{mefficiency}, 
                        \code{eefficiency}, \code{sefficiency}, \code{order}
-                       and \code{dforthog}.}
+                       and \code{dforthog}. If there is only one formula, this 
+                       argument is ignored.}
  \item{...}{further arguments affecting the summary produced.}
 }
 \value{An object of classes \code{summary.pcanon} and \code{data.frame}, whose 
