@@ -31,9 +31,10 @@ projs.structure(formula, orthogonalize = "differencing",
                        between terms. It can be 
                        \code{none}, \code{all} or some combination of 
                        \code{aefficiency}, \code{mefficiency}, 
-                       \code{eefficiency}, \code{sefficiency}, \code{order}
-                       and \code{dforthog}. If \code{none}, no summary is 
-                       printed.}
+                       \code{sefficiency}, \code{eefficiency}, \code{xefficiency}, 
+                       \code{order} and \code{dforthog} -- for details see
+                       \code{\link{efficiency.criteria}}. 
+                       If \code{none}, no summary is printed.}
  \item{data}{A data frame contains the values of the factors and variables 
              that occur in \code{formula}.}
  \item{...}{further arguments passed to \code{terms}.}

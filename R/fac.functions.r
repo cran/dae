@@ -15,15 +15,11 @@
 
 "fac.recode" <- function(factor, newlevels, ...)
 #function to form a new factor by changing the levels of factor
-{ lev.fac <- levels(factor)
-  nlev <- length(lev.fac)
+{ 
+  nlev <- length(levels(factor))
   if (nlev != length(newlevels))
   { stop("Must supply a new level for every level in the supplied factor")}
-  new.fac <- as.character(factor)
-  old.fac <- new.fac
-  for (i in 1:nlev)
-  { new.fac[old.fac == lev.fac[i]] <- newlevels[i]}
-  new.fac <- factor(new.fac, ...)
+  new.fac <- factor(newlevels[factor], ...)
   return(new.fac)
 }
 
@@ -91,9 +87,13 @@
 # Yates order
 	else if (which.ord== "2") counter <- 1:nfac
 #
-# compute new factor
+# convert factor or numeric to numeric with values 1:nlev and compute new factors
 #		
-	kombined.factor <- as.numeric(combined.factor)
+	if (is.factor(combined.factor))
+	  nlev <- length(levels(combined.factor))
+	else
+	  nlev <- length(unique(combined.factor))
+	kombined.factor <- c(1:nlev)[combined.factor]
 	for (i in counter)
 	{ klev <- length(factor.names[[i]])
     if (is.numeric(factor.names[[i]]))

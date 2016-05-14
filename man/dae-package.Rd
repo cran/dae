@@ -1,166 +1,232 @@
+\newcommand{\packageVer}{\Sexpr[results=rd,stage=build]{utils::packageDescription("#1", fields="Version")}}
+\newcommand{\packageDate}{\Sexpr[results=rd,stage=build]{utils::packageDescription("#1", fields="Date")}}
 \name{dae-package}
 \alias{dae-package}
 \alias{dae}
 \docType{package}
 \title{
-Functions Useful in the Design and ANOVA of Experiments
+\packageTitle{dae}
 }
-\description{
-The content falls into the following groupings: (i) Data, (ii) Factor manipulation 
-    functions, (iii) Design functions, (iv) ANOVA functions, (v) Matrix functions, 
-    (vi) Projector and canonical efficiency functions, and (vii) Miscellaneous functions. 
-    A document 'daeDesignRandomization.pdf', available in the doc subdirectory of the
-    installation directory for 'dae', describes the use of the package for generating randomized 
-    layouts for experiments. The ANOVA functions facilitate the extraction of information when 
-    the 'Error' function has been used in the call to 'aov'.
+\description{\packageDescription{dae}
+
+\bold{Version:} {\packageVer{dae}}
+
+\bold{Date:} \packageDate{dae}
 }
-\details{
+\section{Index}{
+\tabular{ll}{
+(i) Data\cr\cr
 
-The DESCRIPTION file:
+\code{\link{ABC.Interact.dat}} 
+  \tab Randomly generated set of values indexed by \cr
+  \tab three factors \cr
+\code{\link{Fac4Proc.dat}}
+  \tab Data for a 2^4 factorial experiment\cr
+\code{\link{Sensory3Phase.dat}}
+ \tab Data for the three-pahse sensory evaluation \cr
+ \tab experiment in Brien, C.J. and Payne, R.W. (1999)\cr
+\code{\link{SPLGrass.dat}}
+  \tab Data for an experiment to investigate the \cr
+  \tab effects of grazing patterns on pasture \cr
+  \tab composition \cr
+\cr
+(ii) Factor manipulation functions \cr\cr
 
-\packageDESCRIPTION{dae}
+\code{\link{as.numfac}}             
+ \tab Convert a factor to a numeric vector \cr
+\code{\link{fac.combine}}
+  \tab Combines several factors into one \cr
+\code{\link{fac.divide}}
+  \tab Divides a factor into several individual factors\cr
+\code{\link{fac.gen}}
+  \tab Generate all combinations of several factors\cr
+\code{\link{fac.match}}
+  \tab Match, for each combination of a set of columns \cr
+  \tab in 'x', the row that has the same combination\cr
+  \tab in 'table'\cr
+\code{\link{fac.nested}}
+  \tab Creates a factor whose values are generated \cr
+  \tab within those of the factor nesting.fac\cr
+\code{\link{fac.recode}}
+  \tab Recodes factor 'levels' using possibly nonunique \cr
+  \tab values in a vector. \cr
+\code{\link{mpone}}
+  \tab Converts the first two levels of a factor into\cr
+  \tab the numeric values -1 and +1\cr
+\cr
+(iii) Design functions\cr\cr
 
+\code{\link{blockboundaryPlot}}
+  \tab This function plots a block boundary on a plot \cr
+  \tab produced by 'designPlot'. It supersedes  \cr
+  \tab blockboundary.plot. \cr
+\code{\link{designLatinSqrSys}}
+  \tab Generate a systematic plan for a Latin Square design.\cr
+\code{\link{designPlot}}
+  \tab This function plots treatments within a matrix. \cr
+  \tab It superseded design.plot.\cr
+\code{\link{fac.layout}}
+  \tab Generate a randomized layout for an experiment\cr
+\code{\link{no.reps}}
+  \tab Computes the number of replicates for an experiment\cr
+\code{\link{detect.diff}}
+  \tab Computes the detectable difference for an experiment\cr
+\code{\link{power.exp}}
+  \tab Computes the power for an experiment\cr
+\cr
+(iv) ANOVA functions \cr\cr
 
-Index:
-\preformatted{
-(i) Data
+\code{\link{fitted.aovlist}}
+  \tab Extract the fitted values for a fitted model\cr
+  \tab from an aovlist object\cr
+\code{\link{fitted.errors}}
+  \tab Extract the fitted values for a fitted model\cr
+\code{\link{interaction.ABC.plot}}
+  \tab Plots an interaction plot for three factors\cr
+\code{\link{qqyeffects}}
+  \tab Half or full normal plot of Yates effects\cr
+\code{\link{resid.errors}}
+  \tab Extract the residuals for a fitted model\cr
+\code{\link{residuals.aovlist}}
+  \tab Extract the residuals from an aovlist object\cr
+\code{\link{strength}}
+  \tab Generate paper strength values\cr
+\code{\link{tukey.1df}}
+  \tab Performs Tukey's\cr
+  \tab one-degree-of-freedom-test-for-nonadditivity\cr
+\code{\link{yates.effects}}
+  \tab Extract Yates effects\cr
+\cr
+(v) Matrix functions\cr\cr
 
-ABC.Interact.dat        Randomly generated set of values indexed by
-                        three factors
-Fac4Proc.dat            Data for a 2^4 factorial experiment
-Sensory3Phase.dat       Data for the three-pahse sensory evaluation 
-                        experiment in Brien, C.J. and Payne, R.W. (1999)
-SPLGrass.dat            Data for an experiment to investigate the
-                        effects of grazing patterns on pasture
-                        composition
+\code{\link{elements}}
+  \tab Extract the elements of an array specified by\cr
+  \tab the subscripts\cr
+\code{\link{fac.ar1mat}}
+  \tab Forms the ar1 correlation matrix for a\cr
+  \tab (generalized) factor\cr
+\code{\link{fac.sumop}}
+  \tab Computes the summation matrix that produces\cr
+  \tab sums corresponding to a (generalized) factor\cr
+\code{\link{fac.vcmat}}
+  \tab Forms the variance matrix for the variance\cr
+  \tab component of a (generalized) factor\cr
+\code{\link{mat.I}}
+  \tab Forms a unit matrix\cr
+\code{\link{mat.J}}
+  \tab Forms a square matrix of ones\cr
+\code{\link{mat.ar1}}
+  \tab Forms an ar1 correlation matrix\cr
+\code{\link{mat.ar2}}
+  \tab Forms an ar2 correlation matrix\cr
+\code{\link{mat.ar3}}
+  \tab Forms an ar3 correlation matrix\cr
+\code{\link{mat.sar2}}
+  \tab Forms an sar2 correlation matrix\cr
+\code{\link{mat.exp}}
+  \tab Forms an exponential correlation matrix \cr
+\code{\link{mat.banded}}
+  \tab Forms a banded matrix\cr
+\code{\link{mat.dirprod}}
+  \tab Forms the direct product of two matrices\cr
+\code{\link{mat.dirsum}}
+  \tab Forms the direct sum of a list of matrices\cr
+\code{\link{mat.Vpred}}
+  \tab Forms the variance matrix of predictions\cr
+\cr
+(vi) Projector and canonical efficiency functions\cr\cr
+\cr
+Projector class:\cr\cr
 
-(ii) Factor manipulation functions
+\code{\link{projector}}
+  \tab Create projectors\cr
+\code{\link{projector-class}}
+  \tab Class projector\cr
+\code{\link{is.projector}}
+  \tab Tests whether an object is a valid object of\cr
+  \tab class projector\cr
+\code{\link{print.projector}}
+  \tab Print projectors\cr
+\code{\link{correct.degfree}}
+  \tab Check the degrees of freedom in an object of\cr
+  \tab class projector\cr
+\code{\link{degfree}}
+  \tab Degrees of freedom extraction and replacement\cr
+\cr
+Accepts two or more formulae:\cr\cr
 
-as.numfac               Convert a factor to a numeric vector
-fac.combine             Combines several factors into one
-fac.divide              Divides a factor into several individual
-                        factors
-fac.gen                 Generate all combinations of several factors
-fac.match               Match, for each combination of a set of columns
-                        in 'x', the row that has the same combination
-                        in 'table'
-fac.nested              creates a factor whose values are generated
-                        within those of the factor nesting.fac
-fac.recode              Recodes the 'levels' and values of a factor
-                        using the value in position i of the
-                        'newlevels' vector to replace the ith 'level'
-                        of the 'factor'.
-mpone                   Converts the first two levels of a factor into
-                        the numeric values -1 and +1
+\code{\link{projs.canon}}
+  \tab A canonical analysis of the relationships between\cr
+  \tab two or more sets of projectors\cr
+\code{\link{summary.pcanon}}
+  \tab A summary of the results of an analysis of\cr
+  \tab the relationships between two or more sets of\cr 
+  \tab projectors\cr
+\code{\link{print.summary.pcanon}}
+  \tab Prints the values in an 'summary.pcanon' object\cr
+\code{\link{efficiencies.pcanon}}
+  \tab Extracts the canonical efficiency factors from a \cr
+  \tab list of class 'pcanon'\cr
+\cr
+Accepts exactly two formulae:\cr\cr
 
-(iii) Design functions
+\code{\link{projs.2canon}}
+  \tab A canonical analysis of the relationships between\cr
+  \tab two sets of projectors\cr
+\code{\link{projs.combine.p2canon}}
+  \tab Extract, from a p2canon object, the projectors\cr
+\code{\link{summary.p2canon}}
+  \tab A summary of the results of an analysis of\cr
+  \tab the relationships between two sets of projectors\cr
+\code{\link{print.summary.p2canon}}
+  \tab Prints the values in an 'summary.p2canon' object\cr
+  \tab that give the combined decomposition\cr
+\code{\link{efficiencies.p2canon}}
+  \tab Extracts the canonical efficiency factors from\cr
+  \tab a list of class 'p2canon'\cr
+\cr
+Others:\cr\cr
 
-blockboundary.plot      This function plots a block boundary on a plot
-                        produced by 'design.plot'.
-design.plot             This function plots treatments within a matrix.
-fac.layout              Generate a randomized layout for an experiment
-no.reps                 Computes the number of replicates for an
-                        experiment
-detect.diff             Computes the detectable difference for an
-                        experiment
-power.exp               Computes the power for an experiment
+\code{\link{Ameasures}}
+  \tab Calculates the A-optimality measures from the \cr
+  \tab variance matrix for predictions\cr
+\code{\link{decomp.relate}}
+  \tab Examines the relationship between the\cr
+  \tab eigenvectors for two decompositions\cr
+\code{\link{efficiency.criteria}}
+  \tab Computes efficiency criteria from a set of\cr
+  \tab efficiency factors\cr
+\code{\link{fac.meanop}}
+  \tab Computes the projection matrix that produces means\cr
+\code{\link{proj2.eigen}}
+  \tab Canonical efficiency factors and eigenvectors\cr
+  \tab in joint decomposition of two projectors\cr
+\code{\link{proj2.efficiency}}
+  \tab Computes the canonical efficiency factors for\cr
+  \tab the joint decomposition of two projectors\cr
+\code{\link{proj2.combine}}
+  \tab Compute the projection and Residual operators\cr
+  \tab for two, possibly nonorthogonal, projectors\cr
+\code{\link{projs.structure}}
+  \tab Orthogonalised projectors for the terms in a formula\cr
+\code{\link{show-methods}}
+  \tab Methods for Function 'show' in Package dae\cr
+\cr
+(vii) Miscellaneous functions\cr\cr
 
-(iv) ANOVA functions 
-
-fitted.aovlist          Extract the fitted values for a fitted model
-                        from an aovlist object
-fitted.errors           Extract the fitted values for a fitted model
-interaction.ABC.plot    Plots an interaction plot for three factors
-qqyeffects              Half or full normal plot of Yates effects
-resid.errors            Extract the residuals for a fitted model
-residuals.aovlist       Extract the residuals from an aovlist object
-strength                Generate paper strength values
-tukey.1df               Performs Tukey's
-                        one-degree-of-freedom-test-for-nonadditivity
-yates.effects           Extract Yates effects
-
-(v) Matrix functions
-
-elements                Extract the elements of an array specified by
-                        the subscripts
-fac.ar1mat              forms the ar1 correlation matrix for a
-                        (generalized) factor
-fac.sumop               computes the summation matrix that produces
-                        sums corresponding to a factor
-fac.vcmat               forms the variance matrix for the variance
-                        component of a (generalized) factor
-mat.I                   Forms a unit matrix
-mat.J                   Forms a square matrix of ones
-mat.ar1                 Forms an ar1 correlation matrix
-mat.dirprod             Forms the direct product of two matrices
-mat.dirsum              Forms the direct sum of a list of matrices
-
-
-(vi) Projector and canonical efficiency functions
-
-Projector class:
-
-projector               Create projectors
-projector-class         Class projector
-is.projector            Tests whether an object is a valid object of
-                        class projector
-print.projector         Print projectors
-correct.degfree         Check the degrees of freedom in an object of
-                        class projector
-degfree                 Degrees of freedom extraction and replacement
-
-Accepts two or more formulae:
-
-projs.canon             A canonical analysis of the relationships between
-                        two or more sets of projectors
-summary.pcanon          A summary of the results of an analysis of
-                        the relationships between two or more sets of 
-                        projectors
-print.summary.pcanon    Prints the values in an 'summary.pcanon' object
-efficiencies.pcanon     Extracts the canonical efficiency factors from a 
-                        list of class 'pcanon'
-
-Accepts exactly two formulae:
-
-projs.2canon            A canonical analysis of the relationships between
-                        two sets of projectors
-projs.combine.p2canon   Extract, from a p2canon object, the projectors
-summary.p2canon         A summary of the results of an analysis of
-                        the relationships between two sets of projectors
-print.summary.p2canon   Prints the values in an 'summary.p2canon' object
-                        that give the combined decomposition
-efficiencies.p2canon    Extracts the canonical efficiency factors from
-                        a list of class 'p2canon'.
-
-Others:
-
-decomp.relate           Examines the relationship between the
-                        eigenvectors for two decompositions
-efficiency.criteria     Computes efficiency criteria from a set of
-                        efficiency factors
-fac.meanop              computes the projection matrix that produces
-                        means
-proj2.eigen             Canonical efficiency factors and eigenvectors
-                        in joint decomposition of two projectors
-proj2.efficiency        Computes the canonical efficiency factors for
-                        the joint decomposition of two projectors
-proj2.combine           Compute the projection and Residual operators
-                        for two, possibly nonorthogonal, projectors
-projs.structure         Orthogonalised projectors for the terms in a formula
-show-methods            Methods for Function 'show' in Package dae
-
-(vii) Miscellaneous functions
-
-extab                   Expands the values in table to a vector
-get.daeTolerance        Gets the value of daeTolerance for the package
-                        dae
-harmonic.mean           Calcuates the harmonic mean.
-is.allzero              Tests whether all elements are approximately
-                        zero
-rmvnorm                 generates a vector of random values from a
-                        multivariate normal distribution
-set.daeTolerance        Sets the value of daeTolerance for the package
-                        dae
+\code{\link{extab}}
+  \tab Expands the values in table to a vector\cr
+\code{\link{get.daeTolerance}}
+  \tab Gets the value of daeTolerance for the package dae\cr
+\code{\link{harmonic.mean}}
+  \tab Calcuates the harmonic mean.\cr
+\code{\link{is.allzero}}
+  \tab Tests whether all elements are approximately zero\cr
+\code{\link{rmvnorm}}
+  \tab Generates a vector of random values from a\cr
+  \tab multivariate normal distribution\cr
+\code{\link{set.daeTolerance}}
+  \tab Sets the value of daeTolerance for the package dae\cr
 }
 }
 \author{

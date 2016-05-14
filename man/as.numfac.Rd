@@ -4,10 +4,10 @@
 \description{Converts a \code{\link{factor}} to a numeric \code{vector} with approximately the 
              numeric values of its \code{levels}. Hence, the \code{levels} of the 
              \code{\link{factor}} must be numeric values, stored as characters. It uses the method 
-             described in \code{\link{factor}}.  Use \code{\link{as.numeric}} to convert the 
+             described in \code{\link{factor}}.  Use \code{\link{as.numeric}} to convert a 
              \code{\link{factor}} to a numeric \code{vector} with integers 1, 2, ... corresponding 
              to the positions in the list of levels. You can also use \code{\link{fac.recode}} to 
-             recode the levels to numeric values. If the a \code{numeric} is supplied, it is 
+             recode the levels to numeric values. If a \code{numeric} is supplied, it is 
              left unchanged.}
 \usage{as.numfac(factor)}
 \arguments{

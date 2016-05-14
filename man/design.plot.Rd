@@ -1,15 +1,17 @@
 \name{design.plot}
 \alias{design.plot}
-\title{This function plots treatments within a matrix.}
+\title{This function plots treatments within a matrix. It is being superseded by \code{\link{design.plot}}.}
 \description{This function plots treatments within a matrix and may be used to 
              build a graphical representation of a matrix, highlighting the position 
              of certain treatments and the blocking factors used in the design. 
              It is a modified version of the function supplied with DiGGer. 
              It includes more control over the labelling of the rows and columns 
              of the design and allows for more flexible plotting of designs with 
-             unequal block size.}
+             unequal block size. However, it is being supersed by \code{\link{design.plot}},
+             which has more descriptive argument names.}
 \usage{design.plot(dsgn, trts = NULL, rprop = 1, cprop = 1, label = TRUE,
-                 plotchar = NULL, plotbndry = TRUE, chtdiv = 2, 
+                 plotchar = NULL, plotbndry = TRUE, 
+                 chtdiv = 2, rchtdiv = 1, cchtdiv = 1, 
                  bseq = FALSE, bdef = NULL, bcol = 1, bwd = 2, 
                  rotate = FALSE, new = TRUE, 
                  cstr = "Range",rstr = "Row", rlab = TRUE, clab = TRUE,  
@@ -32,7 +34,11 @@
  \item{plotbndry}{A \code{logical} indicting whether a boundary is to plotted 
               around a cell.}
  \item{chtdiv}{A \code{numeric} specifying the amount by which 
-              plotting text and symbols should be magnified/reduced relative to the default.}
+              plotting text and symbols in the cells should be magnified/reduced relative to the default.}
+ \item{rchtdiv}{A \code{numeric} specifying the amount by which the labels of the rows of the
+              design should be magnified/reduced relative to the default.}
+ \item{cchtdiv}{A \code{numeric} specifying the amount by which the labels of the columns of the
+              design should be magnified/reduced relative to the default.}
  \item{bseq}{A \code{logical} that determines whether block numbers are repetitions 
               or sequences of block numbers.}
  \item{bdef}{A \code{\link{matrix}} of block sizes:

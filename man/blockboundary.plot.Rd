@@ -1,10 +1,12 @@
 \name{blockboundary.plot}
 \alias{blockboundary.plot}
-\title{This function plots a block boundary on a plot produced by \code{\link{design.plot}}.}
+\title{This function plots a block boundary on a plot produced by \code{\link{design.plot}}. 
+       It is being superseded by \code{\link{blockboundaryPlot}}.}
 \description{This function plots a block boundary on a plot produced by \code{\link{design.plot}}.
              It allows control of the starting unit, through rstart and cstart, 
              and the number of rows (nr) and columns (nc) from the starting unit 
-             that the blocks to be plotted are to cover.}
+             that the blocks to be plotted are to cover. However, it is being supersed by 
+             \code{\link{blockboundaryPlot}}, which has more descriptive argument names.}
 \usage{blockboundary.plot(bdef = NULL, bseq = FALSE, rstart= 0, cstart = 0, 
                                 nr, nc, bcol = 1, bwd = 2)}
 \arguments{

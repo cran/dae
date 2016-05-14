@@ -5,7 +5,8 @@
        decomposition of two structures or sets of mutually orthogonally 
        projectors (Brien and Bailey, 2009), orthogonalizing projectors in the 
        Q2 \code{list} to those earlier in the \code{list} of projectors with 
-       which they are partially aliased.}
+       which they are partially aliased. The results can be summarized in the 
+       form of a skeleton ANOVA table.}
 \usage{projs.2canon(Q1, Q2)}
 \arguments{
  \item{Q1}{A \code{list} whose components are objects of class "\code{\link[=projector-class]{projector}}".}
@@ -28,13 +29,15 @@
        The \code{Qproj} component is the adjusted projector for the parent 
        \code{Q2} component. The \code{pairwise} and \code{adjusted} components 
        have the following components: \code{efficiencies}, \code{aefficiency}, 
-       \code{mefficiency}, \code{sefficiency}, \code{eefficiency}.}
+       \code{mefficiency}, \code{sefficiency}, \code{eefficiency}, 
+       \code{xefficiency}, \code{order} and \code{dforthog} 
+       -- for details see \code{\link{efficiency.criteria}}.}
 \details{Two loops, one nested within the other. are performed. The first cycles 
          over the components of \code{Q1} and the nested loop cycles over the 
          components of \code{Q2}. The joint decomposition of the two projectors 
          in each cycle, one from \code{Q1} (say \code{Q1[[i]]}) and the other 
          from \code{Q2} (say \code{Q2[[j]]}) is obtained using 
-         \code{\link{proj2.eigen}}. 
+         \code{\link{proj2.combine}}. 
          In particular, the nonzero canonical efficiency factors for the joint 
          decomposition of the two projectors is obtained. The nonzero canonical 
          efficiency factors are the nonzero eigenvalues of 
@@ -64,7 +67,8 @@
 \seealso{\code{\link{summary.p2canon}}, \code{\link{efficiencies.p2canon}}, 
          \code{\link{projs.combine.p2canon}}, \code{\link{projs.structure}} , \cr
          \code{\link{proj2.efficiency}}, \code{\link{proj2.combine}}, 
-         \code{\link{proj2.eigen}},  in package \pkg{dae}, \code{\link{eigen}}.
+         \code{\link{proj2.eigen}}, \code{\link{efficiency.criteria}} 
+         in package \pkg{dae}, \code{\link{eigen}}.
 
          \code{\link[=projector-class]{projector}} for further information about this class.}
 \examples{

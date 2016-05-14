@@ -1,5 +1,54 @@
 \name{news}
 \title{News for Package dae}
+\section{Changes in dae version 2.7-15 (2016-05-14)}{
+  \itemize{
+    \item Revised fac.recode and fac.divide to deal with factors with both numeric and character levels and to improve efficiency.
+  }
+}
+\section{Changes in dae version 2.7-14 (2016-05-10)}{
+  \itemize{
+    \item Added designLatinSqrSys. 
+    \item Revised some documentation.
+  }
+}
+\section{Changes in dae version 2.7-13 (2016-04-25)}{
+  \itemize{
+    \item Added functions mat.Vpred and Ameasures. 
+    \item Fixed bugs in fac.vcmat. 
+  }
+}
+\section{Changes in dae version 2.7-12 (2016-03-10)}{
+  \itemize{
+    \item Reversed order of parameters in mat.ar1 and mat.exp. 
+    \item Added functions mat.ar2, mat.ar3, mat.ma1, mat.ma2, mat.arma and mat.sar2. 
+  }
+}
+\section{Changes in dae version 2.7-11 (2016-02-11)}{
+  \itemize{
+    \item Added \code{xefficiency}, the maximum efficiency factor projector-based functions. 
+  }
+}
+\section{Changes in dae version 2.7-10 (2016-01-19)}{
+  \itemize{
+    \item Improved the code for analyzing the relationships between pairs of projectors. 
+  }
+}
+\section{Changes in dae version 2.7-9 (2015-01-03)}{
+  \itemize{
+    \item Include new functions designPlot and blockboundaryPlot, that are the same as design.plot and blockboundary.plot, except that they have less cryptic argument names and some arguments have been modified. It is envisaged that the new functions will supersede the old functions with the old functions being deprecated in due course.
+    \item Fixed bug in projs.structure to ensure that arguments, including \code{keep.order}, are passed to the terms function. 
+  }
+}
+\section{Changes in dae version 2.7-8 (2015-12-16)}{
+  \itemize{
+    \item Add arguments rchtdiv and cchtdiv to design.plot so that can size row and column labels independetly of the cell labels. 
+  }
+}
+\section{Changes in dae version 2.7-7 (2015-11-15)}{
+  \itemize{
+    \item Improved the documentation of efficiency criteria in a number of functions. 
+  }
+}
 \section{Changes in dae version 2.7-6 (2015-11-02)}{
   \itemize{
     \item Allow a single formula to be specified in formula of projs.canon.

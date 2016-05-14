@@ -104,12 +104,11 @@
   { lev.fac <- names(repl)[!(repl == 0)]
   }
   fact.new <- factor(factor, labels=lev.fac)
-  numfac <- as.numfac(fact.new)
   order <- length(fact.new)
   n <- order*order
   id <- matrix(rep(0, n), nrow=order, ncol=order)
-  row.no <- matrix(rep(numfac, times=order), nrow=order, ncol=order)
-  col.no <- matrix(rep(numfac, each=order), nrow=order, ncol=order)
+  row.no <- matrix(rep(fact.new, times=order), nrow=order, ncol=order)
+  col.no <- matrix(rep(fact.new, each=order), nrow=order, ncol=order)
   id[row.no == col.no] <- 1
   id <- sigma2*id
   id

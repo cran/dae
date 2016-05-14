@@ -1,10 +1,10 @@
 \name{fac.layout}
 \alias{fac.layout}
 \title{Generate a randomized layout for an experiment}
-\description{Generate a layout for an experiment consisting of randomized 
-             \code{\link{factor}s} that are randomized to the unrandomized 
-             \code{\link{factor}s}, taking into account the nesting, for 
-             the design, between the unrandomized factors.}
+\description{Given a systematic design, generate a layout for an experiment 
+             consisting of randomized \code{\link{factor}s} that are randomized 
+             to the unrandomized \code{\link{factor}s}, taking into account the 
+             nesting between the unrandomized factors for the design.}
 \usage{fac.layout(unrandomized, nested.factors=NULL, except=NULL, 
                   randomized, seed=NULL, unit.permutation=TRUE)}
 \arguments{

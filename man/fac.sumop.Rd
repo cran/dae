@@ -1,6 +1,6 @@
 \name{fac.sumop}
 \alias{fac.sumop}
-\title{computes the summation matrix that produces sums corresponding to a factor}
+\title{computes the summation matrix that produces sums corresponding to a (generalized) factor}
 \description{Computes the matrix that produces the sums 
              corresponding to a (generalized) \code{\link{factor}}.}
 \usage{fac.sumop(factor)}

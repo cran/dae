@@ -26,7 +26,7 @@
             orthogonal to the range of Q2.}}}
 \details{
 The nonzero canonical efficiency factors are the nonzero eigenvalues of 
-Q1 \%*\% Q2 \%*\% Q1 (James and Wilkinson, 1971). An eigenvalue is regarded 
+\code{Q1 \%*\% Q2 \%*\% Q1} (James and Wilkinson, 1971). An eigenvalue is regarded 
 as zero if it is less than \code{daeTolerance}, which is initially set to 
 \code{.Machine$double.eps ^ 0.5} (about 1.5E-08). 
 The function \code{\link{set.daeTolerance}} can be used to change \code{daeTolerance}.
@@ -35,11 +35,17 @@ The eigenvectors are the eigenvectors of Q1 corresponding to the nonzero canonic
 efficiency factors. The eigenvectors for Q2 can be obtained by premultiplying 
 those for Q1 by Q2.
 
-Qres is computed using equation 4.10 from James and Wilkinson (1971) and Qconf 
-is obtained by subtracting Qres from Q1.}
+Qres is computed using equation 4.10 from James and Wilkinson (1971), if the number of distinct
+canonical efficiency factors is less than 10. If this fails to produce a projector or the number of distinct canonical efficiency factors is 10 or more, equation 5.3 of Payne and Tobias (1992) is used to obtain Qres. In this latter case, \code{Qres = Q1 - Q1 \%*\% ginv(Q2 \%*\% Q1 \%*\% Q2) \%*\% Q1}. Qconf is obtained by subtracting Qres from Q1.}
+
 \references{James, A. T. and Wilkinson, G. N. (1971) Factorization of the 
             residual operator and canonical decomposition of nonorthogonal 
-            factors in the analysis of variance. \emph{Biometrika}, \bold{58}, 279-294.}
+            factors in the analysis of variance. \emph{Biometrika}, \bold{58}, 279--294.
+            
+            
+            Payne, R. W. and R. D. Tobias (1992). General balance, combination of 
+            information and the analysis of covariance. 
+            \emph{Scandinavian Journal of Statistics}, \bold{19}, 3--23.}
 \author{Chris Brien}
 \seealso{\code{\link{proj2.eigen}}, \code{\link{proj2.efficiency}}, \code{\link{decomp.relate}} 
 in package \pkg{dae}.

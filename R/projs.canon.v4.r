@@ -79,7 +79,8 @@
   orthog <- options[unlist(lapply(orthogonalize, check.arg.values, options=options))]
   
   #check which.criteria arguments
-  criteria <- c("aefficiency", "eefficiency", "mefficiency", "sefficiency", "order", "dforthog")
+  criteria <- c("aefficiency", "eefficiency", "mefficiency", "sefficiency", "xefficiency", 
+                "order", "dforthog")
   options <- c(criteria, "none", "all")
   kcriteria <- options[unlist(lapply(which.criteria, check.arg.values, 
                                      options=options))]
@@ -133,7 +134,8 @@
 { if (!inherits(object, "pcanon"))
   stop("object must be of class pcanon as produced by projs.pcanon")
   #check which.criteria arguments
-  criteria <- c("aefficiency", "eefficiency", "mefficiency", "sefficiency", "order", "dforthog")
+  criteria <- c("aefficiency", "eefficiency", "mefficiency", "sefficiency", "xefficiency", 
+                "order", "dforthog")
   options <- c(criteria, "none", "all")
   kcriteria <- options[unlist(lapply(which.criteria, check.arg.values, 
                                      options=options))]
@@ -325,6 +327,10 @@ print.summary.pcanon <- function(x, ...)
     if ("eefficiency" %in% names(y))
     { y$eefficiency <- formatC(y$eefficiency, format="f", digits=4, width=11)
       y$eefficiency <- gsub("NA", "  ", y$eefficiency)
+    }
+    if ("xefficiency" %in% names(y))
+    { y$xefficiency <- formatC(y$xefficiency, format="f", digits=4, width=11)
+      y$xefficiency <- gsub("NA", "  ", y$xefficiency)
     }
     if ("sefficiency" %in% names(y))
     { y$sefficiency <- formatC(y$sefficiency, format="f", digits=4, width=11)

@@ -100,7 +100,8 @@
 }
 
 "design.plot" <- function (dsgn, trts = NULL, rprop = 1, cprop = 1, label = TRUE,
-                 plotchar = NULL, plotbndry = TRUE, chtdiv = 2, 
+                 plotchar = NULL, plotbndry = TRUE, 
+                 chtdiv = 2, rchtdiv = 1, cchtdiv = 1, 
                  bseq = FALSE, bdef = NULL, bcol = 1, bwd = 2, 
                  rotate = FALSE, new = TRUE, 
                  cstr = "Range",rstr = "Row", rlab = TRUE, clab = TRUE,  
@@ -145,8 +146,10 @@
     if (rotate) {
         csival <- min(par()$fin/c(nr, nc))/chtdiv
     }
-    cexval <- csival/par()$csi
-    lineval = (max(nchar(rowlabs))+1)*cexval*0.5
+    cexval <- csival/par()$csi/0.7
+    rcexval <- cexval*chtdiv/rchtdiv
+    ccexval <- cexval*chtdiv/cchtdiv
+    lineval = (max(nchar(rowlabs))+1)*rcexval*0.5
     if (new) {
         plot(range(drange) + c(-1, 1), range(drow) + c(-1, 1),
             type = "n", axes = FALSE, xlab = "", ylab = "")
@@ -156,46 +159,46 @@
               #else option is original code
               if (rdecrease)
                 mtext(rowlabs, side = 2, line = 0,
-                  at = -seq(nr), cex = cexval, adj = 1, las = 1)
+                  at = -seq(nr), cex = rcexval, adj = 1, las = 1)
               else
                 mtext(rev(rowlabs), side = 2, line = 0,
-                  at = -seq(nr), cex = cexval, adj = 1, las = 1)
+                  at = -seq(nr), cex = rcexval, adj = 1, las = 1)
             }
             mtext(rstr, side = 2, line = lineval, at = -nr/2 - 1/2,
-                adj = 0.5, cex = cexval, font = font)
+                adj = 0.5, cex = rcexval*1.25, font = font)
             mtext(cstr, side = 3, line = 2, at = nc/2 + 1/2,
-                adj = 0.5, cex = cexval, font = font)
+                adj = 0.5, cex = ccexval*1.25, font = font)
             if (clab) {
               # Modification to implement cdecrease - 15/12/2012
               #else option is original code
               if (cdecrease)
                 mtext(rev(collabs), side = 3, line = 0, at = seq(nc),
-                  cex = cexval)
+                  cex = ccexval)
               else
                 mtext(collabs, side = 3, line = 0, at = seq(nc),
-                  cex = cexval)
+                  cex = ccexval)
             }
         }
         else {
             if (rlab) {
               if (rdecrease)
                 mtext(rev(rowlabs), side = 2, line = 0, at = -seq(nr),
-                  cex = cexval, adj = 1, las = 1)
+                  cex = rcexval, adj = 1, las = 1)
               else
                 mtext(rowlabs, side = 2, line = 0, at = -seq(nr),
-                  cex = cexval, adj = 1, las = 1)
+                  cex = rcexval, adj = 1, las = 1)
             }
             mtext(rstr, side = 2, line = lineval, at = -nr/2 - 1/2,
-                adj = 0.5, cex = cexval, font = font)
+                adj = 0.5, cex = rcexval*1.25, font = font)
             mtext(cstr, side = 3, line = 2, at = nc/2 + 1/2,
-                adj = 0.5, cex = cexval, font = font)
+                adj = 0.5, cex = ccexval*1.25, font = font)
             if (clab) {
               if (cdecrease)
                 mtext(rev(collabs), side = 3, line = 0, at = seq(nc),
-                  cex = cexval)
+                  cex = ccexval)
               else
                 mtext(collabs, side = 3, line = 0, at = seq(nc),
-                  cex = cexval)
+                  cex = ccexval)
             }
         }
     }
@@ -210,11 +213,11 @@
             }
             if (label) {
                 if (!is.null(plotchar)) {
-                  text(x, y, labels = plotchar[i], cex = cexval/0.7)
+                  text(x, y, labels = plotchar[i], cex = cexval)#/0.7)
                 }
                 else {
                   text(x, y, labels = i, srt = charot, adj = 0.5,
-                    cex = cexval/0.7)
+                    cex = cexval)#/0.7)
                 }
             }
         }
@@ -222,11 +225,11 @@
     if (is.null(trts)) {
         if (label) {
             if (!is.null(plotchar)) {
-                text(drange, drow, labels = plotchar[i], cex = cexval/0.7)
+                text(drange, drow, labels = plotchar[i], cex = cexval)#/0.7)
             }
             else {
                 text(drange, drow, labels = dtrt, srt = charot,
-                  adj = 0.5, cex = cexval/0.7)
+                  adj = 0.5, cex = cexval)#/0.7)
             }
         }
     }

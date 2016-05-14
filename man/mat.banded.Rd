@@ -15,7 +15,9 @@
  \item{ncol}{The number of columns in the banded \code{\link{matrix}} being formed.}
 }
 \value{An \eqn{nrow \times ncol}{nrow \times ncol} \code{\link{matrix}}.}
-\seealso{\code{matmult}, \code{\link{mat.ar1}}, \code{\link{mat.exp}}, 
+\seealso{\code{matmult}, \code{\link{mat.ar1}}, \code{\link{mat.ar2}}, \code{\link{mat.ar3}}, 
+         \code{\link{mat.sar2}}, \code{\link{mat.exp}}, 
+         \code{\link{mat.ma1}}, \code{\link{mat.ma2}}, \code{\link{mat.arma}}
          \code{\link{mat.I}}, \code{\link{mat.J}}}
 \examples{
       m <- mat.banded(c(1,0.6,0.5), 5,5)

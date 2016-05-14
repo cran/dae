@@ -49,7 +49,6 @@ in randomized order.
 }
 \usage{data(Sensory3Phase.dat)}
 \format{A data.frame containing 576 observations of 12 variables.}
-\source{Statlib data sets, \url{http://lib.stat.cmu.edu/datasets/sensory}.}
 \references{Brien, C.J. and Payne, R.W. (1999) Tiers, structure formulae 
 and the analysis of complicated experiments. The Statistician, 48, 41-52.
 }

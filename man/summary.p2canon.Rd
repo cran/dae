@@ -1,11 +1,12 @@
 \name{summary.p2canon}
 \alias{summary.p2canon}
 \alias{summary,p2canon-method}
-\title{A summary of the results of a canonical analysis of the relationships between two sets of projectors}
+\title{Summarize a canonical analysis of the relationships between two sets of projectors}
 \description{Produces a summary of the efficiency criteria computed from the 
              canonical efficiency factors for the joint decomposition of two 
              sets of projectors (Brien and Bailey, 2009) obtained using 
-             \code{\link{projs.2canon}}.}
+             \code{\link{projs.2canon}}. It takes the form of a decomposition or skeleton 
+             ANOVA table.}
 \usage{
 \method{summary}{p2canon}(object, which.criteria = c("aefficiency", "eefficiency", "order"), ...)}
 \arguments{
@@ -14,9 +15,10 @@
  \item{which.criteria}{A character \code{vector} nominating the efficiency 
                        criteria to be included in the summary. It can be 
                        \code{none}, \code{all} or some combination of 
-                       \code{aefficiency}, \code{mefficiency}, 
-                       \code{eefficiency}, \code{sefficiency}, \code{order} 
-                       and \code{dforthog}.}
+                       \code{aefficiency}, \code{mefficiency},
+                       \code{sefficiency}, \code{eefficiency}, \code{xefficiency}, 
+                       \code{order} and \code{dforthog} -- for details see
+                       \code{\link{efficiency.criteria}}.}
  \item{...}{further arguments affecting the summary produced.}
 }
 \value{An object of classes \code{summary.p2canon} and \code{data.frame}, whose 

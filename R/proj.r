@@ -169,18 +169,27 @@ proj2.ops <- function(...)
       } else if(length(Eff.Q1.Q2) == degfree(Q1)) # all of Q1 is confounded by Q2
       { Qconf <- projector(Q1)
         Qres <- projector(matrix(0, nrow = nrow(Q1), ncol = ncol(Q1)))
-      } else      #compute projection operators for partially confounded case
-      { Qres <- Q1
-        Q121 <- Q1 %*% Q2 %*% Q1
-        for(eff in EffUnique.Q1.Q2[1:K])
-        { Qres <- Qres %*% (Q1 - (Q121/eff))
-          Qres <- (Qres + t(Qres))/2  #force symmetry because know that it must be
-        }  
-        eff <- eigen(Qres, symmetric=T)
-        eff <- eff$values[eff$values > daeTolerance[["eigen.tol"]]]
-        Qres <- projector(Qres)
-        Qconf <- projector(Q1 - Qres)
-      }
+      } else  
+      { if (K < 10) #compute projection operators for partially confounded case by recursion
+        { Qres <- Q1
+          Q121 <- Q1 %*% Q2 %*% Q1
+          for(eff in EffUnique.Q1.Q2[1:K])
+          { Qres <- Qres %*% (Q1 - (Q121/eff))
+            Qres <- (Qres + t(Qres))/2  #force symmetry because know that it must be
+          }
+          #if have not got a projector, then compute the residual operator directly
+          if (class(validProjector(Qres)) == "character")
+            Qres <- Q1 - Q1 %*% ginv(Q2 %*% Q1 %*% Q2) %*% Q1
+        } else #compute projection operators for partially confounded case by inversion
+          Qres <- Q1 - Q1 %*% ginv(Q2 %*% Q1 %*% Q2) %*% Q1
+      
+          #Form projectors
+          Qres <- projector(Qres)
+          if (degfree(Qres) > 0)
+            Qconf <- projector(Q1 - Qres)
+          else
+            Qconf <- Q1
+      } 
     }
     eigenvec <- decomp$eigenvectors
   }

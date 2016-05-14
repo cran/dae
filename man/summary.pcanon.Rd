@@ -1,20 +1,23 @@
 \name{summary.pcanon}
 \alias{summary.pcanon}
 \alias{summary,pcanon-method}
-\title{A summary of the results of a canonical analysis of the relationships between two or more sets of projectors}
+\title{Summarize a canonical analysis of the relationships between sets of projectors}
 \description{Produces a summary of the efficiency criteria computed from the 
              canonical efficiency factors for the joint decomposition of two or 
              more sets of projectors (Brien and Bailey, 2009) obtained using 
-             \code{\link{projs.canon}}.}
+             \code{\link{projs.canon}}. It takes the form of a decomposition or skeleton 
+             ANOVA table.}
 \usage{\method{summary}{pcanon}(object, which.criteria = c("aefficiency", "eefficiency", "order"), ...)}
 \arguments{
  \item{object}{A \code{list} of class \code{pcanon} produced by \code{projs.canon}.}
  \item{which.criteria}{A character \code{vector} nominating the efficiency 
                        criteria to be included in the summary. It can be 
                        \code{none}, \code{all} or some combination of 
-                       \code{aefficiency}, \code{mefficiency}, 
-                       \code{eefficiency}, \code{sefficiency}, \code{order}
-                       and \code{dforthog}. If there is only one formula, this 
+                       \code{aefficiency}, \code{mefficiency},
+                       \code{sefficiency}, \code{eefficiency}, \code{xefficiency}, 
+                       \code{order} and \code{dforthog} -- for details see 
+                       \code{\link{efficiency.criteria}}. 
+                       If there is only one formula, this 
                        argument is ignored.}
  \item{...}{further arguments affecting the summary produced.}
 }

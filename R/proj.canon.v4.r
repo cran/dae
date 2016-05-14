@@ -8,7 +8,8 @@
     stop("The matrices to orthogonalize to must be in a list")
 
   #check which.criteria arguments
-  criteria <- c("aefficiency", "eefficiency", "mefficiency", "sefficiency", "order", "dforthog")
+  criteria <- c("aefficiency", "eefficiency", "mefficiency", "sefficiency", "xefficiency", 
+                "order", "dforthog")
   options <- c(criteria, "none", "all")
   kcriteria <- options[unlist(lapply(which.criteria, check.arg.values, 
                                      options=options))]
@@ -66,7 +67,8 @@
   options <- c("differencing", "eigenmethods")
   opt <- options[check.arg.values(orthogonalize, options)]
   #check which.criteria arguments
-  criteria <- c("aefficiency", "eefficiency", "mefficiency", "sefficiency", "order", "dforthog")
+  criteria <- c("aefficiency", "eefficiency", "mefficiency", "sefficiency", "xefficiency", 
+                "order", "dforthog")
   options <- c(criteria, "none", "all")
   kcriteria <- options[unlist(lapply(which.criteria, check.arg.values, 
                                      options=options))]
@@ -95,7 +97,7 @@
   if (length(terms) > 1)
   { if (orthogonalize == "differencing") #by difference
     { orthogonal <- TRUE
-      fac.mat <- attr(terms(formula), which="factors")
+      fac.mat <- attr(terms(formula, ...), which="factors")
       for (i in 2:length(terms))
       { Q.work <- Q[[terms[i]]]
         for (j in 1:length(terms))
@@ -130,8 +132,9 @@
 
 "efficiency.criteria" <- function(efficiencies)
 { daeTolerance <- get("daeTolerance", envir=daeEnv)
-  criteria <- vector(mode="list", length = 6)
-  names(criteria) <- c('aefficiency','mefficiency','sefficiency','eefficiency','order',"dforthog")
+  criteria <- vector(mode="list", length = 7)
+  names(criteria) <- c('aefficiency','mefficiency','sefficiency','eefficiency',
+                       "xefficiency",'order',"dforthog")
   df.orthog <- sum(abs(1-efficiencies) <  daeTolerance[["eigen.tol"]])
   eff.unique <- remove.repeats(efficiencies, daeTolerance[["eigen.tol"]])
   K <- length(eff.unique)
@@ -141,6 +144,7 @@
       criteria["mefficiency"] <- 0
       criteria["sefficiency"] <- 0
       criteria["eefficiency"] <- 0
+      criteria["xefficiency"] <- 0
       criteria["order"] <- 0
       criteria["dforthog"] <- 0
   }
@@ -149,6 +153,7 @@
       criteria["mefficiency"] <- eff.unique
       criteria["sefficiency"] <- 0
       criteria["eefficiency"] <- eff.unique
+      criteria["xefficiency"] <- eff.unique
       criteria["order"] <- K
       criteria["dforthog"] <- df.orthog
     }
@@ -158,6 +163,7 @@
     criteria["mefficiency"] <- mean(efficiencies)
     criteria["sefficiency"] <- var(efficiencies)
     criteria["eefficiency"] <- min(efficiencies)
+    criteria["xefficiency"] <- max(efficiencies)
     criteria["order"] <- K
     criteria["dforthog"] <- df.orthog
   }
@@ -183,6 +189,10 @@ print.summary.p2canon <- function(x, ...)
   if ("eefficiency" %in% names(y))
   { y$eefficiency <- formatC(y$eefficiency, format="f", digits=4, width=11)
     y$eefficiency <- gsub("NA", "  ", y$eefficiency)
+  }
+  if ("xefficiency" %in% names(y))
+  { y$xefficiency <- formatC(y$xefficiency, format="f", digits=4, width=11)
+    y$xefficiency <- gsub("NA", "  ", y$xefficiency)
   }
   if ("sefficiency" %in% names(y))
   { y$sefficiency <- formatC(y$sefficiency, format="f", digits=4, width=11)
@@ -256,7 +266,8 @@ print.summary.p2canon <- function(x, ...)
   Q2labels <- names(Q2)
   if (is.null(Q2labels))
     Q2labels <- as.character(1:nQ2)
-  criteria <- c('aefficiency','mefficiency','sefficiency','eefficiency','order',"dforthog")
+  criteria <- c('aefficiency','mefficiency','sefficiency','eefficiency',"xefficiency",
+                'order',"dforthog")
   
   #Perform the analysis
   kQ1Q2 <- 0
@@ -322,7 +333,8 @@ print.summary.p2canon <- function(x, ...)
 { if (!inherits(object, "p2canon"))
     stop("object must be of class p2canon as produced by projs.2canon")
   #check which.criteria arguments
-  criteria <- c("aefficiency", "eefficiency", "mefficiency", "sefficiency", "order", "dforthog")
+  criteria <- c("aefficiency", "eefficiency", "mefficiency", "sefficiency", "xefficiency", 
+                "order", "dforthog")
   options <- c(criteria, "none", "all")
   kcriteria <- options[unlist(lapply(which.criteria, check.arg.values, 
                                      options=options))]
