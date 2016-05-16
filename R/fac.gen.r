@@ -62,7 +62,10 @@ function(generate, each=1, times=1, order="standard")
   for (i in 1:nfac)
   { if (is.numeric(fnames[[i]]) | is.character(fnames[[i]]))
     { if (length(fnames[[i]]) == 1)
-        levels[i] <- fnames[[i]]
+        if (is.character(fnames[[i]]))
+          levels[i] <- 1
+        else
+          levels[i] <- fnames[[i]]
       else
         levels[i] <- length(fnames[[i]])
     }

@@ -1,4 +1,4 @@
-d0697f5bac7a1a92794dad0c71d35a69 *DESCRIPTION
+8c7d42d380ae1e805d0b3d7bb0038d4f *DESCRIPTION
 6979ffa060bddb0f137523dbc44e8584 *NAMESPACE
 f504a24f3238c8e8d8e3d91b9a376779 *R/Interaction.ABC.Plot.r
 2119a1a711cf1b7c05f5dae406a5c45f *R/NoReps.r
@@ -9,7 +9,7 @@ bf4a89c120b78870965290231300f209 *R/designPlot.r
 0d562331b77a03f8eb5065729488fba8 *R/diagnostic.checking.r
 a90ecb8b4fd7ee4539ef05fca3420263 *R/extab.r
 dc211a0b16ff0a63d08d47754ab30c6e *R/fac.functions.r
-603d9548aec3d1bc4602ffb78e355c7f *R/fac.gen.r
+d169b403f02dae697ab303a3d8469036 *R/fac.gen.r
 db3cc79b9283b6e4d54bd0ae7e9de13b *R/fac.layout.r
 38f86e4c72ce9b5718405778ac858128 *R/fac.match.r
 efa0dcb53627172aef78808eaddc2828 *R/fac.matop.r
@@ -22,13 +22,13 @@ d866f3ad9b225bd1b8dd52bee291465c *R/projs.canon.v4.r
 c61ba72a062bc843ac5af124f584a2d4 *R/qqyeffects.r
 7b2651d550201357d74af7918707b933 *R/rmvnorm.r
 66116f959a9d740dbbb684cb84dd847e *R/strength.r
-477541c5cc6cded0fd68288aac3f1af0 *build/partial.rdb
+789f5a8d65406e7776fd3a050c0343c1 *build/partial.rdb
 6a0206b6e54521e9ed58703fa7333d2f *data/ABC.Interact.dat.rda
 0660416782cc5c33205a0ef1e76fec95 *data/Fac4Proc.dat.rda
 d549fecfdc5cfa6b40011e7ce9eff036 *data/SPLGrass.dat.rda
 4b73f505c487a89a85f88b51d92538bb *data/Sensory3Phase.dat.rda
-67f6ac886b1973cfebc03cb412f3ba40 *inst/NEWS.Rd
-e84a93e81d3f792b90c0400809052568 *inst/doc/dae-manual.pdf
+755902eaa94781354796fa8cbd25906c *inst/NEWS.Rd
+0e4430f822951d2f723918d8a88f7fc6 *inst/doc/dae-manual.pdf
 0fb5dbe91f1eb897217918c45d8bf28a *inst/doc/daeDesignRandomization.pdf
 0b149dc9866d9867265d7ee1b00a2fbc *man/ABC.Interact.dat.Rd
 1d9f06b2bd3ed615f840e985bfc65b28 *man/Ameasures.Rd

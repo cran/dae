@@ -1,5 +1,10 @@
 \name{news}
 \title{News for Package dae}
+\section{Changes in dae version 2.7-16 (2016-05-16)}{
+  \itemize{
+    \item Fixed a bug in fac.gen when there is a factor with a single character value.
+  }
+}
 \section{Changes in dae version 2.7-15 (2016-05-14)}{
   \itemize{
     \item Revised fac.recode and fac.divide to deal with factors with both numeric and character levels and to improve efficiency.
