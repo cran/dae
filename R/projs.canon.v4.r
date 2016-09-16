@@ -54,7 +54,7 @@
   return(object)
 }
 
-"projs.canon" <- function(formulae, orthogonalize = "differencing", 
+"projs.canon" <- function(formulae, orthogonalize = "differencing", meanTerm = FALSE, 
                           which.criteria = c("aefficiency", "eefficiency", "order"), 
                           omit.projectors = c("p2canon", "combined"), data = NULL, ...)
 { #examine the relationships between the sets of mutually orthogonal projection matrices for the supplied formulae
@@ -101,10 +101,10 @@
   #Get set of projectors for the first formula
   if (ntiers == 1)
     Q[[1]] <- projs.structure(formulae[[1]], which.criteria = kcriteria, orthogonalize = orthog, 
-                              data=data, ...)
+                              data=data, meanTerm = meanTerm, ...)
   else 
     Q[[1]] <- projs.structure(formulae[[1]], which.criteria = kcriteria, orthogonalize = orthog[1], 
-                              data=data, ...)
+                              data=data, meanTerm = meanTerm, ...)
   
   #Loop over remaining  formulae
   CombinedSets <- vector(mode="list", length=ntiers)
@@ -112,7 +112,8 @@
   if (ncomb > 0)
   { for (k in 1:ncomb)
     { ktier <- k + 1
-      Q[[ktier]] <- projs.structure(formulae[[ktier]], which.criteria = kcriteria, 
+      Q[[ktier]] <- projs.structure(formulae[[ktier]], meanTerm = meanTerm, 
+                                    which.criteria = kcriteria, 
                                     orthogonalize = orthog[ktier], data=data, ...)
       CombinedSets[[k]] <- projs.2canon(CombinedSets[[ntiers]], Q[[ktier]])
       CombinedSets[[ntiers]] <- projs.combine.p2canon(CombinedSets[[k]])

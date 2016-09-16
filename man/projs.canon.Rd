@@ -3,21 +3,24 @@
 \title{A canonical analysis of the relationships between sets of projectors}
 \description{Computes the canonical efficiency factors for the joint 
        decomposition of two or more structures or sets of mutually orthogonally 
-       projectors (Brien and Bailey, 2009), orthogonalizing projectors in a set 
-       to those earlier in the set of projectors with 
+       projectors (Brien and Bailey, 2009; Brien, 2016a,b), orthogonalizing 
+       projectors in a set to those earlier in the set of projectors with 
        which they are partially aliased. The results can be summarized in the 
-       form of a skeleton ANOVA table.}
+       form of a decomposition table which shows the confounding between sources 
+       from different sets.}
 \usage{
-projs.canon(formulae, orthogonalize = "differencing", 
+projs.canon(formulae, orthogonalize = "differencing", meanTerm = FALSE, 
             which.criteria = c("aefficiency","eefficiency","order"), 
             omit.projectors = c("p2canon", "combined"), data = NULL, ...)}
 \arguments{
- \item{formulae}{An object of class \code{list} whose compoents are of class \code{formula}.}
+ \item{formulae}{An object of class \code{list} whose components are of class \code{formula}.}
  \item{orthogonalize}{A string indicating the method for orthogonalizing a 
                       projector to those for terms that occurred previously 
                       in the formula. Two options are available:  
                       \code{differencing}; \code{eigenmethods}. 
                       If a single value is given, it is used for all formulae.}
+ \item{meanTerm}{A \code{logical} indicating whether the projector for the 
+                       grand mean is to be included for each structure.}
  \item{which.criteria}{A character \code{vector} nominating the efficiency 
                        criteria to be included in the summary of aliasing 
                        between terms within a structure. It can be 
@@ -59,14 +62,32 @@ projs.canon(formulae, orthogonalize = "differencing",
          the relationships between its projectors and the already established 
          decomposition is obtained using \code{\link{projs.2canon}}. The core 
          of the analysis is the determination of eigenvalues of the product of 
-         pairs of projectors using the results of James and Wilkinson (1971).}
-\references{Brien, C. J. and R. A. Bailey (2009). Decomposition tables for 
+         pairs of projectors using the results of James and Wilkinson (1971). 
+         However, if the order of balance between two projection matrices is 
+         10 or more or the James and Wilkinson (1971) methods fails to produce 
+         an idempotent matrix, equation 5.3 of Payne and Tobias (1992) is used 
+         to obtain the projection matrices for their joint decompostion.}
+\references{Brien, C. J. (2016a) Multiphase experiments in practice, with an 
+            emphasis on nonorthogonal designs. I. A look back. submitted 
+            to the \emph{Australian & New Zealand Journal of Statistics}.
+
+            Brien, C. J. (2016a) Multiphase experiments in practice, with an 
+            emphasis on nonorthogonal designs. II. Developments. submitted 
+            to the \emph{Australian & New Zealand Journal of Statistics}.
+
+
+
+            Brien, C. J. and R. A. Bailey (2009). Decomposition tables for 
             multitiered experiments. I. A chain of randomizations.  
             \emph{The Annals of Statistics}, \bold{36}, 4184 - 4213.
 
            James, A. T. and Wilkinson, G. N. (1971) Factorization of the residual 
            operator and canonical decomposition of nonorthogonal factors in the 
-           analysis of variance. \emph{Biometrika}, \bold{58}, 279-294.}
+           analysis of variance. \emph{Biometrika}, \bold{58}, 279-294.
+           
+           Payne, R. W. and R. D. Tobias (1992). General balance, combination of 
+            information and the analysis of covariance. 
+            \emph{Scandinavian Journal of Statistics}, \bold{19}, 3-23.}
 \author{Chris Brien}
 \seealso{\code{\link{summary.pcanon}}, \code{\link{efficiencies.pcanon}}, 
          \code{\link{projs.2canon}}, \code{\link{projs.structure}} , \cr

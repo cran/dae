@@ -254,31 +254,56 @@ mat.sar2 <- function(gamma, order, print = NULL)
 
 
 ### Function to calculate 
-"Ameasures" <- function(Vpred, groupsizes = NULL)
-{ # Calculate the variance matrix for differences between predictions
+"Ameasures" <- function(Vpred, groupsizes = NULL, groups = NULL)
+{ 
+  #determine any groupings of the variances
   n <- nrow(Vpred)
   if (n != ncol(Vpred))
     stop("Vpred must be square")  
-  if (is.null(groupsizes))
+  if (is.null(groupsizes) & is.null(groups))
+  {
     groupsizes <- n
+    groups <- list(all = 1:n)
+    ngrp <- 1
+  } else
+  {
+    if (!is.null(groups)) #working on groups
+    {
+      if (!is.list(groups))
+        stop("the groups argument should be a list")
+      if (!is.null(groupsizes))
+        warning("Both groups and grouspsizes are set - using groups")
+      ngrp <- length(groups)
+      groupsizes <- unlist(lapply(groups, length))
+    } else #working on group sizes
+    {
+      ngrp <- length(groupsizes)
+      end <- cumsum(groupsizes)
+      if (end[ngrp] > n)
+        stop("The sum of the group sizes must less than or equal to the size of Vpred")
+      if(ngrp == 1)
+        start <- 1
+      else
+        start <- c(0, end[-ngrp]) +1
+      groups <- mapply(function(start,end)
+                             {start:end},
+                       start, end, SIMPLIFY = FALSE)
+      if (!is.null(names(groupsizes)))
+        names(groups) <- names(groupsizes)
+    }
+  }
+  
+  # Calculate the variance matrix for differences between predictions
   varDiff <- matrix(rep(diag(Vpred), each = n), nrow = n) + 
-    matrix(rep(diag(Vpred), times = n), nrow = n) - 2 * Vpred
-  ngrp <- length(groupsizes)
+             matrix(rep(diag(Vpred), times = n), nrow = n) - 2 * Vpred
   
   # Calculate all within and between group A-measure values
   A <- matrix(0, nrow = ngrp, ncol = ngrp)
-  end <- cumsum(groupsizes)
-  if (end[ngrp] != n)
-    stop("The sum of the group sizes must equal the size of Vpred")
-  if (ngrp == 1)
-    start = 1
-  else
-    start <- c(0,end[1:(ngrp-1)]) + 1
   for (i in 1:ngrp)
   {
     for(j in i:ngrp)
     {
-      A[i, j] <- sum(varDiff[start[i]:end[i], start[j]:end[j]])
+      A[i, j] <- sum(varDiff[groups[[i]], groups[[j]]])
       if (i==j)
         A[i, i] <- A[i, i]/(groupsizes[i]*(groupsizes[i]-1))
       else
@@ -287,6 +312,10 @@ mat.sar2 <- function(gamma, order, print = NULL)
         A[j, i] <- A[i, j]
       }
     }
+  }
+  if (!is.null(names(groups)))
+  {
+    rownames(A) <- colnames(A) <- names(groups)
   }
   return(A)
 }

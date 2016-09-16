@@ -2,19 +2,29 @@
 \alias{Ameasures}
 \title{Calculates the A-optimality measures from the variance matrix for predictions}
 \description{Calculates the A-optimality measures, possibly for different subgroups of the 
-             predictions, from the variance matrix for the predictions. The predictions 
-             will be sequentially broken into groups of the size specified by the elements 
-             of groupsizes. The A-optimality measures are calculated for the differences 
+             predictions, from the variance matrix for the predictions. If groups are                     specified then the A-optimality measures are calculated for the differences 
              between predictions within each group and for those between predictions from 
-             different groups.
+             different groups. If groupsizes are specified, but groups are not, the
+             predictions will be sequentially broken into groups of the size specified by 
+             the elements of groupsizes. The groups can be named.
 }
-\usage{Ameasures(Vpred, groupsizes = NULL)}
+\usage{Ameasures(Vpred, groupsizes = NULL, groups = NULL)}
 \arguments{
  \item{Vpred}{The variance \code{\link{matrix}} of the predictions.}
  \item{groupsizes}{A \code{\link{numeric}} containing group sizes. The sum of the 
-                   elements of \code{groupsizes} must equal the order of 
-                   \code{Vpred}. If \code{NULL}, the average for all 
-                   pairwise differences is obtained.}
+                   elements of \code{groupsizes} must be less than or equal to the 
+                   order of \code{Vpred}. If \code{groupsizes} is a named 
+                   \code{vector}, the names are used to label the groups. 
+                   If \code{NULL}, either \code{groups} is used or 
+                   the average for all pairwise differences is obtained.}
+ \item{groups}{A \code{\link{list}}, each element of which specifies a subroup of the 
+               predictions over whose pairwise differences the variances are 
+               to be averaged. If there is more than one group, the variances of 
+               all between and within group pairwise differences are averaged. 
+               If the elements of \code{groups} are named , the names are used to 
+               label the groups. If \code{groups} is \code{NULL}, either 
+               \code{groupsizes} is used or the average for all pairwise differences 
+               is obtained.}
 }
 \value{A \code{\link{matrix}} containing the within and between group A-optimality measures.}
 \seealso{\code{\link{mat.Vpred}}, \code{\link{projs.canon}}.}
@@ -47,5 +57,11 @@ Vp <- mat.Vpred(W = W, Gg = Gg, Vu = Vu, R = R)
   
 ## Calculate A-optimality measure
 Ameasures(Vp)
+Ameasures(Vp, groups=list(fldUndup = c(1:4), fldDup = c(5,6)))
+grpsizes <- c(4,2)
+names(grpsizes) <- c("fldUndup", "fldDup")
+Ameasures(Vp, groupsizes = grpsizes)
+Ameasures(Vp, groupsizes = c(4))
+Ameasures(Vp, groups=list(c(1,4),c(5,6)))
 }
 \keyword{design}

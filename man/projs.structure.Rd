@@ -16,7 +16,7 @@
              to be orthogonal to all terms previous to it in the expanded 
              formula.}
 \usage{
-projs.structure(formula, orthogonalize = "differencing", 
+projs.structure(formula, orthogonalize = "differencing", meanTerm = FALSE, 
                 which.criteria = c("aefficiency","eefficiency","order"), 
                 data = NULL, ...)}
 \arguments{
@@ -26,6 +26,8 @@ projs.structure(formula, orthogonalize = "differencing",
                       projector to those for terms that occurred previously 
                       in the formula. Two options are available:  
                       \code{differencing}; \code{eigenmethods}.}
+ \item{meanTerm}{A \code{logical} indicating whether the projector for the 
+                       grand mean is to be included in the set produced.}
  \item{which.criteria}{A character \code{vector} nominating the efficiency 
                        criteria to be included in the summary of aliasing 
                        between terms. It can be 

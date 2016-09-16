@@ -25,7 +25,7 @@ set.daeTolerance <- function(element.tol=NULL, eigen.tol=NULL)
     tol[1] <- element.tol
   }
     
-  #Set value for eiggen.tol, if one supplied
+  #Set value for eigen.tol, if one supplied
   if (!is.null(eigen.tol))
   { if (!is.numeric(eigen.tol))
       stop("non-numeric argument")

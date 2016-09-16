@@ -35,7 +35,8 @@
     if (df == 0)
     { warning(paste(terms[[i]],"is aliased with previous terms in the formula", sep=" "))
       if (anycriteria)
-      { eff.crit <- 0
+      { 
+        eff.crit[kcriteria] <- 0
         summary <- rbind(summary, 
                          data.frame(c(list(Source = terms[[i]], df = df), eff.crit), 
                                     stringsAsFactors = FALSE))
@@ -54,13 +55,13 @@
   
   #Print out the efficiency criteria if which.criteria is set
   if (anycriteria & nrow(summary) > 0)
-  { cat("\nTable of efficiency criteria for aliasing between terms within a structure\n\n")
+  { cat("\nTable of efficiency criteria for (partial) aliasing between terms within a structure\n\n")
     print(summary)
   }
   return(Q)
 }
   
-"projs.structure" <- function(formula, orthogonalize = "differencing", 
+"projs.structure" <- function(formula, orthogonalize = "differencing", meanTerm = FALSE, 
                               which.criteria = c("aefficiency","eefficiency","order"), 
                               data = NULL, ...)
 { #generate a set of mutually orthogonal projection matrices, one for each term in the formula
@@ -85,8 +86,16 @@
   
   #get terms and form mean operators for each term
   terms <- attr(terms(formula, ...), which="term.labels")
-  Q <- vector("list", length=length(terms))
-  names(Q) <- terms
+  if (meanTerm)  #add grand mean term if meanTerm is TRUE
+  {
+    Q <- vector("list", length=length(terms)+1)
+    names(Q) <- c("Mean", terms)
+    Q[["Mean"]] <- Q.G
+  } else
+  {
+    Q <- vector("list", length=length(terms))
+    names(Q) <- terms
+  }
   for (k in 1:length(terms))
   { Q[[terms[k]]] <- model.matrix(as.formula(paste("~ ",terms[k])), data=fac.modl)
     Q[[terms[k]]] <- Q[[terms[k]]] %*% ginv(t(Q[[terms[k]]]) %*% Q[[terms[k]]]) %*% t(Q[[terms[k]]])
@@ -127,6 +136,7 @@
                                                which.criteria = kcriteria)
     }
   }
+  
   return(Q)
 }    
 

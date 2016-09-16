@@ -1,5 +1,25 @@
 \name{news}
 \title{News for Package dae}
+\section{Changes in dae version 2.7-20 (2016-09-16)}{
+  \itemize{
+    \item Rebuild under R 3.4.0.
+  }
+}
+\section{Changes in dae version 2.7-19 (2016-09-07)}{
+  \itemize{
+    \item Include the argument \code{meanTerm} in projs.structure and projs.canon to allow the option to include the grand mean term.
+  }
+}
+\section{Changes in dae version 2.7-18 (2016-08-07)}{
+  \itemize{
+    \item Fixed a bug for aliased terms in projs.jandw.
+  }
+}
+\section{Changes in dae version 2.7-17 (2016-05-18)}{
+  \itemize{
+    \item Extended Ameasures to include a \code{groups} argument that allows explicit specification of the elements of groups for which A values are required.
+  }
+}
 \section{Changes in dae version 2.7-16 (2016-05-16)}{
   \itemize{
     \item Fixed a bug in fac.gen when there is a factor with a single character value.
