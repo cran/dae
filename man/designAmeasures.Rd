@@ -1,5 +1,5 @@
-\name{Ameasures}
-\alias{Ameasures}
+\name{designAmeasures}
+\alias{designAmeasures}
 \title{Calculates the A-optimality measures from the variance matrix for predictions}
 \description{Calculates the A-optimality measures, possibly for different subgroups of the 
              predictions, from the variance matrix for the predictions. If groups are                     specified then the A-optimality measures are calculated for the differences 
@@ -8,7 +8,7 @@
              predictions will be sequentially broken into groups of the size specified by 
              the elements of groupsizes. The groups can be named.
 }
-\usage{Ameasures(Vpred, groupsizes = NULL, groups = NULL)}
+\usage{designAmeasures(Vpred, groupsizes = NULL, groups = NULL)}
 \arguments{
  \item{Vpred}{The variance \code{\link{matrix}} of the predictions.}
  \item{groupsizes}{A \code{\link{numeric}} containing group sizes. The sum of the 
@@ -27,7 +27,8 @@
                is obtained.}
 }
 \value{A \code{\link{matrix}} containing the within and between group A-optimality measures.}
-\seealso{\code{\link{mat.Vpred}}, \code{\link{projs.canon}}.}
+\author{Chris Brien}
+\seealso{\code{\link{mat.Vpred}}, \code{\link{designAnatomy}}.}
 \references{Smith, A. B., D. G. Butler, C. R. Cavanagh and B. R. Cullis (2015). 
             Multi-phase variety trials using both composite and individual replicate 
             samples: a model-based design approach. 
@@ -52,16 +53,16 @@ Vu <- with(start.design, fac.vcmat(Mrep, 0.3) +
                          fac.vcmat(fac.combine(list(Frep, Fplot)), 0.2))
 R <- diag(1, nrow(start.design))
   
-## Caluclate information matrix
+## Calculate the information matrix
 Vp <- mat.Vpred(W = W, Gg = Gg, Vu = Vu, R = R)
   
 ## Calculate A-optimality measure
-Ameasures(Vp)
-Ameasures(Vp, groups=list(fldUndup = c(1:4), fldDup = c(5,6)))
+designAmeasures(Vp)
+designAmeasures(Vp, groups=list(fldUndup = c(1:4), fldDup = c(5,6)))
 grpsizes <- c(4,2)
 names(grpsizes) <- c("fldUndup", "fldDup")
-Ameasures(Vp, groupsizes = grpsizes)
-Ameasures(Vp, groupsizes = c(4))
-Ameasures(Vp, groups=list(c(1,4),c(5,6)))
+designAmeasures(Vp, groupsizes = grpsizes)
+designAmeasures(Vp, groupsizes = c(4))
+designAmeasures(Vp, groups=list(c(1,4),c(5,6)))
 }
 \keyword{design}

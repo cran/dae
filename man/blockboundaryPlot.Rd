@@ -21,7 +21,7 @@ blockboundaryPlot(blockdefinition = NULL, blocksequence = FALSE,
     Similarly, a single value for a column specifies a repetition of blocks of that size 
          across the columns of the design, while several column values specifies a 
          sequence of blocks across the columns of the size specified.}
- \item{blocksequence}{A \code{\link{logical}} thatt determines whether block numbers are repetitions 
+ \item{blocksequence}{A \code{\link{logical}} that determines whether block numbers are repetitions 
               or sequences of block numbers.}
  \item{rstart}{A \code{\link{numeric}} speccifying the row after which the plotting 
                of block boundaries is to start.}
@@ -39,6 +39,7 @@ blockboundaryPlot(blockdefinition = NULL, blocksequence = FALSE,
 \value{no values are returned, but modifications are made to the currently active plot.}
 
 
+\author{Chris Brien}
 \seealso{\code{\link{designPlot}}, \code{\link{par}}, \code{DiGGer}}
 \examples{\dontrun{
     SPL.Lines.mat <- matrix(as.numfac(Lines), ncol=16, byrow=T)

@@ -34,14 +34,17 @@
   formula.plot <- formula(paste(deparse(substitute(response)), " ~ as.numeric(", 
                                 deparse(substitute(x.factor)), ") | ", deparse(substitute(trace.factor))))
   # do the plot
-  lbl.fn <- function(variable, value) {
-    value <- paste(name.t,": ", as.character(value), sep="")
-    return(value)}
+   addfacname <- function(string)
+  {
+    string <- paste(name.t,": ", as.character(string), sep="")
+    return(string)
+  }
   int.plot <- ggplot(data=data.means, 
                      aes_string(x = name.x, y = name.r, linetype=name.g, colour=name.g, group=name.g), ...) +
                      geom_line() + geom_point() + 
                      labs(xlab = xlab, ylab = ylab, title = title, group=key.title) +
-                     facet_grid(formula(paste("~ ", name.t, sep="")),, labeller = lbl.fn)
+                     facet_grid(formula(paste("~ ", name.t, sep="")), 
+                                labeller = labeller(.cols = addfacname))
   if (!is.null(ggplotFuncs))
     for (f in ggplotFuncs)
       int.plot <- int.plot + f

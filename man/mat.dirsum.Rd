@@ -12,6 +12,7 @@
  \item{matrices}{A list, each of whose component is a \code{\link{matrix}}.}
 }
 \value{An \eqn{m \times n}{m x n} \code{\link{matrix}}.}
+\author{Chris Brien}
 \seealso{\code{\link{mat.dirprod}}, \code{matmult}}
 \examples{
        m1 <- matrix(1:4, nrow=2)

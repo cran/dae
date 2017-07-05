@@ -20,11 +20,28 @@
 \code{\link{ABC.Interact.dat}} 
   \tab Randomly generated set of values indexed by \cr
   \tab three factors \cr
+\code{\link{BIBDWheat.dat}} 
+  \tab Data for a balanced incomplete block experiment \cr
+\code{\link{Casuarina.dat}}
+  \tab Data for an experiment with rows and columns from \cr
+  \tab Williams (2002) \cr
+\code{\link{Exp249.mplot.des}}
+ \tab Systematic, main-plot design for an experiment to be \cr
+ \tab run in a greenhouse \cr
 \code{\link{Fac4Proc.dat}}
   \tab Data for a 2^4 factorial experiment\cr
+\code{\link{LatticeSquare_t49.des}}
+ \tab A Lattice square design for 49 treatments \cr
+\code{\link{McIntyreTMV.dat}}
+ \tab The design and data from McIntyre (1955) two-phase \cr
+ \tab experiment \cr
 \code{\link{Sensory3Phase.dat}}
  \tab Data for the three-pahse sensory evaluation \cr
  \tab experiment in Brien, C.J. and Payne, R.W. (1999)\cr
+\code{\link{Sensory3PhaseShort.dat}}
+ \tab Data for the three-pahse sensory evaluation \cr
+ \tab experiment in Brien, C.J. and Payne, R.W. (1999), \cr
+ \tab but with short factor names \cr
 \code{\link{SPLGrass.dat}}
   \tab Data for an experiment to investigate the \cr
   \tab effects of grazing patterns on pasture \cr
@@ -60,19 +77,42 @@
   \tab This function plots a block boundary on a plot \cr
   \tab produced by 'designPlot'. It supersedes  \cr
   \tab blockboundary.plot. \cr
+\code{\link{designAmeasures}}
+  \tab Calculates the A-optimality measures from the \cr
+  \tab variance matrix for predictions\cr
+\code{\link{designAnatomy}}
+  \tab An anatomy of a design showing the confounding and \cr
+  \tab aliasing inherent in the design that is obtained \cr
+  \tab via a canonical analysis of its projectors.\cr
 \code{\link{designLatinSqrSys}}
   \tab Generate a systematic plan for a Latin Square design.\cr
 \code{\link{designPlot}}
-  \tab This function plots treatments within a matrix. \cr
+  \tab A graphical representation of an experimental design \cr 
+  \tab using labels stored in a matrix. \cr
   \tab It superseded design.plot.\cr
+\code{\link{designRandomize}}
+  \tab Randomize allocated to recipient factors to produce  \cr 
+  \tab a layout for an experiment\cr
 \code{\link{fac.layout}}
   \tab Generate a randomized layout for an experiment\cr
+\code{\link{marginality.pstructure}} 
+  \tab Extracts the marginality matrix from a \cr
+  \tab \code{\link{pstructure.object}} \cr
+\code{\link{marginality.pstructure}} 
+  \tab Extracts a list containing the marginality matrices from \cr
+  \tab a \code{\link{pcanon.object}} \cr
+\code{\link{print.aliasing}} 
+  \tab Prints an aliasing data.frame \cr
 \code{\link{no.reps}}
   \tab Computes the number of replicates for an experiment\cr
 \code{\link{detect.diff}}
   \tab Computes the detectable difference for an experiment\cr
 \code{\link{power.exp}}
   \tab Computes the power for an experiment\cr
+\code{\link{summary.pcanon}}
+  \tab Summarizes the anatomy of a design, being the \cr
+  \tab decomposition of the sample space based on its \cr
+  \tab canonical analysis \cr
 \cr
 (iv) ANOVA functions \cr\cr
 
@@ -121,18 +161,35 @@
   \tab Forms an ar2 correlation matrix\cr
 \code{\link{mat.ar3}}
   \tab Forms an ar3 correlation matrix\cr
-\code{\link{mat.sar2}}
-  \tab Forms an sar2 correlation matrix\cr
-\code{\link{mat.exp}}
-  \tab Forms an exponential correlation matrix \cr
+\code{\link{mat.arma}}
+  \tab Forms an arma correlation matrix\cr
 \code{\link{mat.banded}}
   \tab Forms a banded matrix\cr
+\code{\link{mat.exp}}
+  \tab Forms an exponential correlation matrix \cr
+\code{\link{mat.gau}}
+  \tab Forms a gaussian correlation matrix \cr
+\code{\link{mat.ma1}}
+  \tab Forms an ma1 correlation matrix\cr
+\code{\link{mat.ma2}}
+  \tab Forms an ma2 correlation matrix\cr
+\code{\link{mat.ncssvar}}
+  \tab Forms a variance matrix for random cubic \cr
+  \tab smoothing spline effects\cr
+\code{\link{mat.sar}}
+  \tab Forms an sar correlation matrix\cr
+\code{\link{mat.sar2}}
+  \tab Forms an sar2 correlation matrix\cr
 \code{\link{mat.dirprod}}
   \tab Forms the direct product of two matrices\cr
 \code{\link{mat.dirsum}}
   \tab Forms the direct sum of a list of matrices\cr
 \code{\link{mat.Vpred}}
   \tab Forms the variance matrix of predictions\cr
+\code{\link{Zncsspline}}
+  \tab Forms the design matrix for fitting the \cr
+  \tab random effects for a natural cubic smoothing \cr
+  \tab spline. \cr
 \cr
 (vi) Projector and canonical efficiency functions\cr\cr
 \cr
@@ -155,13 +212,14 @@ Projector class:\cr\cr
 \cr
 Accepts two or more formulae:\cr\cr
 
-\code{\link{projs.canon}}
-  \tab A canonical analysis of the relationships between\cr
-  \tab two or more sets of projectors\cr
+\code{\link{designAnatomy}}
+  \tab An anatomy of a design, obtained from \cr
+  \tab a canonical analysis of the relationships \cr
+  \tab between sets of projectors.\cr
 \code{\link{summary.pcanon}}
-  \tab A summary of the results of an analysis of\cr
-  \tab the relationships between two or more sets of\cr 
-  \tab projectors\cr
+  \tab Summarizes the anatomy of a design, being the \cr
+  \tab decomposition of the sample space based on its \cr
+  \tab canonical analysis \cr
 \code{\link{print.summary.pcanon}}
   \tab Prints the values in an 'summary.pcanon' object\cr
 \code{\link{efficiencies.pcanon}}
@@ -185,11 +243,19 @@ Accepts exactly two formulae:\cr\cr
   \tab Extracts the canonical efficiency factors from\cr
   \tab a list of class 'p2canon'\cr
 \cr
+Accepts a single formula:\cr\cr
+
+\code{\link{as.data.frame.pstructure}}
+  \tab Coerces a pstructure.object to a data.frame \cr
+\code{\link{print.pstructure}}
+  \tab Prints a pstructure.object \cr
+\code{\link{pstructure.formula}}
+  \tab Takes a formula and constructs a pstructure.object \cr
+  \tab that includes the orthogonalized projectors for the \cr
+  \tab terms in a formula\cr
+
 Others:\cr\cr
 
-\code{\link{Ameasures}}
-  \tab Calculates the A-optimality measures from the \cr
-  \tab variance matrix for predictions\cr
 \code{\link{decomp.relate}}
   \tab Examines the relationship between the\cr
   \tab eigenvectors for two decompositions\cr
@@ -207,8 +273,6 @@ Others:\cr\cr
 \code{\link{proj2.combine}}
   \tab Compute the projection and Residual operators\cr
   \tab for two, possibly nonorthogonal, projectors\cr
-\code{\link{projs.structure}}
-  \tab Orthogonalised projectors for the terms in a formula\cr
 \code{\link{show-methods}}
   \tab Methods for Function 'show' in Package dae\cr
 \cr

@@ -110,7 +110,37 @@
     return(mat)
   }
 
-mat.sar2 <- function(gamma, order, print = NULL)
+"mat.gau" <- function(rho, coordinates) 
+{ if (abs(rho) > 1)
+  stop(paste("abs(rho) must be less than 1 \n",
+             "Note order of mat.exp arguments changed to (rho, coordinates)",sep=""))
+  order <- length(coordinates)
+  n <- order * order
+  mat <- matrix(rep(rho, n), nrow = order, ncol = order)
+  rownames(mat) <- colnames(mat) <- coordinates
+  power  <- (outer(coordinates,coordinates,'-'))^2
+  mat <- mat^power
+  return(mat)
+}
+
+"mat.sar" <- function(SARparameter, order)
+{ #check SARparameter values
+  if (abs(SARparameter) >= 1)
+    stop("SARparameter must be less than 1")
+
+  #Calculate autocorrelations
+  corrs <- vector(mode = "numeric", length = order)
+  corrs[1] <- 1
+  corrs[2] <- SARparameter/(1 + (SARparameter*SARparameter/4))
+  for (k in 3:order)
+    corrs[k] <- SARparameter*corrs[k-1] - (SARparameter*SARparameter/4)*corrs[k-2]
+  
+  #Form correlation matrix
+  sar <- mat.banded(corrs, order, order)  
+  return(sar)
+}
+
+"mat.sar2" <- function(gamma, order, print = NULL)
 { options <- c("ar3parameters")
   if (is.null(print))
     opt <- "none"
@@ -232,6 +262,81 @@ mat.sar2 <- function(gamma, order, print = NULL)
   return(dsum)  
 }
 
+#Function form variance matrix for random effects for a natural cubic smoothing spline
+mat.ncssvar <- function(sigma2s = 1, knot.points, print = FALSE)
+{
+  #Check knot.points  
+  if (is.matrix(knot.points))
+    if (ncol(knot.points) != 1)
+      stop("knot.points should be a single column matrix")
+  if (is.unsorted(knot.points))
+    stop("the knot.points should be in increasing order")
+  
+  h <- as.vector(knot.points)
+  r <- length(h)
+  krange <- (h[r] - h[1]) / (r - 1)
+  h <- diff(h, lag=1) / krange
+  
+  TD <- matrix(0, nrow = r, ncol = r)
+  diag(TD)[2:(r-1)] <- (h[2:(r-1)] + h[1:(r-2)])/3
+  TD[row(TD)==col(TD)-1] <- c(0,h[2:(r-2)], 0)/6
+  TD[row(TD)==col(TD)+1] <- c(0,h[2:(r-2)], 0)/6
+  TD <- TD[2:(r-1), 2:(r-1)]
+  TD <- sigma2s * TD
+  if (print)
+  {
+    cat("\n\n#### TD \n\n")
+    print(TD)
+  }
+  
+  return(TD)
+}
+
+#design matrix for a natural cubic smoothing splines
+Zncsspline <- function(knot.points, Gpower = 0, print = FALSE)
+{
+  #Check knot.points  
+  if (is.matrix(knot.points))
+    if (ncol(knot.points) != 1)
+      stop("knot.points should be a single column matrix")
+  if (is.unsorted(knot.points))
+    stop("the knot.points should be in increasing order")
+  
+  h <- as.vector(knot.points)
+  r <- length(h)
+  krange <- (h[r] - h[1]) / (r - 1)
+  h <- diff(h, lag=1) / krange
+  
+  delta <- diag(as.vector(1/h), nrow = r, ncol = (r-2))
+  delta[row(delta)==col(delta)+1] <- -(1/h[1:(r-2)] + 1/h[2:(r-1)])
+  delta[row(delta)==col(delta)+2] <- 1/h[2:(r-1)]
+  Z <- delta %*% ginv(t(delta) %*% delta)
+  if (print)
+  {
+    cat("\n\n#### delta\n\n")
+    print(delta)
+  }
+  
+  TD <- matrix(0, nrow = r, ncol = r)
+  diag(TD)[2:(r-1)] <- (h[2:(r-1)] + h[1:(r-2)])/3
+  TD[row(TD)==col(TD)-1] <- c(0,h[2:(r-2)], 0)/6
+  TD[row(TD)==col(TD)+1] <- c(0,h[2:(r-2)], 0)/6
+  TD <- TD[2:(r-1), 2:(r-1)]
+  if (print)
+  {
+    cat("\n\n#### TD \n\n")
+    print(TD)
+  }
+  
+  #operator to get power of a matrix
+  "%^%" <- function(x, n) 
+    with(eigen(x), vectors %*% (values^n * t(vectors))) 
+  
+  if (Gpower != 0)  
+    Z <- Z %*% (TD %^% Gpower)
+  return(Z)
+}
+
 ### Function to calculate the variance of predictions for Genotypes
 "mat.Vpred" <- function(W, Gg = 0, X = matrix(1, nrow = nrow(W), ncol = 1), Vu = 0, R)
 { #set W or X to a column vector of 0s and Gg or Vu to a matrix of 0s if not effects for them not random
@@ -254,7 +359,7 @@ mat.sar2 <- function(gamma, order, print = NULL)
 
 
 ### Function to calculate 
-"Ameasures" <- function(Vpred, groupsizes = NULL, groups = NULL)
+"designAmeasures" <- function(Vpred, groupsizes = NULL, groups = NULL)
 { 
   #determine any groupings of the variances
   n <- nrow(Vpred)

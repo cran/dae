@@ -31,9 +31,10 @@
              \item the second subdiagonal band (\code{k = 3}) of \code{corr} are equal to \cr
                    \code{(phi[1] * (phi[1] + phi[3]) + phi[2] * (1 - phi[2])) / omega}; 
              \item the subsequent subdiagonal bands, (\code{k = 4:order}), of \code{corr} are equal to \cr
-                      \code{phi[1]*corrs[k-1] + phi[2]*corrs[k-2] + phi[3]*corrs[k-3]}.}}
+                      \code{phi[1]*corr[k-1] + phi[2]*corr[k-2] + phi[3]*corr[k-3]}.}}
+\author{Chris Brien}
 \seealso{\code{\link{mat.I}}, \code{\link{mat.J}}, \code{\link{mat.banded}}, \code{\link{mat.exp}}, 
-\code{\link{mat.ar1}}, \code{\link{mat.ar2}}, \code{\link{mat.ar3}}, 
+\code{\link{mat.gau}}, \code{\link{mat.ar1}}, \code{\link{mat.ar2}}, \code{\link{mat.ar3}}, \code{\link{mat.sar}}, 
 \code{\link{mat.ma1}}, \code{\link{mat.ma2}}, \code{\link{mat.arma}}}
 \examples{
     corr <- mat.sar2(gamma = c(-0.4, 0.2), order = 4)

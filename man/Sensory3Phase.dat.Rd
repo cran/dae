@@ -1,7 +1,8 @@
 \name{Sensory3Phase.dat}
 \docType{data}
 \alias{Sensory3Phase.dat}
-\title{Data for the three-pahse sensory evaluation experiment in Brien, C.J. and Payne,
+\alias{Sensory3PhaseShort.dat}
+\title{Data for the three-phase sensory evaluation experiment in Brien, C.J. and Payne,
 R.W. (1999)}
 \description{
 The data is from an experiment involved two phases.  In the field phase 
@@ -46,10 +47,15 @@ variable Score.
 The scores are ordered so that the factors Occasion, Judges, Interval,
 Sittings and Position are in standard order; the remaining factors are
 in randomized order.
+
+See also the vignette \cite{daeDesignNotes.pdf}.
 }
-\usage{data(Sensory3Phase.dat)}
-\format{A data.frame containing 576 observations of 12 variables.}
+\usage{data(Sensory3Phase.dat)
+data(Sensory3PhaseShort.dat)}
+\format{A data.frame containing 576 observations of 12 variables. 
+        There are two versions, one with shorter factor names than the other.
+}
 \references{Brien, C.J. and Payne, R.W. (1999) Tiers, structure formulae 
-and the analysis of complicated experiments. The Statistician, 48, 41-52.
+and the analysis of complicated experiments. \emph{The Statistician}, \bold{48}, 41-52.
 }
 \keyword{datasets}

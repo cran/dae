@@ -1,147 +1,7 @@
-"fac.getinTerm" <- function(term)
-  #function to return the set of factors/variables in a term separated by ':"
-{ unlist(strsplit(term, ":", fixed=TRUE))}
-
-"projs.jandw" <- function(R, Q, which.criteria = c("aefficiency","eefficiency","order"))
-#A function to use J&W to orthogonalise the set of Q to R and previous Q
-{ if (!is.list(Q))
-    stop("The matrices to orthogonalize to must be in a list")
-
-  #check which.criteria arguments
-  criteria <- c("aefficiency", "eefficiency", "mefficiency", "sefficiency", "xefficiency", 
-                "order", "dforthog")
-  options <- c(criteria, "none", "all")
-  kcriteria <- options[unlist(lapply(which.criteria, check.arg.values, 
-                                     options=options))]
-  if ("all" %in% kcriteria)
-    kcriteria <- criteria
-  anycriteria <- !("none" %in% kcriteria)
-  #set up efficiency summary
-  if (anycriteria)
-  { nc <- 2 + length(kcriteria)
-    summary <- data.frame(matrix(nrow = 0, ncol=nc))
-    colnames(summary) <- c("Source", "df", kcriteria)
-    eff.crit <- vector(mode="list",length=length(kcriteria))
-    names(eff.crit) <- kcriteria
-  }
-
-  #do orthogonalization
-  terms <- names(Q)
-  for (i in 1:length(terms))
-  { decomp <- proj2.combine(R, Q[[terms[i]]])
-    Q[[terms[i]]] <- decomp$Qconf
-    R <- decomp$Qres
-    df <- degfree(Q[[terms[i]]])
-    if (df == 0)
-    { warning(paste(terms[[i]],"is aliased with previous terms in the formula", sep=" "))
-      if (anycriteria)
-      { 
-        eff.crit[kcriteria] <- 0
-        summary <- rbind(summary, 
-                         data.frame(c(list(Source = terms[[i]], df = df), eff.crit), 
-                                    stringsAsFactors = FALSE))
-      }
-    } else
-    { keff.crit <- efficiency.criteria(decomp$efficiencies)
-      if ((df - keff.crit[["dforthog"]]) != 0)
-      { warning(paste(terms[[i]],"is partially aliased with previous terms in the formula", sep=" "))
-        if (anycriteria)
-          summary <- rbind(summary, 
-                           data.frame(c(list(Source = terms[[i]], df = df), keff.crit[kcriteria]), 
-                                      stringsAsFactors = FALSE))
-      }
-    }
-  }
-  
-  #Print out the efficiency criteria if which.criteria is set
-  if (anycriteria & nrow(summary) > 0)
-  { cat("\nTable of efficiency criteria for (partial) aliasing between terms within a structure\n\n")
-    print(summary)
-  }
-  return(Q)
-}
-  
-"projs.structure" <- function(formula, orthogonalize = "differencing", meanTerm = FALSE, 
-                              which.criteria = c("aefficiency","eefficiency","order"), 
-                              data = NULL, ...)
-{ #generate a set of mutually orthogonal projection matrices, one for each term in the formula
-  options <- c("differencing", "eigenmethods")
-  opt <- options[check.arg.values(orthogonalize, options)]
-  #check which.criteria arguments
-  criteria <- c("aefficiency", "eefficiency", "mefficiency", "sefficiency", "xefficiency", 
-                "order", "dforthog")
-  options <- c(criteria, "none", "all")
-  kcriteria <- options[unlist(lapply(which.criteria, check.arg.values, 
-                                     options=options))]
-  if ("all" %in% kcriteria)
-    kcriteria <- criteria
-  anycriteria <- !("none" %in% kcriteria)
-  
-  #Initialize
-  if (is.null(data) | !is.data.frame(data))
-    stop("Must supply a data.frame for data")
-  n <- nrow(data)
-  Q.G = projector(matrix(1, nrow=n, ncol=n)/n)
-  fac.modl <- model.frame(formula, data=data)
-  
-  #get terms and form mean operators for each term
-  terms <- attr(terms(formula, ...), which="term.labels")
-  if (meanTerm)  #add grand mean term if meanTerm is TRUE
-  {
-    Q <- vector("list", length=length(terms)+1)
-    names(Q) <- c("Mean", terms)
-    Q[["Mean"]] <- Q.G
-  } else
-  {
-    Q <- vector("list", length=length(terms))
-    names(Q) <- terms
-  }
-  for (k in 1:length(terms))
-  { Q[[terms[k]]] <- model.matrix(as.formula(paste("~ ",terms[k])), data=fac.modl)
-    Q[[terms[k]]] <- Q[[terms[k]]] %*% ginv(t(Q[[terms[k]]]) %*% Q[[terms[k]]]) %*% t(Q[[terms[k]]])
-    Q[[terms[k]]] <- projector(Q[[terms[k]]] - Q.G)
-  }
-  
-  #form projection matrices of the structure
-  if (length(terms) > 1)
-  { if (orthogonalize == "differencing") #by difference
-    { orthogonal <- TRUE
-      fac.mat <- attr(terms(formula, ...), which="factors")
-      for (i in 2:length(terms))
-      { Q.work <- Q[[terms[i]]]
-        for (j in 1:length(terms))
-        { if (i != j)
-          { if (all((fac.mat[,j] != 0) == (fac.mat[,j] & fac.mat[,i])))
-               Q.work <- Q.work - Q[[terms[j]]]
-          }
-        }
-        Q.work <- projector(Q.work)
-        if (degfree(Q.work) == 0)
-          warning(paste(terms[[i]],"is aliased with previous terms in the formula", sep=" "))
-        else #Check that this term is orthogonal to previous projectors
-        { i1 <- i - 1 
-          if (i1 > 0)
-            for (j in 1:i1)
-              if (!is.allzero(Q.work %*% Q[[terms[j]]]))
-              { warning(paste("** Projection matrices for ",terms[i], " and ", terms[j], 
-                              " are not orthogonal", sep=""))
-              }
-        }
-        Q[[terms[i]]] <- Q.work
-      }
-    }
-    else  #by recursive orthogonalization
-    { R <- projector(diag(1, nrow = n, ncol = n) - Q[[terms[1]]] - Q.G)
-      Q[terms[2:length(terms)]] <- projs.jandw(R, Q[terms[2:length(terms)]],
-                                               which.criteria = kcriteria)
-    }
-  }
-  
-  return(Q)
-}    
 
 "efficiency.criteria" <- function(efficiencies)
-{ daeTolerance <- get("daeTolerance", envir=daeEnv)
+{ 
+  daeTolerance <- get("daeTolerance", envir=daeEnv)
   criteria <- vector(mode="list", length = 7)
   names(criteria) <- c('aefficiency','mefficiency','sefficiency','eefficiency',
                        "xefficiency",'order',"dforthog")
@@ -150,16 +10,17 @@
   K <- length(eff.unique)
   if (K == 1)
   { if (eff.unique == 0)
-    { criteria["aefficiency"] <- 0
+    { 
+    criteria["aefficiency"] <- 0
       criteria["mefficiency"] <- 0
       criteria["sefficiency"] <- 0
       criteria["eefficiency"] <- 0
       criteria["xefficiency"] <- 0
       criteria["order"] <- 0
       criteria["dforthog"] <- 0
-  }
-    else
-    { criteria["aefficiency"] <- eff.unique
+  } else
+    { 
+      criteria["aefficiency"] <- eff.unique
       criteria["mefficiency"] <- eff.unique
       criteria["sefficiency"] <- 0
       criteria["eefficiency"] <- eff.unique
@@ -167,9 +28,9 @@
       criteria["order"] <- K
       criteria["dforthog"] <- df.orthog
     }
-  }
-  else
-  { criteria["aefficiency"] <- harmonic.mean(efficiencies)
+  } else
+  { 
+    criteria["aefficiency"] <- harmonic.mean(efficiencies)
     criteria["mefficiency"] <- mean(efficiencies)
     criteria["sefficiency"] <- var(efficiencies)
     criteria["eefficiency"] <- min(efficiencies)
@@ -188,32 +49,32 @@ print.summary.p2canon <- function(x, ...)
   nlines <- nrow(y)
   repeats <- c(FALSE, y[2:nlines,"Source"] == y[1:(nlines-1),"Source"])
   y[repeats, "Source"] <- "  "
-  if ("aefficiency" %in% names(y))
-  { y$aefficiency <- formatC(y$aefficiency, format="f", digits=4, width=11)
+  if ("aefficiency" %in% names(y)) { 
+    y$aefficiency <- formatC(y$aefficiency, format="f", digits=4, width=11)
     y$aefficiency <- gsub("NA", "  ", y$aefficiency)
   }
-  if ("mefficiency" %in% names(y))
-  { y$mefficiency <- formatC(y$mefficiency, format="f", digits=4, width=11)
+  if ("mefficiency" %in% names(y)) { 
+    y$mefficiency <- formatC(y$mefficiency, format="f", digits=4, width=11)
     y$mefficiency <- gsub("NA", "  ", y$mefficiency)
   }
-  if ("eefficiency" %in% names(y))
-  { y$eefficiency <- formatC(y$eefficiency, format="f", digits=4, width=11)
+  if ("eefficiency" %in% names(y)) { 
+    y$eefficiency <- formatC(y$eefficiency, format="f", digits=4, width=11)
     y$eefficiency <- gsub("NA", "  ", y$eefficiency)
   }
-  if ("xefficiency" %in% names(y))
-  { y$xefficiency <- formatC(y$xefficiency, format="f", digits=4, width=11)
+  if ("xefficiency" %in% names(y)) { 
+    y$xefficiency <- formatC(y$xefficiency, format="f", digits=4, width=11)
     y$xefficiency <- gsub("NA", "  ", y$xefficiency)
   }
-  if ("sefficiency" %in% names(y))
-  { y$sefficiency <- formatC(y$sefficiency, format="f", digits=4, width=11)
+  if ("sefficiency" %in% names(y)) { 
+    y$sefficiency <- formatC(y$sefficiency, format="f", digits=4, width=11)
     y$sefficiency <- gsub("NA", "  ", y$sefficiency)
   }
-  if ("order" %in% names(y))
-  { y$order <- formatC(y$order, format="f", digits=0, width=5)
+  if ("order" %in% names(y)) { 
+    y$order <- formatC(y$order, format="f", digits=0, width=5)
     y$order <- gsub("NA", "  ", y$order)
   }
-  if ("dforthog" %in% names(y))
-  { y$dforthog <- formatC(y$dforthog, format="f", digits=0, width=8)
+  if ("dforthog" %in% names(y)) { 
+    y$dforthog <- formatC(y$dforthog, format="f", digits=0, width=8)
     y$dforthog <- gsub("NA", "  ", y$dforthog)
   }
   print.data.frame(y, na.print="  ", right=FALSE, row.names=FALSE)
@@ -232,22 +93,24 @@ print.summary.p2canon <- function(x, ...)
   isproj <- is.projector(Q1) & is.projector(Q2)
 
   if (length(Eff.Q1.Q2) == 1 & Eff.Q1.Q2[1]==0) #check matrices are orthogonal
-  { Qconf <- projector(matrix(0, nrow = n, ncol = n))
+  { 
+    Qconf <- projector(matrix(0, nrow = n, ncol = n))
     Qres <- Q1
     Eff.Q1.Q2 <- 0
     warning("Matrices are orthogonal.")
-  }
-  else
-  { daeTolerance <- get("daeTolerance", envir=daeEnv)
+  } else
+  { 
+    daeTolerance <- get("daeTolerance", envir=daeEnv)
     EffUnique.Q1.Q2 <-remove.repeats(Eff.Q1.Q2, daeTolerance[["eigen.tol"]])
     K <- length(EffUnique.Q1.Q2)
     #check for all confounded (i.e. eff = 1)
     if (K == 1 & EffUnique.Q1.Q2[1] == 1 & length(Eff.Q1.Q2) == degfree(Q2))
-    { Qconf <- projector(Q2)
+    { 
+      Qconf <- projector(Q2)
       Qres <- projector(Q1 - Q2)
-    }
-    else      #compute projection operators for partially confounded case
-    { I <- diag(1, nrow = n, ncol = n)
+    } else      #compute projection operators for partially confounded case
+    { 
+      I <- diag(1, nrow = n, ncol = n)
       Qres <- I
       Q121 <- Q1 %*% Q2 %*% Q1
       for(i in 1:K)
@@ -262,7 +125,8 @@ print.summary.p2canon <- function(x, ...)
 
 "projs.2canon" <- function(Q1, Q2)
   #Function to do an eigenanalysis of the relationship between two sets of projection matrices
-{ if (!is.list(Q1) | !is.list(Q2))
+{ 
+  if (!is.list(Q1) | !is.list(Q2))
     stop("Both Q1 and Q2 must be lists")
   daeTolerance <- get("daeTolerance", envir=daeEnv)
   
@@ -279,15 +143,22 @@ print.summary.p2canon <- function(x, ...)
   criteria <- c('aefficiency','mefficiency','sefficiency','eefficiency',"xefficiency",
                 'order',"dforthog")
   
+  #set up aliasing summary
+  nc <- 4 + length(criteria)
+  aliasing <- data.frame(matrix(nrow = 0, ncol=nc))
+  colnames(aliasing) <- c("Source", "df", "Alias", "In", criteria)
+
   #Perform the analysis
   kQ1Q2 <- 0
   multieffic <- FALSE
   results <- vector(mode = "list", length = 0)
   for (i in Q1labels)
-  { results[[i]][["Q1res"]] <- Q1[[i]]
+  { 
+    results[[i]][["Q1res"]] <- Q1[[i]]
     rdf <- degfree(Q1[[i]])
     for (j in Q2labels)
-    { if (rdf >0) #only do this if there are df left in Q1
+    { 
+      if (rdf >0) #only do this if there are df left in Q1
       { #Get unadjusted criteria and store only if confounded
         Q1Q2.eff <- suppressWarnings(proj2.efficiency(Q1[[i]], Q2[[j]]))
         if (Q1Q2.eff[1] > 0)
@@ -299,10 +170,23 @@ print.summary.p2canon <- function(x, ...)
             #Check for adjusted orthogonality
             Qfitlab <- names(results[[i]])[-1]
             if (length(Qfitlab) > 0)
-            { for (k in Qfitlab)
-              { Qjik <- Q2[[k]] %*% Q1[[i]] %*% Q2[[j]]
+            { 
+              for (k in Qfitlab)
+              { 
+                Qjik <- Q2[[k]] %*% Q1[[i]] %*% Q2[[j]]
                 if(!is.allzero(Qjik))
+                {
                   warning(paste(j,"and",k,"are partially aliased in",i, sep=" "))
+                  eff.crit <- efficiency.criteria(adj.Q1Q2$efficiencies)
+                  names(eff.crit) <- criteria
+                  aliasing <- rbind(aliasing, 
+                                    data.frame(c(list(Source = j, 
+                                                      df = degfree(adj.Q1Q2$Qconf),
+                                                      Alias = k,
+                                                      In = i),
+                                                 eff.crit[criteria]), 
+                                               stringsAsFactors = FALSE))
+                }
               }
             }  
             
@@ -312,7 +196,8 @@ print.summary.p2canon <- function(x, ...)
             results[[i]][[j]][["pairwise"]][criteria] <- efficiency.criteria(Q1Q2.eff)
             
             if (degfree(adj.Q1Q2$Qres) == 0)
-            { adj.Q1Q2$Qres <- matrix(0, nrow=nrow(adj.Q1Q2$Qres), ncol=ncol(adj.Q1Q2$Qres))
+            { 
+              adj.Q1Q2$Qres <- matrix(0, nrow=nrow(adj.Q1Q2$Qres), ncol=ncol(adj.Q1Q2$Qres))
               adj.Q1Q2$Qres <- projector(adj.Q1Q2$Qres)
             }
             results[[i]][["Q1res"]] <- adj.Q1Q2$Qres
@@ -327,20 +212,34 @@ print.summary.p2canon <- function(x, ...)
             #Store adjusted projector
             results[[i]][[j]][["Qproj"]] <- adj.Q1Q2$Qconf
             rdf <- degfree(adj.Q1Q2$Qres)
-          }
-          else
+          } else
+          {
             warning(paste(j,"is aliased with previous terms in",i, sep=" "))
+            eff.crit <- rep(0, length(criteria))
+            names(eff.crit) <- criteria
+            aliasing <- rbind(aliasing, 
+                              data.frame(c(list(Source = j, 
+                                                df = 0,
+                                                Alias = "unknown",
+                                                In = i),
+                                          eff.crit), 
+                                         stringsAsFactors = FALSE))
+          }
         }  
       }
     }
   }
-  class(results) <- "p2canon"
-  return(results)
+  if (nrow(aliasing) == 0 )
+    aliasing <- NULL
+  p2can <- list(decomp = results, aliasing = aliasing)
+  class(p2can) <- "p2canon"
+  return(p2can)
 }
 
 "summary.p2canon" <- function(object, which.criteria = c("aefficiency", "eefficiency", "order"), ...)
   #Routine to output a summary of the projector analysis
-{ if (!inherits(object, "p2canon"))
+{ 
+  if (!inherits(object, "p2canon"))
     stop("object must be of class p2canon as produced by projs.2canon")
   #check which.criteria arguments
   criteria <- c("aefficiency", "eefficiency", "mefficiency", "sefficiency", "xefficiency", 
@@ -356,7 +255,8 @@ print.summary.p2canon <- function(x, ...)
   orthogonaldesign <- TRUE
   nc <- 3
   if (anycriteria)
-  { nc <- nc + length(kcriteria)
+  { 
+    nc <- nc + length(kcriteria)
     res.criteria <- vector(mode = "list", length = length(kcriteria))
     names(res.criteria) <- kcriteria
     res.criteria[kcriteria] <- NA
@@ -367,23 +267,27 @@ print.summary.p2canon <- function(x, ...)
   {   summary <- data.frame(matrix(nrow = 0, ncol=nc))
       colnames(summary) <- c("Source", "Confounded.source", "df")
   }  
-  Q1labels <- names(object)
+  Q1labels <- names(object$decomp)
   for (i in Q1labels)
-  { Q2labels <- names(object[[i]])[-1]
+  { 
+    Q2labels <- names(object$decomp[[i]])[-1]
     nconf.terms <- 0
     if (length(Q2labels) > 0)
-    { for (j in Q2labels)
-      { kdf <- degfree(object[[i]][[j]]$Qproj)
+    { 
+      for (j in Q2labels)
+      { 
+      kdf <- degfree(object$decomp[[i]][[j]]$Qproj)
         if (kdf > 0)
-        { nconf.terms <- nconf.terms + 1
-          if (abs(1 - unlist(object[[i]][[j]][["adjusted"]]["aefficiency"])) > 1e-04)
+        { 
+          nconf.terms <- nconf.terms + 1
+          if (abs(1 - unlist(object$decomp[[i]][[j]][["adjusted"]]["aefficiency"])) > 1e-04)
             orthogonaldesign <- FALSE
           if (anycriteria)
             summary <- rbind(summary,
                              data.frame(Source = i,
                                         Confounded.source = j, 
                                         df = kdf, 
-                                        object[[i]][[j]][["adjusted"]][kcriteria], 
+                                        object$decomp[[i]][[j]][["adjusted"]][kcriteria], 
                                         stringsAsFactors = FALSE))
           else
             summary <- rbind(summary,
@@ -394,10 +298,11 @@ print.summary.p2canon <- function(x, ...)
         }
       }
     }
-    kdf <- degfree(object[[i]]$Q1res)
+    kdf <- degfree(object$decomp[[i]]$Q1res)
     if (kdf > 0)
       if (nconf.terms > 0)
-      { if (anycriteria)
+      { 
+        if (anycriteria)
         summary <- rbind(summary,
                          data.frame(Source = i,
                                     Confounded.source = "Residual", 
@@ -410,9 +315,9 @@ print.summary.p2canon <- function(x, ...)
                                       Confounded.source = "Residual", 
                                       df = kdf, 
                                       stringsAsFactors = FALSE))
-      }  
-      else
-      { if (anycriteria)
+      } else
+      { 
+        if (anycriteria)
         summary <- rbind(summary,
                          data.frame(Source = i,
                                     Confounded.source = "   ", 
@@ -436,24 +341,38 @@ print.summary.p2canon <- function(x, ...)
 }
 
 
-"efficiencies.p2canon" <- function(object, which = "adjusted")
+"efficiencies.decomp" <- function(decomp, which = "adjusted", ...)
+  #function to extract the efficiency factors from a p2canon object 
+{ 
+  options <- c("adjusted", "pairwise")
+  opt <- options[check.arg.values(which, options)]
+  
+  #Get efficiencies
+  Q1labels <- names(decomp)
+  efficiencies <- vector(mode = "list", length = 0)
+  for (i in Q1labels)
+  { 
+    Q2labels <- names(decomp[[i]])[-1]
+    if (length(Q2labels) > 0)
+    { 
+      efficiencies[[i]] <- vector(mode = "list", length = 0)
+      for (j in Q2labels)
+        efficiencies[[i]][[j]] <- decomp[[i]][[j]][[opt]][["efficiencies"]]
+    }  
+  }
+  return(efficiencies)
+}  
+
+"efficiencies.p2canon" <- function(object, which = "adjusted", ...)
 #function to extract the efficiency factors from a p2canon object 
-{ if (!inherits(object, "p2canon"))
+{ 
+  if (!inherits(object, "p2canon"))
     stop("object must be of class p2canon as produced by projs.2canon")
   options <- c("adjusted", "pairwise")
   opt <- options[check.arg.values(which, options)]
   
   #Get efficiencies
-  Q1labels <- names(object)
-  efficiencies <- vector(mode = "list", length = 0)
-  for (i in Q1labels)
-  { Q2labels <- names(object[[i]])[-1]
-    if (length(Q2labels) > 0)
-    { efficiencies[[i]] <- vector(mode = "list", length = 0)
-      for (j in Q2labels)
-        efficiencies[[i]][[j]] <- object[[i]][[j]][[opt]][["efficiencies"]]
-    }  
-  }
+  efficiencies <- efficiencies.decomp(object$decomp, which = which)
   return(efficiencies)
 }  
 
@@ -464,23 +383,26 @@ print.summary.p2canon <- function(x, ...)
   Q1combineQ2 <- vector(mode = "list", length = 0)
   
   #Loop through p2canon object
-  Q1labels <- names(object)
+  Q1labels <- names(object$decomp)
   efficiencies <- vector(mode = "list", length = 0)
   for (i in Q1labels)
-  { Q2labels <- names(object[[i]])[-1]
+  { 
+    Q2labels <- names(object$decomp[[i]])[-1]
     if (length(Q2labels) > 0)
-    { for (j in Q2labels)
-      { Q1Q2label <- paste(Q1labels[[match(i, Q1labels)]], Q2labels[[match(j, Q2labels)]], sep="&")
-        Q1combineQ2[[Q1Q2label]] <-object[[i]][[j]][["Qproj"]]
+    { 
+      for (j in Q2labels)
+      { 
+        Q1Q2label <- paste(Q1labels[[match(i, Q1labels)]], Q2labels[[match(j, Q2labels)]], sep="&")
+        Q1combineQ2[[Q1Q2label]] <-object$decomp[[i]][[j]][["Qproj"]]
       }
       #Get the residual if any
-      if (degfree(object[[i]][["Q1res"]]) > 0)
-      { Q1Q2label <- paste(Q1labels[[match(i, Q1labels)]],"Residual", sep="&")
-        Q1combineQ2[[Q1Q2label]] <- object[[i]][["Q1res"]]
+      if (degfree(object$decomp[[i]][["Q1res"]]) > 0)
+      { 
+        Q1Q2label <- paste(Q1labels[[match(i, Q1labels)]],"Residual", sep="&")
+        Q1combineQ2[[Q1Q2label]] <- object$decomp[[i]][["Q1res"]]
       }
-    }
-    else
-      Q1combineQ2[[i]] <- object[[i]][["Q1res"]]
+    } else
+      Q1combineQ2[[i]] <- object$decomp[[i]][["Q1res"]]
   }
   return(Q1combineQ2)
 }  

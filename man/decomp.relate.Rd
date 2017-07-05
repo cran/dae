@@ -32,17 +32,17 @@ can be used to change \code{daeTolerance}.}
 PBIBD2.unit <- list(Block = 6, Unit = 4)
 PBIBD2.nest <- list(Unit = "Block")
 trt <- factor(c(1,4,2,5, 2,5,3,6, 3,6,1,4, 4,1,5,2, 5,2,6,3, 6,3,4,1))
-PBIBD2.lay <- fac.layout(unrandomized = PBIBD2.unit, 
-                         nested.factors=PBIBD2.nest, 
-                         randomized = trt)
+PBIBD2.lay <- designRandomize(allocated = trt, 
+                              recipient = PBIBD2.unit, 
+                              nested.recipients = PBIBD2.nest)
 
 ##obtain sets of projectors
-Q.unit <- projs.structure(~ Block/Unit, data = PBIBD2.lay)
-Q.trt <- projs.structure(~ trt, data = PBIBD2.lay)
+unit.struct <- pstructure(~ Block/Unit, data = PBIBD2.lay)
+trt.struct <- pstructure(~ trt, data = PBIBD2.lay)
 
 ## obtain intra- and inter-block decompositions
-decomp.inter <- proj2.eigen(Q.unit[["Block"]], Q.trt[["trt"]])
-decomp.intra <- proj2.eigen(Q.unit[["Block:Unit"]], Q.trt[["trt"]])
+decomp.inter <- proj2.eigen(unit.struct$Q[["Block"]], trt.struct$Q[["trt"]])
+decomp.intra <- proj2.eigen(unit.struct$Q[["Unit[Block]"]], trt.struct$Q[["trt"]])
 
 ## check that intra- and inter-block decompositions are orthogonal
 decomp.relate(decomp.intra, decomp.inter) 

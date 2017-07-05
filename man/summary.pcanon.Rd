@@ -1,16 +1,27 @@
 \name{summary.pcanon}
 \alias{summary.pcanon}
 \alias{summary,pcanon-method}
-\title{Summarize a canonical analysis of the relationships between sets of projectors}
-\description{Produces a summary of the efficiency criteria computed from the 
-             canonical efficiency factors for the joint decomposition of two or 
+\title{Summarizes the anatomy of a design, being the decomposition of the sample space based on its canonical analysis}
+\description{Gives the anatomy of a design in a table; it summarizes the joint decomposition of two or 
              more sets of projectors (Brien and Bailey, 2009) obtained using 
-             \code{\link{projs.canon}}. It takes the form of a decomposition or skeleton 
-             ANOVA table.}
-\usage{\method{summary}{pcanon}(object, which.criteria = c("aefficiency", "eefficiency", "order"), ...)}
+             \code{\link{designAnatomy}}. It includes the efficiency criteria computed 
+             from the canonical efficiency factors for the joint decomposition. The labels in 
+             the table may be Terms or Sources. The terms are those that would be included in a 
+             mixed model for an experiment based on the design. The sources are the orthogonal 
+             subspaces, derived from the terms, that make up the decomposition and the degrees 
+             of freedom and efficiency factors relate to these subspaces. The table displays 
+             how the information for the different sources allowed for in the design are related. 
+             For more information about the notation used for sources see the \code{labels} argument of 
+             \code{\link{designAnatomy}}.}
+\usage{
+\method{summary}{pcanon}(object, labels.swap = FALSE, 
+        which.criteria = c("aefficiency", "eefficiency", "order"), ...)}
 \arguments{
- \item{object}{A \code{list} of class \code{pcanon} produced by \code{projs.canon}.}
- \item{which.criteria}{A character \code{vector} nominating the efficiency 
+ \item{object}{A \code{\link{pcanon.object}}.}
+  \item{labels.swap}{A \code{\link{logical}} indicating whether to swap between "sources" and 
+                `terms' in the output. The default is established by the \code{labels} 
+                argument of \code{\link{designAnatomy}} and \code{\link{projs.canon}}.}
+ \item{which.criteria}{A \code{\link{character}} \code{vector} nominating the efficiency 
                        criteria to be included in the summary. It can be 
                        \code{none}, \code{all} or some combination of 
                        \code{aefficiency}, \code{mefficiency},
@@ -21,18 +32,31 @@
                        argument is ignored.}
  \item{...}{further arguments affecting the summary produced.}
 }
-\value{An object of classes \code{summary.pcanon} and \code{data.frame}, whose 
-       rows correspond to subspaces in the decomposition; it is of the nature of 
-       a skeleton analysis of variance table. It has an \code{attribute} named 
-       \code{ntiers} that is equal to the number of tiers.}
+\value{An object of classes \code{summary.pcanon} that is a \code{\link{list}} with the two
+       components \code{decomp} and \code{aliasing}. 
+
+       The component \code{decomp} is a \code{data.frame} whose rows correspond to subspaces 
+       in the decomposition for a design. It has the following \code{attribute}s: 
+       (i) \code{title} that is the title for printing with the decomposition table; 
+       (ii) \code{ntiers} that is equal to the number of tiers; (iii) \code{orthogonal} that is 
+       \code{TRUE} if the design is orthogonal; (iv) \code{labels} that is either "terms" or 
+       "sources" depending on the \code{labels} that have resulted from the setting 
+       of \code{label.swap}.
+
+      The component \code{aliasing} is a \code{data.frame} that is also of \code{class} 
+      \code{aliasing}. It contains information about the aliasing between terms that are 
+      derived from the same formula and has the attribute \code{title} that is the title to be 
+      printed with the aliasing table.
+}
 \references{Brien, C. J. and R. A. Bailey (2009). Decomposition tables for 
             multitiered experiments. I. A chain of randomizations.  
             \emph{The Annals of Statistics}, \bold{36}, 4184 - 4213.}
 \author{Chris Brien}
-\seealso{\code{\link{projs.canon}}, \code{\link{proj2.efficiency}}, 
-         \code{\link{efficiency.criteria}}, \code{\link{proj2.combine}},  
-         \code{\link{proj2.eigen}}, \code{\link{projs.structure}}, \cr 
-         \code{\link{print.summary.pcanon}}in package \pkg{dae}, 
+\seealso{\code{\link{designAnatomy}}, \code{\link{designAnatomy}}, ,
+         \code{\link{pstructure}}, \code{\link{efficiency.criteria}}, 
+         \code{\link{proj2.combine}}, \cr 
+         \code{\link{proj2.efficiency}}, \code{\link{proj2.eigen}}, 
+          \code{\link{print.summary.pcanon}}in package \pkg{dae}, 
          \code{\link{eigen}}.
 
          \code{\link[=projector-class]{projector}} for further information about this class.}
@@ -42,13 +66,15 @@
 PBIBD2.unit <- list(Block = 6, Unit = 4)
 PBIBD2.nest <- list(Unit = "Block")
 trt <- factor(c(1,4,2,5, 2,5,3,6, 3,6,1,4, 4,1,5,2, 5,2,6,3, 6,3,4,1))
-PBIBD2.lay <- fac.layout(unrandomized = PBIBD2.unit, 
-                         nested.factors=PBIBD2.nest, 
-                         randomized = trt)
+PBIBD2.lay <- designRandomize(allocated = trt, 
+                              recipient = PBIBD2.unit, 
+                              nested.recipients = PBIBD2.nest)
 
 ##obtain combined decomposition and summarize
-unit.trt.canon <- projs.canon(list(unit=~ Block/Unit, trt=~ trt), data = PBIBD2.lay)
+unit.trt.canon <- designAnatomy(list(unit=~ Block/Unit, trt=~ trt), 
+                                data = PBIBD2.lay)
 summary(unit.trt.canon, which = c("aeff","eeff","order"))
+summary(unit.trt.canon, which = c("aeff","eeff","order"), labels.swap = TRUE)
 }
 \keyword{array}
 \keyword{design}

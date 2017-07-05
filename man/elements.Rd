@@ -13,6 +13,7 @@
 }
 \value{A \code{vector} containing the extracted elements and whose length equals the 
        number of rows in the \code{subscripts} object.}
+\author{Chris Brien}
 \seealso{\code{Extract}}
 \examples{
 ## Form a table of the means for all combinations of Row and Line.

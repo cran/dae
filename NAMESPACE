@@ -1,5 +1,6 @@
 #My namespace
 export(Ameasures,
+       as.data.frame.pstructure,
        as.numfac,
        blockboundaryPlot,
        blockboundary.plot,
@@ -7,10 +8,14 @@ export(Ameasures,
        decomp.relate,
        degfree,
        "degfree<-",
+       designAmeasures,
+       designAnatomy,
        designLatinSqrSys,
        designPlot,
+       designRandomize,
        design.plot,
        detect.diff,
+       efficiencies,
        efficiencies.pcanon,
        efficiencies.p2canon,
        efficiency.criteria,
@@ -34,24 +39,32 @@ export(Ameasures,
        interaction.ABC.plot,
        is.allzero,
        is.projector,
+       marginality,
+       marginality.pcanon,
+       marginality.pstructure,
        mat.ar1,
        mat.ar2,
        mat.ar3,
        mat.arma,
        mat.ma1,
        mat.ma2,
+       mat.ncssvar,
+       mat.sar,
        mat.sar2,
        mat.banded,
        mat.dirprod,
        mat.dirsum,
        mat.exp,
+       mat.gau, 
        mat.I,
        mat.J,
        mat.Vpred,
        mpone,
        no.reps,
        power.exp,
+       print.aliasing,
        print.projector,
+       print.pstructure,
        print.summary.p2canon,
        print.summary.pcanon,
        projector,
@@ -64,6 +77,8 @@ export(Ameasures,
        proj2.efficiency,
        proj2.eigen,
        proj2.ops,
+       pstructure, 
+       pstructure.formula,
        qqyeffects,
        residuals.aovlist,
        resid.errors,
@@ -73,7 +88,8 @@ export(Ameasures,
        summary.p2canon,
        summary.pcanon,
        tukey.1df,
-       yates.effects)
+       yates.effects,
+       Zncsspline)
 exportClasses(projector)
 importFrom("graphics", "abline", "identify", "lines", "mtext", "par",
              "plot", "polygon", "text")
@@ -83,12 +99,20 @@ importFrom("stats", "aov", "as.formula", "coef", "fitted", "formula",
              "pf", "ppoints", "proj", "qf", "qnorm", "qqplot",
              "residuals", "rnorm", "runif", "var")
 import(ggplot2)
+S3method(as.data.frame, pstructure)
+S3method(print, aliasing)
 S3method(print, projector)
+S3method(print, pstructure)
 S3method(print, summary.p2canon)
 S3method(print, summary.pcanon)
 S3method(fitted, aovlist)
 S3method(fitted, errors)
+S3method(efficiencies, pcanon)
+S3method(efficiencies, p2canon)
+S3method(marginality, pcanon)
+S3method(marginality, pstructure)
 S3method(residuals, aovlist)
 S3method(residuals, aovlist, resid.errors)
+S3method(pstructure, formula)
 S3method(summary, p2canon)
 S3method(summary, pcanon)

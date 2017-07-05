@@ -33,9 +33,9 @@ exp.strength <- strength(nodays = 4, noruns = 3,
 ## In this second example, a completely randomized design is generated 
 ## for the same 3 temperatures replicated 4 times. The layout is stored 
 ## in the data.frame called Design.
-Design <- fac.layout(unrandomized=list(runs = 12), 
-                     randomized = temperature, 
-                     seed = 5847123)
+Design <- designRandomize(allocated = temperature, 
+                          recipient = list(runs = 12), 
+                          seed = 5847123)
 ## eradicate the unrandomized version of temperature
 remove("temperature")
 

@@ -12,27 +12,8 @@
  \item{Q1}{A \code{list} whose components are objects of class "\code{\link[=projector-class]{projector}}".}
  \item{Q2}{A \code{list} whose components are objectsof class "\code{\link[=projector-class]{projector}}".}
 }
-\value{A \code{list} of class \code{p2canon}. It has a component for each 
-       component of \code{Q1}. Each of the components for 
-       \code{Q1} is a \code{list}; its components are one for each component of 
-       \code{Q2} and a component \code{Pres}. Each of the \code{Q2} components 
-       is a \code{list} of three components: \code{pairwise}, \code{adjusted} 
-       and \code{Qproj}. These components are  based on an eigenalysis of the 
-       relationship between the projectors for the parent \code{Q1} and 
-       \code{Q2} components. Each \code{pairwise} component is based on the 
-       nonzero canonical efficiency factors for the joint decomposition of the 
-       two parent projectors (see \code{\link{proj2.eigen}}). An \code{adjusted} 
-       component is based on the nonzero canonical efficiency factors for the 
-       joint decomposition of the \code{Q1} component and the \code{Q2} 
-       component, the latter adjusted for all \code{Q2} projectors that have 
-       occured previously in the \code{list}. 
-       The \code{Qproj} component is the adjusted projector for the parent 
-       \code{Q2} component. The \code{pairwise} and \code{adjusted} components 
-       have the following components: \code{efficiencies}, \code{aefficiency}, 
-       \code{mefficiency}, \code{sefficiency}, \code{eefficiency}, 
-       \code{xefficiency}, \code{order} and \code{dforthog} 
-       -- for details see \code{\link{efficiency.criteria}}.}
-\details{Two loops, one nested within the other. are performed. The first cycles 
+\value{A \code{\link{p2canon.object}}.}
+\details{Two loops, one nested within the other, are performed. The first cycles 
          over the components of \code{Q1} and the nested loop cycles over the 
          components of \code{Q2}. The joint decomposition of the two projectors 
          in each cycle, one from \code{Q1} (say \code{Q1[[i]]}) and the other 
@@ -51,11 +32,12 @@
          However, a warning occurs if any pair of Q2 projectors (say 
          \code{Q2[[j]]} and \code{Q2[[k]]}) do not have adjusted orthgonality 
          with respect to any Q1 projector (say \code{Q1[[i]]}), because they are 
-         partially aliased. That is, if \code{Q2[[j]] \%*\% Q1[[i]] \%*\% 
-         Q2[[k]]} is nonzero for any pair of different Q2 projectors and any 
+         partially aliased. That is, if \code{Q2[[j]] \%*\% Q1[[i]] \%*\% Q2[[k]]} 
+         is nonzero for any pair of different Q2 projectors and any 
          Q1 projector. When it is nonzero, the projector for the later term in 
          the list of projectors is orthogonalized to the projector that is 
-         earlier in the list.}
+         earlier in the list. A list o such projectors is returned in the 
+         \code{aliasing} component of the \code{\link{p2canon.object}}.}
 \references{Brien, C. J. and R. A. Bailey (2009). Decomposition tables for 
             multitiered experiments. I. A chain of randomizations.  
             \emph{The Annals of Statistics}, \bold{36}, 4184 - 4213.
@@ -65,7 +47,7 @@
            analysis of variance. \emph{Biometrika}, \bold{58}, 279-294.}
 \author{Chris Brien}
 \seealso{\code{\link{summary.p2canon}}, \code{\link{efficiencies.p2canon}}, 
-         \code{\link{projs.combine.p2canon}}, \code{\link{projs.structure}} , \cr
+         \code{\link{projs.combine.p2canon}}, \code{\link{pstructure}} , \cr
          \code{\link{proj2.efficiency}}, \code{\link{proj2.combine}}, 
          \code{\link{proj2.eigen}}, \code{\link{efficiency.criteria}} 
          in package \pkg{dae}, \code{\link{eigen}}.
@@ -77,16 +59,16 @@
 PBIBD2.unit <- list(Block = 6, Unit = 4)
 PBIBD2.nest <- list(Unit = "Block")
 trt <- factor(c(1,4,2,5, 2,5,3,6, 3,6,1,4, 4,1,5,2, 5,2,6,3, 6,3,4,1))
-PBIBD2.lay <- fac.layout(unrandomized = PBIBD2.unit, 
-                         nested.factors=PBIBD2.nest, 
-                         randomized = trt)
+PBIBD2.lay <- designRandomize(allocated = trt, 
+                              recipient = PBIBD2.unit, 
+                              nested.recipients = PBIBD2.nest)
 
-##obtain projectors using projs.structure
-Q.unit <- projs.structure(~ Block/Unit, data = PBIBD2.lay)
-Q.trt <- projs.structure(~ trt, data = PBIBD2.lay)
+##obtain projectors using pstructure
+unit.struct <- pstructure(~ Block/Unit, data = PBIBD2.lay)
+trt.struct <- pstructure(~ trt, data = PBIBD2.lay)
 
 ##obtain combined decomposition and summarize
-unit.trt.p2canon <- projs.2canon(Q.unit, Q.trt)
+unit.trt.p2canon <- projs.2canon(unit.struct$Q, trt.struct$Q)
 summary(unit.trt.p2canon)
 }
 \keyword{array}

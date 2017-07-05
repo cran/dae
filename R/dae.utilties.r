@@ -75,6 +75,46 @@ remove.repeats <- function(x, tolerance = 1E-06)
   return(kopt)
 }
 
+"separateFunction" <- function(var)
+  #A function to separate the name of a function and the argument to the function
+{ 
+  #Remove description, if there is one, from term in an asreml termlist
+  if (length(grep("(", var, fixed=TRUE))!=0) 
+  { 
+    var <- (strsplit(var, "(", fixed=TRUE) )[[1]]
+    var[2] <- (strsplit(var[2], ")", fixed=TRUE) )[[1]][1]
+  }
+  return(var)
+}
+
+"rmFunction" <- function(var, asreml.obj)
+  #A function that returns the variable without any function
+{ 
+  var <- separateFunction(var)
+  if (length(var)==2)
+  { 
+    var <- var[2]
+    #Check for further arguments and strip, if found
+    if (length(grep(",", var, fixed=TRUE))!=0) 
+    { 
+      var <- (strsplit(var, ",", fixed=TRUE) )[[1]]  
+      var <- var[1]
+    } 
+  }  
+  return(var)
+}
+
+"fac.getinTerm" <- function(term, rmfunction=FALSE)
+  #function to return the set of factors/variables in a term separated by ':"
+{ 
+  if (length(term) != 1)
+    stop("Multiple terms supplied where only one allowed")
+  vars <- unlist(strsplit(term, ":", fixed=TRUE))
+  if (rmfunction)
+    vars <- unlist(lapply(vars, rmFunction))
+  return(vars)
+}
+
 "ginv" <- function(x, tol = .Machine$double.eps ^ 0.5)
 { 
   # computes Moore-Penrose inverse of a matrix

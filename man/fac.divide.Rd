@@ -38,7 +38,7 @@
 n <- 12
 CRD.unit <- list(Unit = n)
 treat <- factor(rep(1:4, each = 3))
-CRD.lay <- fac.layout(unrandomized=CRD.unit, randomized=treat, seed=956)
+CRD.lay <- designRandomize(allocated = treat, recipient = CRD.unit, seed=956)
 
 ## divide the treatments into two two-level factor A nd B
 CRD.facs <- fac.divide(CRD.lay$treat, factor.names = list(A = 2, B = 2))

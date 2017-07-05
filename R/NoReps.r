@@ -1,12 +1,21 @@
 "power.exp" <- function(rm=5, df.num=1, df.denom=10, delta=1, sigma=1, 
                         alpha=0.05, print=FALSE)
 {
-	fcrit <- qf(1-alpha, df.num, df.denom)
-	lambda <- rm / 2 * (delta / sigma)^2
-	powr <- 1 - pf(fcrit, df.num, df.denom, lambda)
-	if (print == TRUE)
-		{ print.data.frame(data.frame(rm, df.num, df.denom, alpha, delta, sigma, lambda, powr))}
-	powr
+  if (df.denom < 1e-03)
+  {
+    warning("cannot calculate power because denominator degrees of freedom are close to zero")
+    powr <- NA
+  } else
+  {
+    fcrit <- qf(1-alpha, df.num, df.denom)
+    lambda <- rm / 2 * (delta / sigma)^2
+    powr <- 1 - pf(fcrit, df.num, df.denom, lambda)
+    if (print == TRUE)
+    { print.data.frame(data.frame(rm, df.num, df.denom, alpha, delta, sigma, lambda, powr))}
+    powr
+
+	}
+  return(powr) 
 }
 
 "power.diff.r" <- function(r=5, multiple=1, df.num=1, df.denom=expression((df.num+1)*(r-1)), 
@@ -35,29 +44,35 @@
 		minimum <- optimize(power.diff.r, interval=c(rmini,rmaxi), tol=tol, print=print,  
 					 multiple=multiple, df.num=df.num, df.denom=df.denom, 
 					 delta=delta, sigma=sigma, alpha=alpha, power=power)
-#
-# check for local minimum				
-		if (minimum$objective > tol)
+		if (minimum$minimum < 2) #stop if need less than 2 reps
 		{
-			local <- TRUE
-			r <- minimum$minimum
-			rm <- r * multiple
-			if (power < power.exp(rm=rm, df.num=df.num, df.denom=eval(df.denom), 
-										delta=delta, sigma=sigma))
-			{
-				rmaxi <- floor(minimum$minimum)
-				rmini <- rmaxi / 2
-			}
-			else
-			{
-				rmini <- ceiling(minimum$minimum)
-				rmaxi <- 2 * rmaxi
-			}
+		  r <- 2
+		} else
+		{
+		  #
+		  # check for local minimum				
+		  if (minimum$objective > tol)
+		  {
+		    local <- TRUE
+		    r <- minimum$minimum
+		    rm <- r * multiple
+		    if (power < power.exp(rm=rm, df.num=df.num, df.denom=eval(df.denom), 
+		                          delta=delta, sigma=sigma))
+		    {
+		      rmaxi <- floor(minimum$minimum)
+		      rmini <- rmaxi / 2
+		    }
+		    else
+		    {
+		      rmini <- ceiling(minimum$minimum)
+		      rmaxi <- 2 * rmaxi
+		    }
+		  }
 		}
+		r <- ceiling(minimum$minimum)
 	}
 #
 # compute integer number of pure reps and the corresponding power
-	r <- ceiling(minimum$minimum)
 	rm <- r * multiple
 	power <- power.exp(rm=rm, df.num=df.num, df.denom=eval(df.denom), delta=delta, sigma=sigma)
 	list(nreps=r, power=power)

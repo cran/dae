@@ -21,6 +21,7 @@
  \item{B}{The right-hand \code{\link{matrix}} in the product.}
 }
 \value{An \eqn{mp \times nq}{mp \times nq} \code{\link{matrix}}.}
+\author{Chris Brien}
 \seealso{\code{matmult}, \code{\link{mat.dirprod}}}
 \examples{
     col.I <- mat.I(order=4)

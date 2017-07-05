@@ -8,6 +8,7 @@
 }
 \value{A square \code{\link{matrix}} whose diagonal elements are one and its off-diagonal 
        are zero.}
+\author{Chris Brien}
 \seealso{\code{\link{mat.J}}, \code{\link{mat.ar1}}}
 \examples{
     col.I <- mat.I(order=4)

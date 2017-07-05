@@ -38,6 +38,6 @@ no.reps(multiple=1., df.num=1.,
 ## complete block design with four treatments. 
 no.reps(multiple = 1, df.num = 3,
         df.denom = expression(df.num * (r - 1)), delta = 5,
-	      sigma = sqrt(20), print = TRUE)
+	        sigma = sqrt(20), print = TRUE)
 }
 \keyword{design}

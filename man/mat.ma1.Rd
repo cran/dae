@@ -12,9 +12,10 @@
  \item{order}{The order of the \code{\link{matrix}} to be formed.}
 }
 \value{A banded correlation \code{\link{matrix}} whose elements follow an ma1 pattern.}
-\seealso{\code{\link{mat.I}}, \code{\link{mat.J}}, \code{\link{mat.exp}}, \code{\link{mat.banded}}, 
-         \code{\link{mat.ar2}}, \code{\link{mat.ar3}}, \code{\link{mat.sar2}},
-         \code{\link{mat.ma2}}, \code{\link{mat.arma}}}
+\author{Chris Brien}
+\seealso{\code{\link{mat.I}}, \code{\link{mat.J}}, \code{\link{mat.exp}}, \code{\link{mat.gau}}, 
+         \code{\link{mat.banded}}, \code{\link{mat.ar2}}, \code{\link{mat.ar3}}, 
+         \code{\link{mat.sar2}}, \code{\link{mat.ma2}}, \code{\link{mat.arma}}}
 \examples{
     corr <- mat.ma1(MAparameter=0.4, order=4)
 }

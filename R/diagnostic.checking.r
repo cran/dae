@@ -2,30 +2,34 @@
 {
   multistratum <- inherits(aov.obj, what="aovlist")
   if (multistratum)
-  {  res.df <- aov.obj[[error.term]]$df.residual
-     aov.proj <- proj(aov.obj)
-     res <- aov.proj[[error.term]][,"Residuals"]
-     fit <- fitted.errors(aov.obj, error.term = error.term)
-     rno1 <- attr(attr(aov.obj, "terms"), "response")+1
-     rname <- as.character(attr(attr(aov.obj, "terms"), "variables"))[rno1]
-  }
-  else
-  {	res.df <- aov.obj$df.residual
-    res <- residuals(aov.obj)
-    fit <- fitted(aov.obj)
+  {  
+    res.df <- aov.obj[[error.term]]$df.residual
+    aov.proj <- proj(aov.obj)
+    res <- aov.proj[[error.term]][,"Residuals"]
+    fit <- fitted.errors(aov.obj, error.term = error.term)
     rno1 <- attr(attr(aov.obj, "terms"), "response")+1
     rname <- as.character(attr(attr(aov.obj, "terms"), "variables"))[rno1]
+  }
+  else
+  {	
+    res.df <- aov.obj$df.residual
+    res <- residuals(aov.obj)
+    fit <- fitted(aov.obj)
+    rno1 <- attr(aov.obj$terms, "response")+1
+    rname <- as.character(attr(aov.obj$terms, "variables"))[rno1]
   }
   data.temp <- data
   data.temp[,rname] <- fit*fit
   if (multistratum)
-  {	Tukey.aov <- aov(attr(aov.obj, "terms"), data.temp)
+  {	
+    Tukey.aov <- aov(attr(aov.obj, "terms"), data.temp)
     Tukey.proj <- proj(Tukey.aov)
     res2 <- Tukey.proj[[error.term]][,"Residuals"]
     res2
   }
   else
-  {	Tukey.aov <- aov(aov.obj$terms, data.temp)
+  {	
+    Tukey.aov <- aov(aov.obj$terms, data.temp)
     res2 <- residuals(Tukey.aov)
   }
   SS.1df.num <- sum(res * res2)^2
@@ -81,6 +85,3 @@ resid.errors <- function(...) residuals.aovlist(...)
 fitted.errors <- function(object, error.term=NULL, ...) 
                                fitted.aovlist(object=object, error.term=error.term, ...)
 
-#"resid.errors" = function(object, ...) UseMethod("residuals")
-#fitted.errors = function(x) UseMethod("fitted.errors")
-#setGeneric("fitted.errors.aovlist")

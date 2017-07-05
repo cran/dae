@@ -2,8 +2,9 @@
 \alias{power.exp}
 \title{Computes the power for an experiment}
 \description{Computes the power for an experiment.}
-\usage{power.exp(rm=5., df.num=1., df.denom=10., delta=1., sigma=1.,
-                 alpha=0.05, print=FALSE)}
+\usage{
+power.exp(rm=5., df.num=1., df.denom=10., delta=1., sigma=1.,
+          alpha=0.05, print=FALSE)}
 \arguments{
  \item{rm}{The number of observations used in computing a mean.}
  \item{df.num}{The degrees of freedom of the numerator of the F for testing

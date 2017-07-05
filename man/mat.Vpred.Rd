@@ -18,13 +18,13 @@ mat.Vpred(W, Gg = 0, X = matrix(1, nrow = nrow(W), ncol = 1), Vu = 0, R)}
            If there are none, set to zero.}
  \item{R}{The residual variance \code{\link{matrix}}.}
 }
-\value{A \code{\link{matrix}} containing the varainces and covariances of the 
+\value{A \code{\link{matrix}} containing the variances and covariances of the 
        predictions.}
 \details{The matrix is calculated as \cr
          \code{Vpred = t(W) \%*\% Vinv \%*\% W + solve(Gg) - A\%*\%solve(t(X)\%*\%Vinv\%*\%X)\%*\%t(A)}, 
          where \code{Vinv = solve(Vu + R)} and \code{A = t(W) \%*\% Vinv \%*\% X}.}
 \author{Chris Brien}
-\seealso{\code{\link{Ameasures}}.}
+\seealso{\code{\link{designAmeasures}}.}
 \references{Smith, A. B., D. G. Butler, C. R. Cavanagh and B. R. Cullis (2015). 
             Multi-phase variety trials using both composite and individual replicate 
             samples: a model-based design approach. 

@@ -31,16 +31,16 @@ The function \code{\link{set.daeTolerance}} can be used to change
 PBIBD2.unit <- list(Block = 6, Unit = 4)
 PBIBD2.nest <- list(Unit = "Block")
 trt <- factor(c(1,4,2,5, 2,5,3,6, 3,6,1,4, 4,1,5,2, 5,2,6,3, 6,3,4,1))
-PBIBD2.lay <- fac.layout(unrandomized = PBIBD2.unit, 
-                         nested.factors=PBIBD2.nest, 
-                         randomized = trt)
+PBIBD2.lay <- designRandomize(allocated = trt, 
+                              recipient = PBIBD2.unit, 
+                              nested.recipients = PBIBD2.nest)
 
 ## obtain sets of projectors
-Q.unit <- projs.structure(~ Block/Unit, data = PBIBD2.lay)
-Q.trt <- projs.structure(~ trt, data = PBIBD2.lay)
+unit.struct <- pstructure(~ Block/Unit, data = PBIBD2.lay)
+trt.struct <- pstructure(~ trt, data = PBIBD2.lay)
 
 ## save intrablock efficiencies
-eff.intra <- proj2.efficiency(Q.unit[["Block"]], Q.trt[["trt"]])
+eff.intra <- proj2.efficiency(unit.struct$Q[["Block"]], trt.struct$Q[["trt"]])
 }
 \keyword{array}
 \keyword{design}

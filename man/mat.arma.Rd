@@ -24,8 +24,9 @@
              \item in subsequent disgonal bands, (\code{k = 3:order}), 
              of \code{corr} are \cr 
                \code{ARparameters[1]*corr[k-1] + ARparameters[2]*corr[k-2]}.}}
-\seealso{\code{\link{mat.I}}, \code{\link{mat.J}}, \code{\link{mat.exp}}, \code{\link{mat.banded}}, 
-\code{\link{mat.ar1}}, \code{\link{mat.ar3}}, \code{\link{mat.sar2}}, 
+\author{Chris Brien}
+\seealso{\code{\link{mat.I}}, \code{\link{mat.J}}, \code{\link{mat.exp}}, \code{\link{mat.gau}}, 
+\code{\link{mat.banded}}, \code{\link{mat.ar1}}, \code{\link{mat.ar3}}, \code{\link{mat.sar2}}, 
 \code{\link{mat.ma1}}, \code{\link{mat.ma2}}}
 \examples{
     corr <- mat.arma(ARparameter = 0.4, MAparameter = -0.2, order = 4)

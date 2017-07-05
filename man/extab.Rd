@@ -31,8 +31,8 @@
 n <- 12
 CRD.unit <- list(Unit = n)
 CRD.treat <- fac.gen(list(A = 2, B = 2), each = 3)
-CRD.lay <- fac.layout(unrandomized=CRD.unit, randomized=CRD.treat, 
-                      seed=956)
+CRD.lay <- designRandomize(allocated = CRD.treat, recipient = CRD.unit, 
+                           seed = 956)
 
 ## set up a 2 x 2 table of A x B effects	
 AB.tab <- c(12, -12, -12, 12)

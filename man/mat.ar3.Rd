@@ -24,8 +24,9 @@
                    \code{(ARparameters[1] * (ARparameters[1] + ARparameters[3]) + } \cr 
                                  \code{ARparameters[2] * (1 - ARparameters[2])) / omega}; 
              \item the subsequent subdiagonal bands, (\code{k = 4:order}), of \code{corr} are equal to \cr
-                      \code{ARparameters[1]*corrs[k-1] + ARparameters[2]*corrs[k-2] + ARparameters[3]*corrs[k-3]}.}}
-\seealso{\code{\link{mat.I}}, \code{\link{mat.J}}, \code{\link{mat.banded}}, \code{\link{mat.exp}}, 
+                      \code{ARparameters[1]*corr[k-1] + ARparameters[2]*corr[k-2] + ARparameters[3]*corr[k-3]}.}}
+\author{Chris Brien}
+\seealso{\code{\link{mat.I}}, \code{\link{mat.J}}, \code{\link{mat.banded}}, \code{\link{mat.exp}}, \code{\link{mat.gau}}, 
 \code{\link{mat.ar1}}, \code{\link{mat.ar2}}, \code{\link{mat.sar2}}, 
 \code{\link{mat.ma1}}, \code{\link{mat.ma2}}, \code{\link{mat.arma}}}
 \examples{

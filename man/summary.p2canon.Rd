@@ -33,7 +33,7 @@
 \author{Chris Brien}
 \seealso{\code{\link{projs.2canon}}, \code{\link{proj2.efficiency}}, 
          \code{\link{efficiency.criteria}}, \code{\link{proj2.combine}},  
-         \code{\link{proj2.eigen}}, \code{\link{projs.structure}}, \cr 
+         \code{\link{proj2.eigen}}, \code{\link{pstructure}}, \cr 
          \code{\link{print.summary.p2canon}}in package \pkg{dae}, 
          \code{\link{eigen}}.
 
@@ -44,16 +44,16 @@
 PBIBD2.unit <- list(Block = 6, Unit = 4)
 PBIBD2.nest <- list(Unit = "Block")
 trt <- factor(c(1,4,2,5, 2,5,3,6, 3,6,1,4, 4,1,5,2, 5,2,6,3, 6,3,4,1))
-PBIBD2.lay <- fac.layout(unrandomized = PBIBD2.unit, 
-                         nested.factors=PBIBD2.nest, 
-                         randomized = trt)
+PBIBD2.lay <- designRandomize(allocated = trt, 
+                              recipient = PBIBD2.unit, 
+                              nested.recipients = PBIBD2.nest)
 
-##obtain projectors using projs.structure
-Q.unit <- projs.structure(~ Block/Unit, data = PBIBD2.lay)
-Q.trt <- projs.structure(~ trt, data = PBIBD2.lay)
+##obtain projectors using pstructure
+unit.struct <- pstructure(~ Block/Unit, data = PBIBD2.lay)
+trt.struct <- pstructure(~ trt, data = PBIBD2.lay)
 
 ##obtain combined decomposition and summarize
-unit.trt.p2canon <- projs.2canon(Q.unit, Q.trt)
+unit.trt.p2canon <- projs.2canon(unit.struct$Q, trt.struct$Q)
 summary(unit.trt.p2canon)
 }
 \keyword{array}
