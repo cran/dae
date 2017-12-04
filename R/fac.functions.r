@@ -146,3 +146,4 @@
 	nested.fac <- factor(nested.fac, levels=levels, labels=labels, ...)
 	return(nested.fac)
 }
+

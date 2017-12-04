@@ -20,16 +20,24 @@
              have different values associated with those \code{recipient} 
              \code{\link{factor}s} that are in the \code{except} vector will remain 
              unchanged from the systematic design.
+             
+             Also, if \code{allocated} is \code{NULL} then a random permutation 
+             of the \code{recipient} \code{\link{factor}s} is produced 
+             that is consistent with their nesting as specified by 
+             \code{nested.recipients}.
 
              For examples of its use also see the vignette \cite{daeDesignNotes.pdf}.
 }
 \usage{
-designRandomize(allocated, recipient, nested.recipients = NULL, except = NULL, 
-                seed = NULL, unit.permutation = FALSE, ...)}
+designRandomize(allocated = NULL, recipient, nested.recipients = NULL, 
+                except = NULL, seed = NULL, unit.permutation = FALSE, ...)}
 \arguments{
  \item{allocated}{A \code{\link{factor}} or a \code{\link{data.frame}} 
                    containing the systematically allocated values of the 
-                   \code{\link{factor}(s)}.}
+                   \code{\link{factor}(s)}. If \code{NULL}, a random permutation 
+                   of the \code{recipient} \code{\link{factor}s} is produced 
+                   that is consistent with their nesting as specified by 
+                   \code{nested.recipients}.}
  \item{recipient}{A \code{\link{data.frame}} or a \code{\link{list}} of 
                      \code{\link{factor}s}, along with their \code{levels} that 
                      specify the set of \code{recipient} \code{\link{factor}s} 
@@ -149,6 +157,12 @@ SPL.lay <- designRandomize(allocated = fac.gen(list(A = 4, B = 3), times = 2),
                            nested.recipients = list(main.unit = "block", 
                                                     split.unit = c("block", "main.unit")), 
                            seed=155251978)
+
+## Generate a permutation of Seedlings within Species
+seed.permute <- designRandomize(recipient = list(Species = 3, Seedlings = 4),
+                                nested.recipients = list(Seedlings = "Species"),
+                                seed = 75724, except = "Species", 
+                                unit.permutation = TRUE)
 }
 \keyword{design}
 \keyword{factor}

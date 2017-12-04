@@ -95,7 +95,26 @@ print.aliasing <- function(x, which.criteria = c("aefficiency","eefficiency","or
           stop("Not all requested efficiency criteria are available in aliasing for printing")
       }
       cat(attr(x, which = "title"))
-      print.data.frame(x[cols], ...)
+      y <- x[cols]
+      for (kcrit in kcriteria)
+      {
+        if (kcrit == "order")
+        {
+          y[kcrit] <- formatC(y[[kcrit]], format="f", digits=0, width=5)
+        } else
+        {
+          if (kcrit == "dforthog")
+          {
+            y[kcrit] <- formatC(y[[kcrit]], format="f", digits=0, width=8)
+          } else
+          {
+            y[kcrit] <- formatC(y[[kcrit]], format="f", digits=4, width=11)
+          }
+        }
+        y[kcrit] <- gsub("NA", "  ", y[[kcrit]])
+      }
+      
+      print.data.frame(y, na.print="  ", right=FALSE, row.names=FALSE)
     }
   }
   invisible()
@@ -479,12 +498,20 @@ formSources <- function(term.names, marginality, grandMean = FALSE)
     stop("Must supply a data.frame for data")
   n <- nrow(data)
   Q.G = projector(matrix(1, nrow=n, ncol=n)/n)
-  fac.modl <- model.frame(formula, data=data)
   aliasing <- NULL
   
-  #get terms and form mean operators for each term
+  #get terms, check all factors/variates in data
   terms <- attr(terms(formula, keep.order = keep.order, ...), which="term.labels")
   nterms <- length(terms)
+  fac.list <- lapply(terms, fac.getinTerm)
+  names(fac.list) <- terms
+  #Find all the factors
+  facs <- unique(unlist(fac.list))
+  if (!all(facs %in% names(data)))
+    stop("Some factor/covariates missing from data")
+  
+  #form mean operators for each term
+  fac.modl <- model.frame(formula, data=data)
   if (grandMean)  #add grand mean term if grandMean is TRUE
   {
     Q <- vector("list", length=nterms+1)

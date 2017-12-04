@@ -42,7 +42,7 @@
   int.plot <- ggplot(data=data.means, 
                      aes_string(x = name.x, y = name.r, linetype=name.g, colour=name.g, group=name.g), ...) +
                      geom_line() + geom_point() + 
-                     labs(xlab = xlab, ylab = ylab, title = title, group=key.title) +
+                     labs(x = xlab, y = ylab, title = title, group=key.title) +
                      facet_grid(formula(paste("~ ", name.t, sep="")), 
                                 labeller = labeller(.cols = addfacname))
   if (!is.null(ggplotFuncs))

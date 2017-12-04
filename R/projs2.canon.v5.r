@@ -334,8 +334,12 @@ print.summary.p2canon <- function(x, ...)
   }
   summary <- as.data.frame(summary)
   class(summary) <- c("summary.p2canon", "data.frame")
-  attr(summary, which = "title") <- 
-    "\n\nSummary table of the decomposition (based on adjusted quantities)\n\n"
+  titl <- "\n\nSummary table of the decomposition"
+  if (!orthogonaldesign)
+    titl <- paste(titl, " (based on adjusted quantities)\n\n", sep = "")
+  else
+    titl <- paste(titl, "\n\n", sep = "")
+  attr(summary, which = "title") <- titl
   attr(summary, which = "orthogonal") <- orthogonaldesign
   return(summary)
 }

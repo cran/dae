@@ -90,11 +90,11 @@
   \tab A graphical representation of an experimental design \cr 
   \tab using labels stored in a matrix. \cr
   \tab It superseded design.plot.\cr
+\code{\link{designPlotlabels}}
+  \tab Plots labels on a two-way grid using \code{ggplot2}. \cr
 \code{\link{designRandomize}}
   \tab Randomize allocated to recipient factors to produce  \cr 
-  \tab a layout for an experiment\cr
-\code{\link{fac.layout}}
-  \tab Generate a randomized layout for an experiment\cr
+  \tab a layout for an experiment. It supersedes \code{fac.layout}. \cr
 \code{\link{marginality.pstructure}} 
   \tab Extracts the marginality matrix from a \cr
   \tab \code{\link{pstructure.object}} \cr

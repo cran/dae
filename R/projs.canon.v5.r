@@ -277,9 +277,275 @@
 { 
   if (!inherits(object, "pcanon"))
     stop("object must be of class pcanon as produced by projs.pcanon")
+  if (is.null(names(object))) #Assume is an old pcannon
+  {
+    summ <- summ.legacy(object = object, which.criteria = which.criteria)
+  } else
+  {
+    #check which.criteria arguments
+    criteria <- c("aefficiency", "eefficiency", "mefficiency", "sefficiency", "xefficiency", 
+                  "order", "dforthog")
+    options <- c(criteria, "none", "all")
+    kcriteria <- options[unlist(lapply(which.criteria, check.arg.values, 
+                                       options=options))]
+    if ("all" %in% kcriteria)
+      kcriteria <- criteria
+    anycriteria <- !("none" %in% kcriteria)
+    
+    ntiers <- length(object$Q)
+    ncomb <- ntiers - 1
+    #Check if have projector or df in pcanon object
+    have.proj <- FALSE
+    if (ntiers == 1)
+    { 
+      if (inherits(object$Q[[1]], "projector"))
+        have.proj <- TRUE
+    }  
+    else 
+      if (inherits(object$Q[[1]][[1]][["Q1res"]], "projector"))
+        have.proj <- TRUE
+    
+    #Form data frame for summary table
+    #Determine whether labels need changing
+    old.labs <- attr(object, which = "labels")
+    if (is.null(old.labs))
+      new.labs <- "terms"
+    else
+      new.labs <- old.labs
+    if (labels.swap & !is.null(old.labs) & all(c("terms","sources") %in% names(object)))
+    {
+      
+      new.labs <- c("terms", "sources")[!(c("terms", "sources") %in% old.labs)]
+      for (icomp in 1:ntiers)
+      {
+        if (icomp == 1)
+        {
+          #Convert uncombined first tier
+          jold.labs <- object[[old.labs]][[1]]
+          jnew.labs <- object[[new.labs]][[1]]
+          ilabs <- names(object$Q[[1]])
+          which.oldlabs <- match(ilabs, jold.labs)
+          names(object$Q[[1]]) <- jnew.labs[which.oldlabs]
+        } else
+        {
+          #Convert names indexing primary components
+          ilabs.split <-lapply(names(object$Q[[icomp]]),  combined.split)
+          for (jtier in 1:icomp)
+          {
+            #interchange labels for jtier
+            jold.labs <- object[[old.labs]][[jtier]]
+            jnew.labs <- object[[new.labs]][[jtier]]
+            ilabs.split <- lapply(ilabs.split, 
+                                  function(ilabs, jold.labs, jnew.labs)
+                                  {
+                                    which.oldlabs <- match(ilabs, jold.labs)
+                                    which.ilabs <- which(!(is.na(which.oldlabs)))
+                                    which.oldlabs <- na.omit(which.oldlabs)
+                                    if (length(which.ilabs) > 0)
+                                      ilabs[which.ilabs] <- jnew.labs[which.oldlabs]
+                                    return(ilabs)
+                                  }, jold.labs = jold.labs, jnew.labs = jnew.labs)
+          }
+          names(object$Q[[icomp]]) <- unlist(lapply(ilabs.split, makeCombinedSource))
+        }
+        
+        #Convert the sublist names
+        if (icomp < ntiers)
+        {
+          jtier <- icomp + 1
+          jold.labs <- object[[old.labs]][[jtier]]
+          jnew.labs <- object[[new.labs]][[jtier]]
+          for (ks in 1:length(names(object$Q[[icomp]])))
+          {
+            ilabs <- names(object$Q[[icomp]][[ks]])
+            which.oldlabs <- match(ilabs, jold.labs)
+            which.ilabs <- which(!(is.na(which.oldlabs)))
+            which.oldlabs <- na.omit(which.oldlabs)
+            if (length(which.ilabs) > 0)
+              names(object$Q[[icomp]][[ks]])[which.ilabs] <- jnew.labs[which.oldlabs]
+          }
+        }
+      }
+    }
+    #Initialize
+    tier.names <- names(object$terms)
+    sources <- names(object$Q[[ntiers]])
+    nlines <- length(sources)
+    terms <- lapply(sources, combined.split)
+    kcomb <- rep(1, nlines)
+    ktiers <- lapply(terms, length)
+    nc <- ntiers*2
+    src.name <- "Source"
+    if (new.labs == "terms")
+      src.name <- "Term"
+    if (ntiers == 1)
+    {
+      if (!is.null(tier.names))
+        src.name <- paste(src.name, tier.names[1], sep = ".")
+      srcdf.names <- c(src.name, " df")
+    }
+    else
+    {
+      if (is.null(tier.names))
+        srcdf.names <- as.vector(outer(c(src.name, "df"), as.character(1:ntiers), paste, sep=""))
+      else
+        srcdf.names <- as.vector(sapply(1:ntiers,
+                                        function(k, src.name, tier.names)
+                                        {
+                                          nam <- c(paste(src.name, tier.names[k], sep = "."),
+                                                   paste("df", k, sep = ""))
+                                        }, src.name = src.name, tier.names = tier.names))
+    }
+    orthogonaldesign <- TRUE
+    if (anycriteria & ntiers > 1)
+    { 
+      nc <- nc + length(kcriteria)
+      res.criteria <- vector(mode = "list", length = length(kcriteria))
+      names(res.criteria) <- kcriteria
+      res.criteria[kcriteria] <- NA
+      summary <- data.frame(matrix(nrow = nlines, ncol=nc))
+      colnames(summary) <- c(srcdf.names, kcriteria)
+    }
+    else
+    {   
+      summary <- data.frame(matrix(nrow = nlines, ncol=nc))
+      colnames(summary) <- srcdf.names
+    }
+    #Loop over sources
+    for (kl in 1:nlines)
+      if (ntiers == 1)
+      { #Get first tier source and df
+        summary[[1]][kl] <- terms[[kl]][1]
+        summary[[2]][kl] <- degfree(object$Q[[1]][[terms[[kl]][1]]])
+      } else
+      { #If next term is a residual, check it is for the previous term and output analogously
+        if (terms[[kl]][ktiers[[kl]]] == "Residual")
+        { #Check same as last term
+          if (any(terms[[kl]][1:(ktiers[[kl]]-1)] != terms[[kl-1]][1:(ktiers[[kl]]-1)]))
+            stop("Residual term and previous source are not confounded with the same source")
+          label <- makeCombinedSource(terms[[kl]][1:(ktiers[[kl]]-1)])
+          kcomb[kl] <- findLastwithSource(kcomb[kl], label, object$Q, ncomb)
+          summary[kl, 1:(kcomb[kl]*2)] <- summary[(kl-1), 1:(kcomb[kl]*2)]
+          summary[kl, (kcomb[kl]*2+1)] <- "Residual"
+          if (have.proj)
+            summary[[kcomb[kl]*2+2]][kl] <- degfree(object$Q[[kcomb[kl]]][[label]][["Q1res"]])
+          else
+            summary[[kcomb[kl]*2+2]][kl] <- object$Q[[kcomb[kl]]][[label]][["Q1res"]]
+          if (ktiers[[kl]]  == 1)
+            stop("Have a Residual in the first formula - include a factor for the units")
+          else
+          { 
+            lastNonResidual <- max(c(1:ktiers[[kl]])["Residual" != terms[[kl]]])
+            if (lastNonResidual  > 1)
+            { 
+              pcomb <- 1
+              label <- makeCombinedSource(terms[[kl]][1:(lastNonResidual-1)])
+              term2 <- terms[[kl]][lastNonResidual]
+              pcomb <- findDecomposition(pcomb, term2, label, object$Q, ncomb) 
+              if (abs(1 - unlist(object$Q[[pcomb]][[label]][[term2]][["adjusted"]]["aefficiency"])) > 1e-04)
+                orthogonaldesign <- FALSE
+              if (anycriteria)
+                summary[kl, kcriteria] <- unlist(object$Q[[pcomb]][[label]][[term2]][["adjusted"]][kcriteria])
+            }
+          }
+        }
+        else  #Not a Residual
+        { #Get first tier source and df
+          summary[[1]][kl] <- terms[[kl]][1]
+          kconf.sources <- names(object$Q[[1]][[terms[[kl]][1]]])[-1]
+          if (have.proj)
+          { 
+            totdf <- sum(unlist(lapply(kconf.sources, 
+                                       function(ksrc, obj){ degfree(obj[[ksrc]][["Qproj"]])}, 
+                                       obj = object$Q[[1]][[terms[[kl]][1]]])))
+            totdf <- totdf + degfree(object$Q[[1]][[terms[[kl]][1]]][["Q1res"]])
+          }
+          else
+          { 
+            totdf <- sum(unlist(lapply(kconf.sources, 
+                                       function(ksrc, obj){ obj[[ksrc]][["Qproj"]]}, 
+                                       obj = object$Q[[1]][[terms[[kl]][1]]])))
+            totdf <- totdf + object$Q[[1]][[terms[[kl]][1]]][["Q1res"]]
+          }
+          summary[[2]][kl] <- totdf
+          label <- summary[[1]][kl]
+          #Add remaining tiers
+          if (ktiers[[kl]] > 1)
+          { 
+            for (kterm in 2:ktiers[[kl]])
+            { 
+              term2 <- terms[[kl]][kterm]
+              if (term2 == "Residual")
+              { 
+                if (have.proj)
+                  summary[[kcomb[kl]*2+2]][kl] <- degfree(object$Q[[kcomb[kl]]][[label]][["Q1res"]])
+                else
+                  summary[[kcomb[kl]*2+2]][kl] <- object$Q[[kcomb[kl]]][[label]][["Q1res"]]
+              }
+              else
+              { 
+                kcomb[kl] <- findDecomposition(kcomb[kl], term2, label, object$Q, ncomb)
+                if (have.proj)
+                  summary[[kcomb[kl]*2+2]][kl] <- degfree(object$Q[[kcomb[kl]]][[label]][[term2]][["Qproj"]])
+                else
+                  summary[[kcomb[kl]*2+2]][kl] <- object$Q[[kcomb[kl]]][[label]][[term2]][["Qproj"]]
+              }
+              summary[[kcomb[kl]*2+1]][kl] <- term2
+              if (kterm != ktiers[[kl]])
+              { 
+                label <- paste(label,term2,sep="&")
+                kcomb[kl] <- kcomb[kl] + 1
+              }
+            }
+            if (abs(1 - unlist(object$Q[[kcomb[kl]]][[label]][[term2]][["adjusted"]]["aefficiency"])) > 1e-04)
+              orthogonaldesign <- FALSE
+          }
+          if (anycriteria & ktiers[[kl]] > 1)
+            summary[kl, kcriteria] <- unlist(object$Q[[kcomb[kl]]][[label]][[term2]][["adjusted"]][kcriteria])
+        }
+      }
+    titl <- "Summary table of the decomposition"
+    if (!is.null(tier.names))
+    {
+      if (ntiers == 1)
+        titl <- paste(titl, " for ", tier.names, sep = "")
+      else
+        titl <- paste(titl, " for ", 
+                      paste(tier.names[1:(ntiers-1)], collapse = ", "),
+                      " & ", tier.names[ntiers], sep = "")
+    }
+    if (!is.null(object$aliasing) | (ntiers > 1 & !orthogonaldesign))
+      titl <- paste(titl, " (based on adjusted quantities)", sep = "")
+    attr(summary, which = "title") <- paste("\n\n", titl, "\n\n", sep = "")
+    attr(summary, which = "ntiers") <- ntiers
+    attr(summary, which = "orthogonal") <- orthogonaldesign
+    attr(summary, which = "labels") <- new.labs
+    
+    #Return summary and aliasing
+    summ <- vector(mode = "list", length = 2)
+    names(summ) <- c("decomp", "aliasing")
+    summ$decomp <- summary
+    if (!is.null(object$aliasing))
+    {
+      cols <- names(object$aliasing)[!(names(object$aliasing) %in% criteria)]
+      if (anycriteria)
+        cols <- c(cols, kcriteria)
+      summ$aliasing <- object$aliasing[cols]
+      attr(summ$aliasing, which = "title") <- attr(object$aliasing, which = "title")
+    }
+    class(summ) <- c("summary.pcanon", "list")
+  }
+
+  return(summ)
+}
+
+"summ.legacy" <- function(object, which.criteria = c("aefficiency", "eefficiency", "order"), ...)
+  #Routine to output a summary of the projector analysis in a pcanon object
+{ 
+  if (!inherits(object, "pcanon"))
+    stop("object must be of class pcanon as produced by projs.pcanon")
   #check which.criteria arguments
-  criteria <- c("aefficiency", "eefficiency", "mefficiency", "sefficiency", "xefficiency", 
-                "order", "dforthog")
+  criteria <- c("aefficiency", "eefficiency", "mefficiency", "sefficiency", "order", "dforthog")
   options <- c(criteria, "none", "all")
   kcriteria <- options[unlist(lapply(which.criteria, check.arg.values, 
                                      options=options))]
@@ -287,112 +553,24 @@
     kcriteria <- criteria
   anycriteria <- !("none" %in% kcriteria)
   
-  ntiers <- length(object$Q)
-  ncomb <- ntiers - 1
   #Check if have projector or df in pcanon object
   have.proj <- FALSE
-  if (ntiers == 1)
-  { 
-    if (inherits(object$Q[[1]], "projector"))
+  if (inherits(object[[1]][[1]][["Q1res"]], "projector"))
     have.proj <- TRUE
-  }  
-  else 
-    if (inherits(object$Q[[1]][[1]][["Q1res"]], "projector"))
-      have.proj <- TRUE
   
   #Form data frame for summary table
-  #Determine whether labels need changing
-  old.labs <- attr(object, which = "labels")
-  if (is.null(old.labs))
-    new.labs <- "terms"
-  else
-    new.labs <- old.labs
-  if (labels.swap & !is.null(old.labs) & all(c("terms","sources") %in% names(object)))
-  {
-
-    new.labs <- c("terms", "sources")[!(c("terms", "sources") %in% old.labs)]
-    for (icomp in 1:ntiers)
-    {
-      if (icomp == 1)
-      {
-        #Convert uncombined first tier
-        jold.labs <- object[[old.labs]][[1]]
-        jnew.labs <- object[[new.labs]][[1]]
-        ilabs <- names(object$Q[[1]])
-        which.oldlabs <- match(ilabs, jold.labs)
-        names(object$Q[[1]]) <- jnew.labs[which.oldlabs]
-      } else
-      {
-        #Convert names indexing primary components
-        ilabs.split <-lapply(names(object$Q[[icomp]]),  combined.split)
-        for (jtier in 1:icomp)
-        {
-          #interchange labels for jtier
-          jold.labs <- object[[old.labs]][[jtier]]
-          jnew.labs <- object[[new.labs]][[jtier]]
-          ilabs.split <- lapply(ilabs.split, 
-                                function(ilabs, jold.labs, jnew.labs)
-                                {
-                                  which.oldlabs <- match(ilabs, jold.labs)
-                                  which.ilabs <- which(!(is.na(which.oldlabs)))
-                                  which.oldlabs <- na.omit(which.oldlabs)
-                                  if (length(which.ilabs) > 0)
-                                    ilabs[which.ilabs] <- jnew.labs[which.oldlabs]
-                                  return(ilabs)
-                                }, jold.labs = jold.labs, jnew.labs = jnew.labs)
-        }
-        names(object$Q[[icomp]]) <- unlist(lapply(ilabs.split, makeCombinedSource))
-      }
-      
-      #Convert the sublist names
-      if (icomp < ntiers)
-      {
-        jtier <- icomp + 1
-        jold.labs <- object[[old.labs]][[jtier]]
-        jnew.labs <- object[[new.labs]][[jtier]]
-        for (ks in 1:length(names(object$Q[[icomp]])))
-        {
-          ilabs <- names(object$Q[[icomp]][[ks]])
-          which.oldlabs <- match(ilabs, jold.labs)
-          which.ilabs <- which(!(is.na(which.oldlabs)))
-          which.oldlabs <- na.omit(which.oldlabs)
-          if (length(which.ilabs) > 0)
-            names(object$Q[[icomp]][[ks]])[which.ilabs] <- jnew.labs[which.oldlabs]
-        }
-      }
-    }
-  }
   #Initialize
-  tier.names <- names(object$terms)
-  sources <- names(object$Q[[ntiers]])
+  ntiers <- length(object)
+  ncomb <- ntiers - 1
+  sources <- names(object[[ntiers]])
   nlines <- length(sources)
   terms <- lapply(sources, combined.split)
   kcomb <- rep(1, nlines)
   ktiers <- lapply(terms, length)
   nc <- ntiers*2
-  src.name <- "Source"
-  if (new.labs == "terms")
-    src.name <- "Term"
-  if (ntiers == 1)
-  {
-    if (!is.null(tier.names))
-      src.name <- paste(src.name, tier.names[1], sep = ".")
-    srcdf.names <- c(src.name, " df")
-  }
-  else
-  {
-    if (is.null(tier.names))
-      srcdf.names <- as.vector(outer(c(src.name, "df"), as.character(1:ntiers), paste, sep=""))
-    else
-      srcdf.names <- as.vector(sapply(1:ntiers,
-                                      function(k, src.name, tier.names)
-                                      {
-                                        nam <- c(paste(src.name, tier.names[k], sep = "."),
-                                                 paste("df", k, sep = ""))
-                                      }, src.name = src.name, tier.names = tier.names))
-  }
+  srcdf.names <- as.vector(outer(c("Source", "df"), as.character(1:ntiers), paste, sep=""))
   orthogonaldesign <- TRUE
-  if (anycriteria & ntiers > 1)
+  if (anycriteria)
   { 
     nc <- nc + length(kcriteria)
     res.criteria <- vector(mode = "list", length = length(kcriteria))
@@ -408,129 +586,113 @@
   }
   #Loop over sources
   for (kl in 1:nlines)
-    if (ntiers == 1)
+  { #IF next term is a residual, check it is for the previous term and output analogously
+    if (terms[[kl]][ktiers[[kl]]] == "Residual")
+    { #Check same as last term
+      if (any(terms[[kl]][1:(ktiers[[kl]]-1)] != terms[[kl-1]][1:(ktiers[[kl]]-1)]))
+        stop("Residual term and previous source are not confounded with the same source")
+      label <- makeCombinedSource(terms[[kl]][1:(ktiers[[kl]]-1)])
+      kcomb[kl] <- findLastwithSource(kcomb[kl], label, object, ncomb)
+      summary[kl, 1:(kcomb[kl]*2)] <- summary[(kl-1), 1:(kcomb[kl]*2)]
+      summary[kl, (kcomb[kl]*2+1)] <- "Residual"
+      if (have.proj)
+        summary[[kcomb[kl]*2+2]][kl] <- degfree(object[[kcomb[kl]]][[label]][["Q1res"]])
+      else
+        summary[[kcomb[kl]*2+2]][kl] <- object[[kcomb[kl]]][[label]][["Q1res"]]
+      if (ktiers[[kl]]  == 1)
+        stop("Have a Residual in the first formula - include a factor for the units")
+      else
+      { 
+        lastNonResidual <- max(c(1:ktiers[[kl]])["Residual" != terms[[kl]]])
+        if (lastNonResidual  > 1)
+        { 
+          pcomb <- 1
+          label <- makeCombinedSource(terms[[kl]][1:(lastNonResidual-1)])
+          term2 <- terms[[kl]][lastNonResidual]
+          pcomb <- findDecomposition(pcomb, term2, label, object, ncomb) 
+          if (abs(1 - unlist(object[[pcomb]][[label]][[term2]][["adjusted"]]["aefficiency"])) > 1e-04)
+            orthogonaldesign <- FALSE
+          if (anycriteria)
+            summary[kl, kcriteria] <- unlist(object[[pcomb]][[label]][[term2]][["adjusted"]][kcriteria])
+        }
+      }
+      #      if (anycriteria)
+      #      { if (ktiers[[kl]]  == 1)
+      #          stop("Have a Residual in the first formula - include a factor for the units")
+      #        else
+      #        { lastNonResidual <- max(c(1:ktiers[[kl]])["Residual" != terms[[kl]]])
+      #          if (lastNonResidual  > 1)
+      #          { pcomb <- 1
+      #            label <- makeCombinedSource(terms[[kl]][1:(lastNonResidual-1)])
+      #            term2 <- terms[[kl]][lastNonResidual]
+      #            pcomb <- findDecomposition(pcomb, term2, label, object, ncomb) 
+      #            summary[kl, kcriteria] <- unlist(object[[pcomb]][[label]][[term2]][["adjusted"]][kcriteria])
+      #          }
+      #        }
+      #      }
+    }
+    else  #Not a Residual
     { #Get first tier source and df
       summary[[1]][kl] <- terms[[kl]][1]
-      summary[[2]][kl] <- degfree(object$Q[[1]][[terms[[kl]][1]]])
-    } else
-    { #If next term is a residual, check it is for the previous term and output analogously
-      if (terms[[kl]][ktiers[[kl]]] == "Residual")
-      { #Check same as last term
-        if (any(terms[[kl]][1:(ktiers[[kl]]-1)] != terms[[kl-1]][1:(ktiers[[kl]]-1)]))
-          stop("Residual term and previous source are not confounded with the same source")
-        label <- makeCombinedSource(terms[[kl]][1:(ktiers[[kl]]-1)])
-        kcomb[kl] <- findLastwithSource(kcomb[kl], label, object$Q, ncomb)
-        summary[kl, 1:(kcomb[kl]*2)] <- summary[(kl-1), 1:(kcomb[kl]*2)]
-        summary[kl, (kcomb[kl]*2+1)] <- "Residual"
-        if (have.proj)
-          summary[[kcomb[kl]*2+2]][kl] <- degfree(object$Q[[kcomb[kl]]][[label]][["Q1res"]])
-        else
-          summary[[kcomb[kl]*2+2]][kl] <- object$Q[[kcomb[kl]]][[label]][["Q1res"]]
-        if (ktiers[[kl]]  == 1)
-          stop("Have a Residual in the first formula - include a factor for the units")
-        else
-        { 
-          lastNonResidual <- max(c(1:ktiers[[kl]])["Residual" != terms[[kl]]])
-          if (lastNonResidual  > 1)
-          { 
-            pcomb <- 1
-            label <- makeCombinedSource(terms[[kl]][1:(lastNonResidual-1)])
-            term2 <- terms[[kl]][lastNonResidual]
-            pcomb <- findDecomposition(pcomb, term2, label, object$Q, ncomb) 
-            if (abs(1 - unlist(object$Q[[pcomb]][[label]][[term2]][["adjusted"]]["aefficiency"])) > 1e-04)
-              orthogonaldesign <- FALSE
-            if (anycriteria)
-              summary[kl, kcriteria] <- unlist(object$Q[[pcomb]][[label]][[term2]][["adjusted"]][kcriteria])
-          }
-        }
+      kconf.sources <- names(object[[1]][[terms[[kl]][1]]])[-1]
+      if (have.proj)
+      { 
+        totdf <- sum(unlist(lapply(kconf.sources, 
+                                   function(ksrc, obj){ degfree(obj[[ksrc]][["Qproj"]])}, 
+                                   obj = object[[1]][[terms[[kl]][1]]])))
+        totdf <- totdf + degfree(object[[1]][[terms[[kl]][1]]][["Q1res"]])
       }
-      else  #Not a Residual
-      { #Get first tier source and df
-        summary[[1]][kl] <- terms[[kl]][1]
-        kconf.sources <- names(object$Q[[1]][[terms[[kl]][1]]])[-1]
-        if (have.proj)
+      else
+      { 
+        totdf <- sum(unlist(lapply(kconf.sources, 
+                                   function(ksrc, obj){ obj[[ksrc]][["Qproj"]]}, 
+                                   obj = object[[1]][[terms[[kl]][1]]])))
+        totdf <- totdf + object[[1]][[terms[[kl]][1]]][["Q1res"]]
+      }
+      summary[[2]][kl] <- totdf
+      label <- summary[[1]][kl]
+      #Add remaining tiers
+      if (ktiers[[kl]] > 1)
+      { 
+        for (kterm in 2:ktiers[[kl]])
         { 
-          totdf <- sum(unlist(lapply(kconf.sources, 
-                                     function(ksrc, obj){ degfree(obj[[ksrc]][["Qproj"]])}, 
-                                     obj = object$Q[[1]][[terms[[kl]][1]]])))
-          totdf <- totdf + degfree(object$Q[[1]][[terms[[kl]][1]]][["Q1res"]])
-        }
-        else
-        { 
-          totdf <- sum(unlist(lapply(kconf.sources, 
-                                     function(ksrc, obj){ obj[[ksrc]][["Qproj"]]}, 
-                                     obj = object$Q[[1]][[terms[[kl]][1]]])))
-          totdf <- totdf + object$Q[[1]][[terms[[kl]][1]]][["Q1res"]]
-        }
-        summary[[2]][kl] <- totdf
-        label <- summary[[1]][kl]
-        #Add remaining tiers
-        if (ktiers[[kl]] > 1)
-        { 
-          for (kterm in 2:ktiers[[kl]])
+          term2 <- terms[[kl]][kterm]
+          if (term2 == "Residual")
           { 
-            term2 <- terms[[kl]][kterm]
-            if (term2 == "Residual")
-            { 
-              if (have.proj)
-                summary[[kcomb[kl]*2+2]][kl] <- degfree(object$Q[[kcomb[kl]]][[label]][["Q1res"]])
-              else
-                summary[[kcomb[kl]*2+2]][kl] <- object$Q[[kcomb[kl]]][[label]][["Q1res"]]
-            }
+            if (have.proj)
+              summary[[kcomb[kl]*2+2]][kl] <- degfree(object[[kcomb[kl]]][[label]][["Q1res"]])
             else
-            { 
-              kcomb[kl] <- findDecomposition(kcomb[kl], term2, label, object$Q, ncomb)
-              if (have.proj)
-                summary[[kcomb[kl]*2+2]][kl] <- degfree(object$Q[[kcomb[kl]]][[label]][[term2]][["Qproj"]])
-              else
-                summary[[kcomb[kl]*2+2]][kl] <- object$Q[[kcomb[kl]]][[label]][[term2]][["Qproj"]]
-            }
-            summary[[kcomb[kl]*2+1]][kl] <- term2
-            if (kterm != ktiers[[kl]])
-            { 
-              label <- paste(label,term2,sep="&")
-              kcomb[kl] <- kcomb[kl] + 1
-            }
+              summary[[kcomb[kl]*2+2]][kl] <- object[[kcomb[kl]]][[label]][["Q1res"]]
           }
-          if (abs(1 - unlist(object$Q[[kcomb[kl]]][[label]][[term2]][["adjusted"]]["aefficiency"])) > 1e-04)
-            orthogonaldesign <- FALSE
+          else
+        { 
+          kcomb[kl] <- findDecomposition(kcomb[kl], term2, label, object, ncomb)
+          if (have.proj)
+            summary[[kcomb[kl]*2+2]][kl] <- degfree(object[[kcomb[kl]]][[label]][[term2]][["Qproj"]])
+          else
+            summary[[kcomb[kl]*2+2]][kl] <- object[[kcomb[kl]]][[label]][[term2]][["Qproj"]]
         }
-        if (anycriteria & ktiers[[kl]] > 1)
-          summary[kl, kcriteria] <- unlist(object$Q[[kcomb[kl]]][[label]][[term2]][["adjusted"]][kcriteria])
+          summary[[kcomb[kl]*2+1]][kl] <- term2
+          if (kterm != ktiers[[kl]])
+          { 
+            label <- paste(label,term2,sep="&")
+            kcomb[kl] <- kcomb[kl] + 1
+          }
+        }
+        if (abs(1 - unlist(object[[kcomb[kl]]][[label]][[term2]][["adjusted"]]["aefficiency"])) > 1e-04)
+          orthogonaldesign <- FALSE
       }
+      if (anycriteria & ktiers[[kl]] > 1)
+        summary[kl, kcriteria] <- unlist(object[[kcomb[kl]]][[label]][[term2]][["adjusted"]][kcriteria])
     }
-  titl <- "Summary table of the decomposition"
-  if (!is.null(tier.names))
-  {
-    if (ntiers == 1)
-      titl <- paste(titl, " for ", tier.names, sep = "")
-    else
-      titl <- paste(titl, " for ", 
-                    paste(tier.names[1:(ntiers-1)], collapse = ", "),
-                    " & ", tier.names[ntiers], sep = "")
   }
-  if (ntiers > 1)
-    titl <- paste(titl, " (based on adjusted quantities)", sep = "")
-  attr(summary, which = "title") <- paste("\n\n", titl, "\n\n", sep = "")
+  class(summary) <- c("summary.pcanon", "data.frame")
+  attr(summary, which = "title") <- 
+    "\n\nSummary table of the decomposition (based on adjusted quantities)\n\n"
   attr(summary, which = "ntiers") <- ntiers
   attr(summary, which = "orthogonal") <- orthogonaldesign
-  attr(summary, which = "labels") <- new.labs
-  
-  #Return summary and aliasing
-  summ <- vector(mode = "list", length = 2)
-  names(summ) <- c("decomp", "aliasing")
-  summ$decomp <- summary
-  if (!is.null(object$aliasing))
-  {
-    cols <- names(object$aliasing)[!(names(object$aliasing) %in% criteria)]
-    if (anycriteria)
-      cols <- c(cols, kcriteria)
-    summ$aliasing <- object$aliasing[cols]
-    attr(summ$aliasing, which = "title") <- attr(object$aliasing, which = "title")
-  }
-
-  class(summ) <- c("summary.pcanon", "list")
-  return(summ)
+  attr(summary, which = "labels") <- "terms"
+  return(summary)
 }
 
 #Function to print a summary from a pcanon object
@@ -539,8 +701,13 @@ print.summary.pcanon <- function(x, aliasing.print = TRUE, ...)
   if (!inherits(x, "summary.pcanon"))
     stop("Must supply an object of class summary.pcanon")
   
+  criteria <- c("aefficiency", "eefficiency", "mefficiency", "sefficiency", "xefficiency", 
+                "order", "dforthog")
   
-  y <- x$decomp
+  if (inherits(x, "data.frame"))
+    y <- x
+  else
+    y <- x$decomp
   cat(attr(y, which="title"))
   ntiers <- attr(y, which="ntiers")
   nlines <- nrow(y)
@@ -571,45 +738,31 @@ print.summary.pcanon <- function(x, aliasing.print = TRUE, ...)
       y[repeats[[ktier]], df.name] <- "  "
       y[[df.name]] <- gsub("NA", "  ", y[[df.name]])
     }
-    if ("aefficiency" %in% names(y)) { 
-      y$aefficiency <- formatC(y$aefficiency, format="f", digits=4, width=11)
-      y$aefficiency <- gsub("NA", "  ", y$aefficiency)
-    }
-    if ("mefficiency" %in% names(y)) { 
-      y$mefficiency <- formatC(y$mefficiency, format="f", digits=4, width=11)
-      y$mefficiency <- gsub("NA", "  ", y$mefficiency)
-    }
-    if ("eefficiency" %in% names(y)) { 
-      y$eefficiency <- formatC(y$eefficiency, format="f", digits=4, width=11)
-      y$eefficiency <- gsub("NA", "  ", y$eefficiency)
-    }
-    if ("xefficiency" %in% names(y)) { 
-      y$xefficiency <- formatC(y$xefficiency, format="f", digits=4, width=11)
-      y$xefficiency <- gsub("NA", "  ", y$xefficiency)
-    }
-    if ("sefficiency" %in% names(y)) { 
-      y$sefficiency <- formatC(y$sefficiency, format="f", digits=4, width=11)
-      y$sefficiency <- gsub("NA", "  ", y$sefficiency)
-    }
-    if ("order" %in% names(y)) { 
-      y$order <- formatC(y$order, format="f", digits=0, width=5)
-      y$order <- gsub("NA", "  ", y$order)
-    }
-    if ("dforthog" %in% names(y)) { 
-      y$dforthog <- formatC(y$dforthog, format="f", digits=0, width=8)
-      y$dforthog <- gsub("NA", "  ", y$dforthog)
+    for (kcrit in names(y)[names(y) %in% criteria])
+    {
+      if (kcrit == "order")
+      {
+        y[kcrit] <- formatC(y[[kcrit]], format="f", digits=0, width=5)
+      } else
+      {
+        if (kcrit == "dforthog")
+        {
+          y[kcrit] <- formatC(y[[kcrit]], format="f", digits=0, width=8)
+        } else
+        {
+          y[kcrit] <- formatC(y[[kcrit]], format="f", digits=4, width=11)
+        }
+      }
+      y[kcrit] <- gsub("NA", "  ", y[[kcrit]])
     }
   }
-  
-  print(y, na.print="  ", right=FALSE, row.names=FALSE)
+  #Need to use print.data.frame for legacy summary objects
+  print.data.frame(y, na.print="  ", right=FALSE, row.names=FALSE)
 
-  if (aliasing.print & !is.null(x$aliasing))
-  {
-    criteria <- c("aefficiency", "eefficiency", "mefficiency", "sefficiency", "xefficiency", 
-                  "order", "dforthog")
-    print(x$aliasing, which.criteria = criteria[criteria %in% names(x$aliasing)])
-  }
-  
+  if (aliasing.print & inherits(x, "list"))
+    if (!is.null(x$aliasing))
+      print(x$aliasing, which.criteria = names(x$aliasing)[names(x$aliasing) %in% criteria])
+
   if (!attr(y, which="orthogonal"))
     cat("\nThe design is not orthogonal\n\n")
   invisible(x)

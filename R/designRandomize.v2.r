@@ -54,10 +54,16 @@
   function(recipient, rec.names, rec.levels, nested.recipients=NULL, except=NULL, 
            allocated, seed=NULL)
   { 
-    if (is.data.frame(allocated))
-      n <- nrow(allocated)
-    else
-      n <- length(allocated)
+    if (is.null(allocated))
+    {
+      n <- prod(rec.levels)
+    } else
+    {
+      if (is.data.frame(allocated))
+        n <- nrow(allocated)
+      else
+        n <- length(allocated)
+    }
     which.unr <- 0
     if(is.data.frame(recipient)) #for data.frame
     { 
@@ -115,10 +121,16 @@
     #nested factor. Also sort numbers of levels in levels and form vector 
     #rec.denestord giving location of recipient factors in nestord.
     #first a list of all non-nested factors
-    if (is.data.frame(allocated))
-      n <- nrow(allocated)
-    else
-      n <- length(allocated)
+    if (is.null(allocated))
+    {
+      n <- prod(rec.levels)
+    } else
+    {
+      if (is.data.frame(allocated))
+        n <- nrow(allocated)
+      else
+        n <- length(allocated)
+    }
     which.unr <- 0
     if(is.data.frame(recipient)) #for data.frame
     { 
@@ -239,8 +251,8 @@
     facrecip
   }
 
-"designRandomize" <- function(allocated, recipient, nested.recipients=NULL, except=NULL, 
-                              seed=NULL, unit.permutation = FALSE, ...)
+"designRandomize" <- function(allocated = NULL, recipient, nested.recipients=NULL, 
+                              except=NULL, seed=NULL, unit.permutation = FALSE, ...)
 {
   #generate a layout for a design consisting of allocated factors that are 
   #allocated to the recipient factors, taking into account the nesting between
@@ -267,12 +279,16 @@
   }
   
   #process allocated argument
-  if(!is.data.frame(allocated) & !is.factor(allocated))
-    stop("allocated must be a factor or data frame.")
-  if (is.data.frame(allocated))
-    n <- nrow(allocated)
-  else
-    n <- length(allocated)
+  if (!is.null(allocated))
+  {
+    if(!is.data.frame(allocated) & !is.factor(allocated))
+      stop("allocated must be a factor or data frame.")
+    if (is.data.frame(allocated))
+      n <- nrow(allocated)
+    else
+      n <- length(allocated)
+  } else
+    n <- 0
   #process seed argument
   if (!is.null(seed))
     set.seed(seed)
@@ -282,7 +298,7 @@
     if(!all(sapply(recipient, FUN=is.factor)))
       stop("All columns in the recipient data.frame must be factors")
     nunr <- ncol(recipient)
-    if (nrow(recipient) != n)
+    if (!is.null(allocated) & nrow(recipient) != n)
       stop("The number of rows in the recipient data frame and the length of the factor(s) must be equal.")
     rec.names <- vector("list", length = nunr)
     names(rec.names) <- as.list(names(recipient))
@@ -323,11 +339,17 @@
       stop("Levels of factors must be specified using either numeric or character vectors")
     }
   }
-  if(n != prod(rec.levels))
-    stop("The product of the numbers of levels of the recipient factors ", 
-         "must equal the length of the allocated factors.")
+  if (is.null(allocated)) 
+  {
+    n <- prod(rec.levels)
+  } else
+  {
+    if (n != prod(rec.levels))
+      stop("The product of the numbers of levels of the recipient factors ", 
+           "must equal the length of the allocated factors.")
+  }
   #process nested.factor argument
-  if(is.null(nested.recipients))
+  if (is.null(nested.recipients))
     facrecip <- fac.recip.cross(recipient=recipient, rec.names=rec.names, 
                                 rec.levels=rec.levels, nested.recipients=nested.recipients, 
                                 except=except, seed=seed, allocated=allocated)
@@ -355,12 +377,11 @@
     #on the left of an expression perm.derand (perm.recip)
     #puts standard order into the same order as facrecip (recipient),
     #i.e. a random permutation of standard order (data frame order).
-    #put facrecip into data.frame order and join with allocated factors
+    #put facrecip into data.frame order
     for (i in 1:nunr)
       attributes(facrecip[[i]]) <- attributes(recipient[[i]])
     faclay <- facrecip
     faclay[perm.recip, ] <- facrecip
-    faclay <- data.frame(faclay, allocated)
     #compute randomization for data.frame order
     perm.dat <- vector("numeric", length=n)
     #order to put permuted data frame into standard order
@@ -369,24 +390,43 @@
     perm.dat[perm.recip] <- perm.dat
     perm.derand.dat <- vector("numeric", length=n)
     perm.derand.dat[perm.dat] <- 1:n
-    if (unit.permutation)
-      faclay <- data.frame(.Units = 1:n, .Permutation = order(perm.derand.dat),
-                           faclay[perm.derand.dat, ])
+    #join facrecip with allocated factors
+    if (is.null(allocated))
+    {
+      if (unit.permutation)
+        faclay <- data.frame(.Units = 1:n, .Permutation = order(perm.derand.dat), faclay)
+    }
     else
-      faclay <- faclay[perm.derand.dat, ]
-    
+    {
+      faclay <- data.frame(faclay, allocated)
+      if (unit.permutation)
+        faclay <- data.frame(.Units = 1:n, .Permutation = order(perm.derand.dat),
+                             faclay[perm.derand.dat, ])
+      else
+        faclay <- faclay[perm.derand.dat, ]
+    }
   }
   else  #get in standard order for rec.names
   { 
     perm.derand <- do.call(order, facrecip)
-    faclay <- data.frame(facrecip, allocated)
-    if (unit.permutation)
-      faclay <- data.frame(.Units = 1:n, .Permutation = order(perm.derand), 
-                           faclay[perm.derand, ])
+    if (is.null(allocated))
+    {
+      faclay <- facrecip
+      if (unit.permutation)
+        faclay <- data.frame(.Units = 1:n, .Permutation = perm.derand, 
+                             faclay)
+    }
     else
-      faclay <- faclay[perm.derand, ]
+    {
+      faclay <- data.frame(facrecip, allocated)
+      if (unit.permutation)
+        faclay <- data.frame(.Units = 1:n, .Permutation = order(perm.derand), 
+                             faclay[perm.derand, ])
+      else
+        faclay <- faclay[perm.derand, ]
+    }
   }
-  if (is.factor(allocated))
+  if (!(is.null(allocated)) & is.factor(allocated))
     names(faclay)[length(faclay)] <- deparse(substitute(allocated))
   rownames(faclay) <- 1:n
   faclay

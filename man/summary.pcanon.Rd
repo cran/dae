@@ -12,7 +12,11 @@
              of freedom and efficiency factors relate to these subspaces. The table displays 
              how the information for the different sources allowed for in the design are related. 
              For more information about the notation used for sources see the \code{labels} argument of 
-             \code{\link{designAnatomy}}.}
+             \code{\link{designAnatomy}}.
+             
+             It is possible to supply an \code{object} that is a \code{\link{pcanon.object}} produced in 
+             versions prior to 3.0-0 using \code{projs.canon}.
+}
 \usage{
 \method{summary}{pcanon}(object, labels.swap = FALSE, 
         which.criteria = c("aefficiency", "eefficiency", "order"), ...)}
@@ -32,7 +36,7 @@
                        argument is ignored.}
  \item{...}{further arguments affecting the summary produced.}
 }
-\value{An object of classes \code{summary.pcanon} that is a \code{\link{list}} with the two
+\value{An object of class \code{summary.pcanon} that is a \code{\link{list}} with the two
        components \code{decomp} and \code{aliasing}. 
 
        The component \code{decomp} is a \code{data.frame} whose rows correspond to subspaces 
@@ -45,8 +49,14 @@
 
       The component \code{aliasing} is a \code{data.frame} that is also of \code{class} 
       \code{aliasing}. It contains information about the aliasing between terms that are 
-      derived from the same formula and has the attribute \code{title} that is the title to be 
-      printed with the aliasing table.
+      derived from the same formula and has the attribute \code{title} that is the title 
+      to be printed with the aliasing table.
+
+      However, if the \code{object} supplied is a \code{\link{pcanon.object}} produced with  
+      versions prior to 3.0-0 using \code{projs.canon}, the value is a \code{data.frame}, 
+      instead of a \code{list}, that has the same \code{attribute}s as the \code{decomp} 
+      component of the \code{summary.pcanon} object now produced, except that \code{labels} 
+      is always set to "terms".
 }
 \references{Brien, C. J. and R. A. Bailey (2009). Decomposition tables for 
             multitiered experiments. I. A chain of randomizations.  

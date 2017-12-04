@@ -78,7 +78,7 @@ test_that("Thao", {
                  ,rep(LS3[1:4],each=4), rep(LS3[5:8],each=4),rep(LS3[9:12],each=4),rep(LS3[13:16],each=4)
                  ,rep(LS4[1:4],each=4), rep(LS4[5:8],each=4),rep(LS4[9:12],each=4),rep(LS4[13:16],each=4))),
     
-    E <- factor(c(rep(LS1[1:4],times=4),rep(LS2[1:4],times=4),rep(LS3[1:4],times=4),rep(LS4[1:4],times=4)
+    E = factor(c(rep(LS1[1:4],times=4),rep(LS2[1:4],times=4),rep(LS3[1:4],times=4),rep(LS4[1:4],times=4)
                   ,rep(LS1[5:8],times=4), rep(LS2[5:8],times=4), rep(LS3[5:8],times=4),rep(LS4[5:8],times=4)
                   ,rep(LS1[9:12],times=4),rep(LS2[9:12],times=4),rep(LS3[9:12],times=4),rep(LS4[9:12],times=4)
                   ,rep(LS1[13:16],times=4),rep(LS2[13:16],times=4),rep(LS3[13:16],times=4) ,rep(LS4[13:16],times=4))))

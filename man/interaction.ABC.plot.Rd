@@ -16,7 +16,12 @@
  \item{response}{A numeric \code{vector} containing the response variable from 
                  which a function (the mean by
                  default) is computed for plotting on the y-axis.}
- \item{x.factor}{The \code{\link{factor}} to be plotted on the x-axis of each plot.}
+ \item{x.factor}{The \code{\link{factor}} to be plotted on the x-axis of each plot. 
+                 If the levels are numeric values stored as characters, they will be 
+                 converted to numeric values for plotting. If they are actually numeric 
+                 codes for nonnumeric categories and you want them plotted on a 
+                 discrete scale then you should employ nonumeric codings, 
+                 such as `-' and `+' or `N' and `Y' or something similar.}
  \item{groups.factor}{The \code{\link{factor}} plotted as separate lines in each plot.}
  \item{trace.factor}{The \code{\link{factor}} for whose \code{levels} there are separate plots.}
  \item{data}{A \code{\link{data.frame}} containing the three \code{factors} and the 

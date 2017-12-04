@@ -10,6 +10,11 @@ test_that("interaction.ABC.plot", {
   data(ABC.Interact.dat)
   testthat::expect_silent(interaction.ABC.plot(MOE, A, B, C, data=ABC.Interact.dat))
   
+  testthat::expect_silent(interaction.ABC.plot(MOE, A, B, C, 
+                                               xlab = "Factor A", 
+                                               ylab = "M.O.E.", data=ABC.Interact.dat))
+  
+  
   ABC.Interact.dat$se <- rep(c(0.5,1), each=4)
   testthat::expect_silent(
     interaction.ABC.plot(MOE, A, B, C, data=ABC.Interact.dat,

@@ -1,8 +1,42 @@
 \name{news}
 \title{News for Package dae}
+\section{Changes in dae version 3.0-12 (2017-12-04)}{
+  \itemize{
+    \item{Rebuild under latest version of R.}
+}}
+\section{Changes in dae version 3.0-11 (2017-10-22)}{
+  \itemize{
+    \item{Minor editing of documentation.}
+}}
+\section{Changes in dae version 3.0-10 (2017-10-08)}{
+  \itemize{
+    \item{Changed designRandomize so that, if \code{allocated} is \code{NULL}, then a random permutation of the recipient factors is produced.}
+}}
+\section{Changes in dae version 3.0-09 (2017-09-28)}{
+  \itemize{
+    \item{Adjust caption of summary.pcanon.}
+    \item{Added new function designPlotlabels that uses ggplot to plot labels on a grid.}
+}}
+\section{Changes in dae version 3.0-08 (2017-09-20)}{
+  \itemize{
+    \item{Correct bug in axis labelling in interaction.ABC.plot.}
+}}
+\section{Changes in dae version 3.0-07 (2017-07-31)}{
+  \itemize{
+    \item{Reinstate ability to form and print a summary from old pcannon objects (pre version 3.0-0).}
+}}
+\section{Changes in dae version 3.0-06 (2017-07-26)}{
+  \itemize{
+    \item{Fixed a bug in summary.pcanon so that aliasing table is printed when required.}
+}}
+\section{Changes in dae version 3.0-05 (2017-07-13)}{
+  \itemize{
+    \item{Put in a check that factors/covariates in a formula are in data.}
+    \item{Formatted the aliasing table to be similar to the decomposition table.}
+}}
 \section{Changes in dae version 3.0-04 (2017-07-05)}{
   \itemize{
-    \item{Apply DAvid Stern's fix to fac.nested so that it deals with missing values in the nesting factor.}
+    \item{Apply David Stern's fix to fac.nested so that it deals with missing values in the nesting factor.}
 }}
 \section{Changes in dae version 3.0-02 (2017-06-30)}{
   \itemize{

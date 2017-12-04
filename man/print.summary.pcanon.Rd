@@ -7,7 +7,8 @@
 \arguments{
  \item{x}{A \code{summary.pcanon} object.}
  \item{aliasing.print}{A \code{\link{logical}} indicating whether the aliasing between sources 
-                       is to be printed.}
+                       is to be printed. Ignored for legacy \code{summary.pcanon} objects 
+                       resulting from versions prior to 3.0-0 and so using \code{projs.canon}}
  \item{...}{further arguments passed to \code{print}.}
 }
 \value{No value is returned.}

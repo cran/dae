@@ -112,7 +112,7 @@ designPlot(designMatrix, labels = NULL, altlabels = NULL, plotlabels = TRUE,
 
 
 \author{Chris Brien}
-\seealso{\code{\link{blockboundaryPlot}}, \code{\link{designLatinSqrSys}}, \code{\link{designRandomize}}, \code{\link{designAnatomy}}  
+\seealso{\code{\link{blockboundaryPlot}}, \code{\link{designPlotlabels}}, \code{\link{designLatinSqrSys}}, \code{\link{designRandomize}}, \code{\link{designAnatomy}}  
           in package \pkg{dae}.  \cr
           Also, \code{\link{par}}, \code{\link{polygon}}, 
   \code{DiGGer}}
