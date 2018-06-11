@@ -17,7 +17,7 @@ designAnatomy(formulae, data, keep.order = TRUE, grandMean = FALSE,
               marginality = NULL, check.marginality = TRUE, 
               which.criteria = c("aefficiency","eefficiency","order"), 
               aliasing.print = FALSE, 
-              omit.projectors = c("p2canon", "combined"), ...)}
+              omit.projectors = c("pcanon", "combined"), ...)}
 \arguments{
  \item{formulae}{An object of class \code{\link{list}} whose components are of class 
                       \code{\link{formula}}. 

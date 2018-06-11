@@ -1,7 +1,10 @@
 \name{fac.layout}
 \alias{fac.layout}
 \title{Generate a randomized layout for an experiment}
-\description{Given a systematic design, generate a layout for an experiment 
+\description{Warning: \code{fac.layout} will be deprecated in future versions, its 
+             synonym \code{\link{designRandomize}} being preferred. 
+
+             Given a systematic design, generate a layout for an experiment 
              consisting of randomized \code{\link{factor}s} that are randomized 
              to the unrandomized \code{\link{factor}s}, taking into account the 
              nesting between the unrandomized factors for the design.}

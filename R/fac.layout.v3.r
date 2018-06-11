@@ -225,7 +225,7 @@ function(unrandomized, unr.names, unr.levels, nested.factors=NULL, except=NULL,
 #randomized is a factor or a data frame containing the generated factor or 
 #factors to be randomized.
 #process randomized argument
-  warning("fac.layout wil be deprecated in future versions, its synonym designRandomize being preferred")
+  warning("fac.layout will be deprecated in future versions, its synonym designRandomize being preferred")
   if(!is.data.frame(randomized) & !is.factor(randomized))
     stop("randomized must be a factor or data frame.")
   if (is.data.frame(randomized))

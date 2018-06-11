@@ -1,5 +1,23 @@
 \name{news}
 \title{News for Package dae}
+\section{Changes in dae version 3.0-16 (2018-6-11)}{
+  \itemize{
+    \item{Rebuild under latest version of R 3.6.0.}
+}}
+\section{Changes in dae version 3.0-15 (2018-04-06)}{
+  \itemize{
+    \item{Fix bugs in designAnatomy when there is only one structure.}
+    \item{Fix bugs in print.summary.pcanon when there are no entries in a column of the table.}
+    \item{Add a warning to print.summary.canon when the sum of  sources' dimensions is less than the number of rows in data.}
+}}
+\section{Changes in dae version 3.0-14 (2017-12-24)}{
+  \itemize{
+    \item{Modified checking of options for function arguments.}
+}}
+\section{Changes in dae version 3.0-13 (2017-12-08)}{
+  \itemize{
+    \item{Modified mat.Vpred so that the Moore-Penrose inverse, which is unique, is always used for matrix inverses.}
+}}
 \section{Changes in dae version 3.0-12 (2017-12-04)}{
   \itemize{
     \item{Rebuild under latest version of R.}

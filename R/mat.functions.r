@@ -343,7 +343,7 @@ Zncsspline <- function(knot.points, Gpower = 0, print = FALSE)
   if (all(Gg < 1e-08))
     Gginv <- Gg
   else
-    Gginv <- solve(Gg)
+    Gginv <- ginv(Gg)
   Vinv <- ginv(Vu + R)
   A <- t(W)%*%Vinv 
   Vpred <- A%*%W + Gginv

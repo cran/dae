@@ -482,9 +482,9 @@ test_that("Housewives", {
   testthat::expect_equal(ncol(summ$aliasing), 7)
   testthat::expect_equal(nrow(Hwife.canon$aliasing), 1)
   testthat::expect_equal(ncol(Hwife.canon$aliasing), 11)
-  testthat::expect_equal(degfree(Hwife.canon$Q[[1]]$`Month:Week`), 7)
-  testthat::expect_equal(degfree(Hwife.canon$Q[[1]]$`Month:Hwife`), 6)
-  testthat::expect_equal(degfree(Hwife.canon$Q[[1]]$`Week#Hwife[Month]`), 18)
+  testthat::expect_equal(Hwife.canon$Q[[1]]$`Month:Week`, 7)
+  testthat::expect_equal(Hwife.canon$Q[[1]]$`Month:Hwife`, 6)
+  testthat::expect_equal(Hwife.canon$Q[[1]]$`Week#Hwife[Month]`, 18)
 
   testthat::expect_error(Hwife.diff.canon <- designAnatomy(formulae = list(units = ~ Month:Week + Month:Hwife + 
                                                       Month:Week:Hwife),

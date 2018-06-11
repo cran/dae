@@ -21,8 +21,8 @@ mat.Vpred(W, Gg = 0, X = matrix(1, nrow = nrow(W), ncol = 1), Vu = 0, R)}
 \value{A \code{\link{matrix}} containing the variances and covariances of the 
        predictions.}
 \details{The matrix is calculated as \cr
-         \code{Vpred = t(W) \%*\% Vinv \%*\% W + solve(Gg) - A\%*\%solve(t(X)\%*\%Vinv\%*\%X)\%*\%t(A)}, 
-         where \code{Vinv = solve(Vu + R)} and \code{A = t(W) \%*\% Vinv \%*\% X}.}
+         \code{Vpred = t(W) \%*\% Vinv \%*\% W + ginv(Gg) - A\%*\%ginv(t(X)\%*\%Vinv\%*\%X)\%*\%t(A)}, 
+         where \code{Vinv = ginv(Vu + R)}, \code{A = t(W) \%*\% Vinv \%*\% X} and ginv(B) is the unique Moore-Penrose inverse of B formed using the eigendecomposition of B.}
 \author{Chris Brien}
 \seealso{\code{\link{designAmeasures}}.}
 \references{Smith, A. B., D. G. Butler, C. R. Cavanagh and B. R. Cullis (2015). 

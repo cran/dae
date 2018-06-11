@@ -12,7 +12,7 @@ Find out what has changed in dae: enter news(package = 'dae').
 
 Need help to produce randomized designs? Enter help(package = 'dae') and look for the package vignettes. 
 
-Need help to do the canonical analyis of a design? go to http://chris.brien.name/rpackages. 
+Need help to do the canonical analysis of a design? go to http://chris.brien.name/rpackages. 
 
 Use suppressPackageStartupMessages() to eliminate all package startup messages.
 

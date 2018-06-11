@@ -141,7 +141,7 @@ test_that("BIBD", {
   set.daeTolerance(1E-06)
   loc.trts.canon <- designAnatomy(formulae = list(loc=~ run/location, trts=~ trts), 
                                   data = BIBD.lay, labels = "terms", 
-                                  omit.projectors="p2c")
+                                  omit.projectors="pc")
   summary(loc.trts.canon, which.criteria =c("aefficiency", "order"))
   testthat::expect_equal(length(loc.trts.canon$Q[[2]]), 4)
   set.daeTolerance(1E-08)
@@ -350,9 +350,9 @@ test_that("Housewives", {
                                                           Month:Week:Hwife),
                                labels = "terms", data = LSRepeatHwife.dat)
   summary(Hwife.canon)
-  testthat::expect_equal(degfree(Hwife.canon$Q[[1]]$`Month:Week`), 7)
-  testthat::expect_equal(degfree(Hwife.canon$Q[[1]]$`Month:Hwife`), 6)
-  testthat::expect_equal(degfree(Hwife.canon$Q[[1]]$`Month:Week:Hwife`), 18)
+  testthat::expect_equal(Hwife.canon$Q[[1]]$`Month:Week`, 7)
+  testthat::expect_equal(Hwife.canon$Q[[1]]$`Month:Hwife`, 6)
+  testthat::expect_equal(Hwife.canon$Q[[1]]$`Month:Week:Hwife`, 18)
 })
 
 cat("#### Test for Preece examples\n")

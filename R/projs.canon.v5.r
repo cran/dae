@@ -69,7 +69,7 @@
 # "projs.canon" <- function(formulae, orthogonalize = "hybrid", labels = "terms", 
 #                           keep.order = TRUE, meanTerm = FALSE, 
 #                           which.criteria = c("aefficiency", "eefficiency", "order"), 
-#                           omit.projectors = c("p2canon", "combined"), data = NULL, ...)
+#                           omit.projectors = c("pcanon", "combined"), data = NULL, ...)
 # { 
 #   warning("projs.canon may be deprecated in future versions, its synonym designAnatomy being preferred")
 #   CombinedSets <- designAnatomy(formulae = formulae, data = data, 
@@ -88,7 +88,7 @@
                             which.criteria = c("aefficiency", "eefficiency", 
                                                "order"), 
                             aliasing.print = FALSE, 
-                            omit.projectors = c("p2canon", "combined"), ...)
+                            omit.projectors = c("pcanon", "combined"), ...)
 { #examine the relationships between the sets of mutually orthogonal projection matrices for the supplied formulae
   
   #Check arguments and intitialize
@@ -129,6 +129,7 @@
 
   if (!is.data.frame(data))
     stop("data must be a data.frame ")
+  n <- nrow(data)
   
   options <- c("hybrid", "differencing", "eigenmethods")
   if (length(orthogonalize) == 1)
@@ -150,7 +151,7 @@
     kcriteria <- criteria
   anycriteria <- !("none" %in% kcriteria)
   
-  options <- c("p2canon", "combined", "none")
+  options <- c("pcanon", "combined", "none")
   omit.proj <- options[unlist(lapply(omit.projectors, check.arg.values, 
                                      options=options))]
   if ("none" %in% omit.proj)
@@ -179,12 +180,21 @@
   
   #Get set of projectors for the first formula
   if (ntiers == 1)
+  {
     struct[[1]] <- pstructure(formulae[[1]], keep.order = keep.order, 
                               grandMean = grandMean,  orthogonalize = orthog, 
                               labels = labels, marginality = marginality[[1]], 
                               check.marginality = check.marginality, 
                               which.criteria = kcriteria, aliasing.print = aliasing.print,
                               data=data, ...)
+    if ("pcanon" %in% omit.proj)
+    {
+      Qlabels <- names(struct[[1]]$Q)
+      efficiencies <- vector(mode = "list", length = 0)
+      for (i in Qlabels)
+        struct[[1]]$Q[[i]] <- degfree(struct[[1]]$Q[[i]])
+    }  
+  }
   else 
     struct[[1]] <- pstructure(formulae[[1]], keep.order = keep.order, 
                               grandMean = grandMean,  orthogonalize = orthog[1], 
@@ -192,6 +202,7 @@
                               check.marginality = check.marginality, 
                               which.criteria = kcriteria, aliasing.print = aliasing.print, 
                               data=data, ...)
+
   #Load first structure into pcanon object
   CombinedSets$Q[[ntiers]] <- struct[[1]]$Q
   CombinedSets$terms[[1]] <- struct[[1]]$terms
@@ -238,7 +249,7 @@
       if (!is.null(comb$aliasing))
         aliasing <- rbind(aliasing, comb$aliasing)
       CombinedSets$Q[[ntiers]] <- projs.combine.p2canon(comb)
-      if ("p2canon" %in% omit.proj)
+      if ("pcanon" %in% omit.proj)
         CombinedSets$Q[[k]] <-  replace.proj(CombinedSets$Q[[k]])
       CombinedSets$terms[[ktier]] <- struct[[ktier]]$terms
       CombinedSets$sources[[ktier]] <- struct[[ktier]]$sources
@@ -254,7 +265,9 @@
     }
     
   }
-
+  #Set attribute for the number of units in the first tier
+  attr(CombinedSets, which = "n") <- n
+  
   if (nrow(aliasing) > 0)
   {
     CombinedSets$aliasing <- aliasing
@@ -416,7 +429,10 @@
       if (ntiers == 1)
       { #Get first tier source and df
         summary[[1]][kl] <- terms[[kl]][1]
-        summary[[2]][kl] <- degfree(object$Q[[1]][[terms[[kl]][1]]])
+        if (have.proj)
+          summary[[2]][kl] <- degfree(object$Q[[1]][[terms[[kl]][1]]])
+        else
+          summary[[2]][kl] <- object$Q[[1]][[terms[[kl]][1]]]
       } else
       { #If next term is a residual, check it is for the previous term and output analogously
         if (terms[[kl]][ktiers[[kl]]] == "Residual")
@@ -518,6 +534,7 @@
       titl <- paste(titl, " (based on adjusted quantities)", sep = "")
     attr(summary, which = "title") <- paste("\n\n", titl, "\n\n", sep = "")
     attr(summary, which = "ntiers") <- ntiers
+    attr(summary, which = "n") <- attr(object, which = "n", exact = "TRUE")
     attr(summary, which = "orthogonal") <- orthogonaldesign
     attr(summary, which = "labels") <- new.labs
     
@@ -725,35 +742,50 @@ print.summary.pcanon <- function(x, aliasing.print = TRUE, ...)
     for (ktier in 1:ntiers)
     { 
       src.name <- colnames(y)[(ktier-1)*2+1] #paste(labs, ktier, sep="")
-      repeats[[ktier]] <- c(FALSE, y[2:nlines, src.name] == y[1:(nlines-1),src.name])
-      repeats[[ktier]][is.na(repeats[[ktier]])] <- FALSE
-      if (ktier > 1)
-        repeats[[ktier]] <- (repeats[[ktier]] & repeats[[(ktier-1)]])
-      y[repeats[[ktier]], src.name] <- "  "
+      if (all(is.na(y[src.name])))
+        y[src.name] <- "  "
+      else
+      {
+        repeats[[ktier]] <- c(FALSE, y[2:nlines, src.name] == y[1:(nlines-1),src.name])
+        repeats[[ktier]][is.na(repeats[[ktier]])] <- FALSE
+        if (ktier > 1)
+          repeats[[ktier]] <- (repeats[[ktier]] & repeats[[(ktier-1)]])
+        y[repeats[[ktier]], src.name] <- "  "
+      }
       if (ntiers == 1)
         df.name <- " df"
       else
         df.name <-paste("df", ktier, sep="")
-      y[[df.name]] <- formatC(y[[df.name]], format="f", digits=0, width=dffw)
-      y[repeats[[ktier]], df.name] <- "  "
-      y[[df.name]] <- gsub("NA", "  ", y[[df.name]])
+      if (all(is.na(y[df.name])))
+        y[df.name] <- "  "
+      else
+      {
+        y[[df.name]] <- formatC(y[[df.name]], format="f", digits=0, width=dffw)
+        y[repeats[[ktier]], df.name] <- "  "
+        y[[df.name]] <- gsub("NA", "  ", y[[df.name]])
+      }
     }
     for (kcrit in names(y)[names(y) %in% criteria])
     {
-      if (kcrit == "order")
+      if (all(is.na(y[kcrit])))
+        y[kcrit] <- "  "
+      else
       {
-        y[kcrit] <- formatC(y[[kcrit]], format="f", digits=0, width=5)
-      } else
-      {
-        if (kcrit == "dforthog")
+        if (kcrit == "order")
         {
-          y[kcrit] <- formatC(y[[kcrit]], format="f", digits=0, width=8)
+            y[kcrit] <- formatC(y[[kcrit]], format="f", digits=0, width=5)
         } else
         {
-          y[kcrit] <- formatC(y[[kcrit]], format="f", digits=4, width=11)
+          if (kcrit == "dforthog")
+          {
+              y[kcrit] <- formatC(y[[kcrit]], format="f", digits=0, width=8)
+          } else
+          {
+              y[kcrit] <- formatC(y[[kcrit]], format="f", digits=4, width=11)
+          }
         }
+        y[kcrit] <- gsub("NA", "  ", y[[kcrit]])
       }
-      y[kcrit] <- gsub("NA", "  ", y[[kcrit]])
     }
   }
   #Need to use print.data.frame for legacy summary objects
@@ -763,6 +795,17 @@ print.summary.pcanon <- function(x, aliasing.print = TRUE, ...)
     if (!is.null(x$aliasing))
       print(x$aliasing, which.criteria = names(x$aliasing)[names(x$aliasing) %in% criteria])
 
+  n <- attr(y, which = "n", exact = "TRUE")
+  if (!is.null(n))
+  {
+    df.sum <- sum(as.numeric(y[,2]), na.rm = TRUE)
+    if (y[1,1] != "Mean")
+      df.sum <- df.sum + 1
+    if (n != df.sum)
+      warning("The combined dimensions of the sources from the first formula", 
+              " are less than the number of rows in data")
+  }
+  
   if (!attr(y, which="orthogonal"))
     cat("\nThe design is not orthogonal\n\n")
   invisible(x)
