@@ -40,9 +40,6 @@ projector <- function(Q)
 { 
   daeTolerance <- get("daeTolerance", envir=daeEnv)
   p <- new("projector", .Data=Q)
-  validity <- validProjector(p)
-  if (class(validity) == "character")
-    stop(validity)
   e <- eigen(Q, symmetric=T, only.values=T)
   nonzero.e <- e$values[abs(1 - e$values) < 0.9]
   dflen <- length(nonzero.e)
@@ -53,7 +50,7 @@ projector <- function(Q)
 setClass("projector", representation("matrix", degfree = "integer"), prototype(degfree=as.integer(NA)))
 setAs(from="projector", to="matrix", 
       def=function(from){m <- from@.Data; m})
-setValidity("projector", validProjector, where=".GlobalEnv")
+setValidity("projector", validProjector)
 
 is.projector <- function(object)
 { 

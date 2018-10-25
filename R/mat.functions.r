@@ -337,14 +337,27 @@ Zncsspline <- function(knot.points, Gpower = 0, print = FALSE)
   return(Z)
 }
 
-### Function to calculate the variance of predictions for Genotypes
-"mat.Vpred" <- function(W, Gg = 0, X = matrix(1, nrow = nrow(W), ncol = 1), Vu = 0, R)
+### Function to calculate the variance of predictions for Genotypes 
+### based on Hookes (2009, Equation 17)
+"mat.Vpred" <- function(W, Gg = 0, X = matrix(1, nrow = nrow(W), ncol = 1), Vu = 0, R, eliminate)
 { #set W or X to a column vector of 0s and Gg or Vu to a matrix of 0s if not effects for them not random
-  if (all(Gg < 1e-08))
+  warning("mat.Vpred is superseded by mat.Vpredicts, being retained for backwards compatibility; it may be deprecated in future versions")
+  Gg.zero <- all(Gg < 1e-08)
+  if (Gg.zero)
     Gginv <- Gg
   else
     Gginv <- ginv(Gg)
   Vinv <- ginv(Vu + R)
+  if (!missing(eliminate))
+  {
+    if (!inherits(eliminate, "projector"))
+      stop("Must supply an object of class projector")
+    if (!Gg.zero)
+      stop("Can only eliminate effects when the effects to be predicted are fixed")
+    eliminate <- projector(diag(1, nrow = nrow(Vinv), ncol = nrow(Vinv)) - 
+                             eliminate)
+    Vinv <- eliminate %*% Vinv %*% eliminate
+  }
   A <- t(W)%*%Vinv 
   Vpred <- A%*%W + Gginv
   if (!all(X < 1e-08))
@@ -356,6 +369,205 @@ Zncsspline <- function(knot.points, Gpower = 0, print = FALSE)
   return(Vpred)
 }
 
+"mat.Vpredicts" <- function(target, Gt = 0, fixed = ~ 1, random, G, R, design, 
+                            eliminate, keep.order = TRUE)
+  #Gt is the component for the target factor; if zero the target treated as fixed, otherwise it is random
+  #G is a list with a component for each random term; 
+  #it can be a single value for the component value of a diagonal matrix, or
+  #a matrix that is the same size as the number of levels in the model term;
+  #the order in the list must correspond to the order of terms in the expanded formula
+{
+  method <- "onestep" #else twostep (as in Butler, 2013)
+  #Generate the target matrix
+  if (inherits(target, what = "matrix"))
+    W <- target
+  else
+  {
+    if (!inherits(target, what = "formula"))
+      stop("target must be a matrix or a formula")
+    W <- model.matrix(target, design, keep.order = keep.order)
+  }
+  #Set up Gt matrix
+  if (inherits(Gt, what = "matrix"))
+  {
+    if (!all(dim(Gt) == ncol(W)))
+      stop("Gt is a matrix that is not conformable with the target design matrix")
+  } else
+  {
+    if (length(Gt) != 1)
+      stop("Gt is not a matrix or a scalar")
+    Gt <- diag(Gt, nrow = ncol(W), ncol = ncol(W))
+  }
+  #Get X from fixed
+  if (inherits(fixed, what = "matrix"))
+  {
+    X <- fixed
+  } else
+  {
+    if (!inherits(fixed, what = "formula"))
+      stop("fixed must be a matrix or a formula")
+    fix.attribs <- attributes(terms(fixed, keep.order = keep.order))
+    terms <- fix.attribs$term.labels
+    if (length(terms) != 0)
+    {
+      X <- do.call(cbind, lapply(terms, 
+                                 function(term, design) 
+                                   model.matrix(as.formula(paste("~ -1 +", term, sep = " ")), 
+                                                design),
+                                 design = design))
+      if (fix.attribs$intercept != 0)
+      {
+        X <- cbind(matrix(1, nrow = nrow(W), ncol = 1), X)
+        colnames(X)[1] <- "(Intercept)"    
+      }
+    } else
+    {
+      if (fix.attribs$intercept != 0)
+        X <- matrix(1, nrow = nrow(W), ncol = 1)
+      else
+        X <- NULL
+    }
+  }
+  fix.cols <- ncol(X)
+  #Generate Z and G for the random terms when a formula is supplied
+  if (missing(random))
+  {
+    if (!missing(G))
+      stop("A G matrix has been specified without random having been set; perhaps it is the random matrix")
+  } else #rocess the random argument
+  {
+    if (inherits(random, what = "matrix"))
+    {
+      if (method != "onestep")
+        stop("If supply a matrix for random then method must be onestep")
+      Vu <- random
+    } else
+    {
+      if (!inherits(random, what = "formula"))
+        stop("random must be a matrix or a formula")
+      ran.attribs <- attributes(terms(random, keep.order = keep.order))
+      if (missing(G))
+        stop("Have specified a random formula without specifying components")
+      if (!inherits(G, what = "list"))
+        stop("G should be a list")
+      if (ran.attribs$intercept != 0)
+        stop("An intercept has been included in the random formula")
+      nranterm <- length(ran.attribs$term.labels) + ran.attribs$intercept
+      if (length(G) != nranterm)
+        stop("The number of supplied components is not equal to the number of random terms")
+      names(G) <- ran.attribs$term.labels
+      terms <- ran.attribs$term.labels
+      Z <- do.call(cbind, lapply(terms, 
+                                 function(term, design) 
+                                   model.matrix(as.formula(paste("~ - 1 +", term, sep = " ")), 
+                                                design),
+                                 design = design))
+      
+      #Generate G from component values
+      for (term in ran.attribs$term.labels)
+      {
+        if (length(ran.attribs$factors) == 1)
+        {
+          facs <- rownames(ran.attribs$factors)
+          nlev <- length(levels(design[[facs]]))
+        } else
+        {
+          facs <- names(ran.attribs$factors[,term])[ran.attribs$factors[,term]  != 0]
+          nlev <- prod(unlist(lapply(facs, 
+                                     function(fac, design) length(levels(design[[fac]])), 
+                                     design = design)))
+        }
+        if (length(G[[term]]) == 1)
+        {
+          G[[term]] <- diag(G[[term]], nrow = nlev, ncol = nlev)
+        } else
+        {
+          if (!all(dim(G[[term]]) == nlev))
+            stop("The dimensions of the G component for ",term, " is not correct")
+        }
+      }
+      G <- mat.dirsum(G)
+      if (!all(dim(G) == ncol(Z)))
+        stop("The design matrix for the combined random terms is not conformable with G")
+      if (method == "onestep")
+        Vu <- Z %*% G %*% t(Z)
+      else
+        Vu = 0
+    }
+  }
+  #Generate R if missing
+  if (missing(R))
+    R <- diag(1, nrow = nrow(W), ncol = nrow(W))
+  
+  if (method == "onestep")
+  {
+    #set W or X to a column vector of 0s and Gt or Vu to a matrix of 0s if not effects for them not random
+    Gt.zero <- all(Gt < 1e-08)
+    if (Gt.zero)
+      Gtinv <- Gt
+    else
+      Gtinv <- ginv(Gt)
+    if (any(dim(Vu) != dim(R)))
+      stop("The variance matrix for random effects has dimensions ",nrow(Vu),", ",ncol(Vu),
+           " which is not conformable with R that has dimensions ", nrow(R),", ",ncol(R),
+           "; also check target")
+    Vinv <- ginv(Vu + R)
+    if (!missing(eliminate))
+    {
+      if (!inherits(eliminate, "projector"))
+        stop("Must supply an object of class projector")
+      if (!Gt.zero)
+        stop("Can only eliminate effects when the effects to be predicted are fixed")
+      eliminate <- projector(diag(1, nrow = nrow(Vinv), ncol = nrow(Vinv)) - 
+                               eliminate)
+      Vinv <- eliminate %*% Vinv %*% eliminate
+    }
+    A <- t(W)%*%Vinv 
+    Vpred <- A%*%W + Gtinv
+    if (!all(X < 1e-08))
+    {
+      AX <- A%*%X
+      Vpred <- Vpred - AX%*%ginv(t(X)%*%Vinv%*%X)%*%t(AX)
+    }
+    Vpred <- ginv(Vpred)
+  } else #twostep
+  {
+    target.cols <- ncol(W)
+    
+    if (Gt == 0) #add to fixed model
+    {
+      X <- cbind(X, W)
+    }
+    else #add to random model
+    {
+      G <- mat.dirsum(list(Gt, G))
+      if (!missing(random))
+        Z <- cbind(W, Z)
+      else
+        Z <- W
+    }
+    if (!missing(random) || Gt !=0)
+      Ginv <- mat.dirsum(list(diag(0, nrow = ncol(X), ncol = ncol(X)), 
+                              ginv(G)))
+    
+    #Form the information matrix
+    C <- cbind(X, Z)
+    C <- t(C) %*% ginv(R) %*% C + Ginv
+    V.p <- ginv(C)
+    
+    #Extract target
+    subcols <- fix.cols + 1:target.cols
+    #  V.p <- V.p[subcols, subcols]
+    
+    cols.nonT <- c(1:fix.cols, (fix.cols+target.cols+1):ncol(C))
+    C11 <- C[subcols, subcols]
+    C22 <- C[cols.nonT, cols.nonT]
+    C12 <- C[subcols, cols.nonT]
+    Cadj <- C11 - (C12 %*% ginv(C22) %*% t(C12))
+    Vpred <- ginv(Cadj)
+  }
+  return(Vpred)
+}
 
 
 ### Function to calculate 

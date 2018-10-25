@@ -1,8 +1,11 @@
 \name{designAmeasures}
 \alias{designAmeasures}
-\title{Calculates the A-optimality measures from the variance matrix for predictions}
-\description{Calculates the A-optimality measures, possibly for different subgroups of the 
-             predictions, from the variance matrix for the predictions. If groups are                     specified then the A-optimality measures are calculated for the differences 
+\title{Calculates the average variance of pairwise differences from the variance matrix 
+       for predictions that can be obtained using mat.Vpredicts}
+\description{Calculates the average variance of pairwise differences between 
+             (of elementary contrasts of) preductions, possibly for different subgroups 
+             of the predictions, from the variance matrix for the predictions. If groups 
+             are specified then the A-optimality measures are calculated for the differences 
              between predictions within each group and for those between predictions from 
              different groups. If groupsizes are specified, but groups are not, the
              predictions will be sequentially broken into groups of the size specified by 
@@ -44,6 +47,7 @@ start.design <- cbind(mill.fac, field.lay[c(3,4,5,8,1,7,3,4,5,8,6,2),])
 rownames(start.design) <- NULL
 
 ## Set up matrices
+n <- nrow(start.design)
 W <- model.matrix(~ -1+ Variety, start.design)
 ng <- ncol(W)
 Gg<- diag(1, ng)
@@ -51,9 +55,9 @@ Vu <- with(start.design, fac.vcmat(Mrep, 0.3) +
                          fac.vcmat(fac.combine(list(Mrep, Mday)), 0.2) + 
                          fac.vcmat(Frep, 0.1) + 
                          fac.vcmat(fac.combine(list(Frep, Fplot)), 0.2))
-R <- diag(1, nrow(start.design))
+R <- diag(1, n)
   
-## Calculate the information matrix
+## Calculate the varaince matrix of the predicted random Variety effects
 Vp <- mat.Vpred(W = W, Gg = Gg, Vu = Vu, R = R)
   
 ## Calculate A-optimality measure
@@ -64,5 +68,13 @@ names(grpsizes) <- c("fldUndup", "fldDup")
 designAmeasures(Vp, groupsizes = grpsizes)
 designAmeasures(Vp, groupsizes = c(4))
 designAmeasures(Vp, groups=list(c(1,4),c(5,6)))
+
+## Calculate the variance matrix of the predicted fixed Variety effects, elminating the grand mean
+Vp.reduc <- mat.Vpred(W = W, Gg = 0, Vu = Vu, R = R, 
+                      eliminate = projector(matrix(1, nrow = n, ncol = n)/n))
+## Calculate A-optimality measure
+designAmeasures(Vp.reduc)
+
+
 }
 \keyword{design}

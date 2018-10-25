@@ -41,6 +41,17 @@ test_that("PBIBD2", {
   trt.struct <- pstructure(formula = ~ Treatments, labels = "terms", data = PBIBD2.lay)
   testthat::expect_equal(degfree(trt.struct$Q$Treatments), 5)
   
+  #Test for single structure
+  unit.canon <- designAnatomy(formulae = list(units =  ~ Blocks/Units), data = PBIBD2.lay)
+  testthat::expect_equal(unit.canon$Q[[1]]$`Units[Blocks]`, 18)
+  summ <- summary(unit.canon)
+  testthat::expect_equal(summ$decomp$` df`[1], 5)
+  unit.canon <- designAnatomy(formulae = list(units =  ~ Blocks/Units), 
+                              omit.projectors = "none", data = PBIBD2.lay)
+  testthat::expect_equal(degfree(unit.canon$Q[[1]]$`Units[Blocks]`), 18)
+  summ <- summary(unit.canon)
+  testthat::expect_equal(summ$decomp$` df`[2], 18)
+  
   #'## Compute the anatomy
   PBIBD2.canon <- designAnatomy(formulae = list(unit = ~Blocks/Units,
                                                 trt = ~ Treatments),

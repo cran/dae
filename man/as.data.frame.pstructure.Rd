@@ -27,7 +27,7 @@
        in the \code{\link{pstructure.object}}. The columns are \code{df}, \code{terms}, 
        \code{sources} and, if \code{omit.marginality} is \code{FALSE}, the columns of 
        the generated \code{levels} with columns of the \code{marginality} matrix 
-       that is stored in the \code{marginality} compnent of the object.}
+       that is stored in the \code{marginality} component of the object.}
 \author{Chris Brien}
 \seealso{\code{\link{as.data.frame}}.}
 \examples{

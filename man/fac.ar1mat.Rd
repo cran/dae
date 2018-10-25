@@ -14,7 +14,7 @@
        \code{\link{factor}}.}
 \details{
 The method is:
-  a) form an n x n matrix of all pairwise differences in the numeric values 
+  a) form an \code{n x n} matrix of all pairwise differences in the numeric values 
      corresponding to the observed levels of the factor by taking the 
      difference between the following two n x n matrices are equal: 1) each row 
      contains the numeric values corresponding to the observed levels of the 

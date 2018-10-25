@@ -79,7 +79,8 @@
   \tab blockboundary.plot. \cr
 \code{\link{designAmeasures}}
   \tab Calculates the A-optimality measures from the \cr
-  \tab variance matrix for predictions\cr
+  \tab variance matrix for predictions that can be obtained \cr 
+  \tab using mat.Vpredicts\cr
 \code{\link{designAnatomy}}
   \tab An anatomy of a design showing the confounding and \cr
   \tab aliasing inherent in the design that is obtained \cr
@@ -186,6 +187,9 @@
   \tab Forms the direct sum of a list of matrices\cr
 \code{\link{mat.Vpred}}
   \tab Forms the variance matrix of predictions\cr
+\code{\link{mat.Vpredicts}}
+  \tab Forms the variance matrix of predictions,\cr
+  \tab based  on supplied matrices or formulae. \cr
 \code{\link{Zncsspline}}
   \tab Forms the design matrix for fitting the \cr
   \tab random effects for a natural cubic smoothing \cr

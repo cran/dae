@@ -1,10 +1,10 @@
 Package: dae
-Version: 3.0-16
-Date: 2018-06-11
+Version: 3.0-23
+Date: 2018-10-17
 Title: Functions Useful in the Design and ANOVA of Experiments
 Author: Chris Brien <Chris.Brien@unisa.edu.au>.
 Maintainer: Chris Brien <Chris.Brien@unisa.edu.au>
-Depends: R (>= 3.5.0), ggplot2
+Depends: R (>= 3.1.0), ggplot2
 Imports: graphics, methods, stats
 Suggests: testthat
 Description: The content falls into the following groupings: (i) Data, (ii)
@@ -18,6 +18,6 @@ License: GPL (>= 2)
 URL: http://chris.brien.name
 RoxygenNote: 5.0.1
 NeedsCompilation: no
-Packaged: 2018-06-11 07:06:55 UTC; briencj
+Packaged: 2018-10-17 12:25:53 UTC; briencj
 Repository: CRAN
-Date/Publication: 2018-06-11 14:33:56 UTC
+Date/Publication: 2018-10-25 13:40:03 UTC

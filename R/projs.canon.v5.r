@@ -311,7 +311,7 @@
     have.proj <- FALSE
     if (ntiers == 1)
     { 
-      if (inherits(object$Q[[1]], "projector"))
+      if (inherits(object$Q[[1]][[1]], "projector"))
         have.proj <- TRUE
     }  
     else 

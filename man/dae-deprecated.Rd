@@ -9,7 +9,8 @@
 \alias{projs.structure}
 \title{Deprecated Functions in Package dae}
 \description{These functions have been renamed and deprecated in \code{dae}.}
-\usage{blockboundary.plot(...)
+\usage{Ameasures(...)
+blockboundary.plot(...)
 design.plot(...)
 proj2.decomp(...)
 proj2.ops(...)

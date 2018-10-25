@@ -1,5 +1,34 @@
 \name{news}
 \title{News for Package dae}
+\section{Changes in dae version 3.0-23 (2018-10-17)}{
+  \itemize{
+    \item{Add diagnostic message to mat.Vpredicts.}
+    \item{Fix a bug in setValidity of class "projector".}
+}}
+\section{Changes in dae version 3.0-22 (2018-10-01)}{
+  \itemize{
+    \item{Fix bug in mat.Vpredicts when have a a single random term for a single factor.}
+}}
+\section{Changes in dae version 3.0-21 (2018-09-29)}{
+  \itemize{
+    \item{Add the new function mat.Vpredicts that has renamed arguments and the capability of using formulae in generating the required matrices.}
+}}
+\section{Changes in dae version 3.0-20 (2018-09-02)}{
+  \itemize{
+    \item{Add \code{eliminate} argument to mat.Vpred.}
+}}
+\section{Changes in dae version 3.0-19 (2018-08-25)}{
+  \itemize{
+    \item{Fix bug in summary.pcanon for a single \code{formula} when \code{projectors} are saved.}
+}}
+\section{Changes in dae version 3.0-18 (2018-08-09)}{
+  \itemize{
+    \item{Small documentation edits.}
+}}
+\section{Changes in dae version 3.0-17 (2018-6-12)}{
+  \itemize{
+    \item{Rebuild under latest version of R 3.5.0 with requirement for R >= 3.1.0.}
+}}
 \section{Changes in dae version 3.0-16 (2018-6-11)}{
   \itemize{
     \item{Rebuild under latest version of R 3.6.0.}
