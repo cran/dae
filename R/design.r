@@ -4,7 +4,7 @@ designLatinSqrSys <- function(order, start = NULL)
   if (is.null(start))
     start <- 1:order
   if (length(unique(start))!= order | !all(start >0 & start <= order))
-    stop("start does not consiste of order unique values between one and order")
+    stop("start does not consist of order unique values between one and order")
   
   #generate design
   des <- lapply(start, 

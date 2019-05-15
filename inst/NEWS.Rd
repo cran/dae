@@ -1,5 +1,42 @@
 \name{news}
 \title{News for Package dae}
+\section{Changes in dae version 3.0-32 (2019-05-15)}{
+  \itemize{
+    \item{Rebuild under version 3.6.0 prior to resubmission to CRAN.}
+    }}
+\section{Changes in dae version 3.0-31 (2019-04-04)}{
+  \itemize{
+    \item{Update the Author field to include an ORCID and the Description field of the DESCRIPTION.}
+    \item{Add new function designTwophaseAnatomies.}
+}}
+\section{Changes in dae version 3.0-30 (2019-03-29)}{
+  \itemize{
+    \item{Add \code{reverse.x} and \code{reverse.y} arguments to designPlotlabels.}
+}}
+\section{Changes in dae version 3.0-29 (2019-03-23)}{
+  \itemize{
+    \item{Dcoumentation revisions.}
+}}
+\section{Changes in dae version 3.0-28 (2019-03-12)}{
+  \itemize{
+    \item{Fix bug in mat.Vpredicts when there are no random effects.}
+}}
+\section{Changes in dae version 3.0-27 (2019-02-21)}{
+  \itemize{
+    \item{Use R.rsp to install vignettes so that hyperlinks are active.}
+}}
+\section{Changes in dae version 3.0-26 (2019-02-18)}{
+  \itemize{
+    \item{Deal with a mean only formula (~1) in pstructure.formula.}
+}}
+\section{Changes in dae version 3.0-25 (2019-02-07)}{
+  \itemize{
+    \item{Reorganize vignette and include manual as a vignette.}
+}}
+\section{Changes in dae version 3.0-24 (2019-02-01)}{
+  \itemize{
+    \item{Minor updates to the daeDesignNotes vignette and move to a vignettes subdirectory.}
+}}
 \section{Changes in dae version 3.0-23 (2018-10-17)}{
   \itemize{
     \item{Add diagnostic message to mat.Vpredicts.}

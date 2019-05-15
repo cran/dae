@@ -93,8 +93,13 @@ test_that("PBIBD2Ameasures", {
   
   #'## Calculate the variance matrix of the predictions
   Vp <- mat.Vpred(W = W, Vu=Vu, R=R)
-  designAmeasures(Vp)
+  testthat::expect_true(abs(designAmeasures(Vp) - 0.5625) < 1e-6)
+
+  #Test when no random terms
+  Vpr <- mat.Vpredicts(target = ~ -1 + Treatments, fixed = ~ Blocks -1, design = PBIBD2.lay)
+  testthat::expect_true(abs(designAmeasures(Vpr) - 0.5666667) < 1e-6)
   
+    
   #'## Get reduced variance matix of predictions
   unit.str <- pstructure(~Blocks/Units, grandMean = TRUE, data = PBIBD2.lay)
   Q.B <- projector(unit.str$Q$Mean + unit.str$Q$Blocks)

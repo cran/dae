@@ -1,5 +1,6 @@
 "designPlotlabels" <- function(data, labels, grid.x = "Columns", grid.y = "Rows", 
                                colour.column=NULL, colour.values=NULL, 
+                               reverse.x = FALSE, reverse.y = TRUE, 
                                xlab, ylab, title, printPlot = TRUE, ggplotFuncs = NULL, ...)
   ## Function that uses ggplot to plot labels on a grid
 {
@@ -9,6 +10,23 @@
   
   plt <- ggplot(data = data, aes_string(x = grid.x, y = grid.y, label = labels)) +
     labs(x = xlab, y = ylab, title = title)
+
+  if (reverse.x)
+  {
+    if (inherits(data[[grid.x]], what = "factor"))
+      plt <- plt + scale_x_discrete(limits = rev(levels(data[[grid.x]])))
+    else
+      plt <- plt + scale_x_reverse()
+  }
+  
+  if (reverse.y)
+  {
+    if (inherits(data[[grid.y]], what = "factor"))
+      plt <- plt + scale_y_discrete(limits = rev(levels(data[[grid.y]])))
+    else
+      plt <- plt + scale_y_reverse()
+  }
+  
   if (!is.null(colour.column)) 
     if (labels == colour.column)
       plt <- plt + theme(legend.position = "none")

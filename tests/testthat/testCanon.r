@@ -254,6 +254,48 @@ test_that("JarrettRuggiero", {
   
 })
 
+cat("#### Test for designTwophaseAnatomies\n")
+test_that("designTwophaseAnatomies", {
+  skip_on_cran()
+  library(dae)
+  #'## Jarrett & Ruggiero example
+  jr.lay <- fac.gen(list(Set=7, Dye=2,Array=3))
+  jr.lay <- within(jr.lay, 
+                   { 
+                     Block <- factor(rep(1:7, each=6))
+                     Plant <- factor(rep(c(1,2,3,2,3,1), times=7))
+                     Sample <- factor(c(rep(c(2,1,2,2,1,1, 1,2,1,1,2,2), times=3), 2,1,2,2,1,1))
+                     Treat <- factor(c(1,2,4,2,4,1, 2,3,5,3,5,2, 3,4,6,4,6,3, 4,5,7,5,7,4, 
+                                       5,6,1,6,1,5, 6,7,2,7,2,6, 7,1,3,1,3,7),
+                                     labels=c("A","B","C","D","E","F","G"))
+                   })
+  
+  testthat::expect_error(jr.anat <- designTwophaseAnatomies(
+    formulae = list(array = ~ (Set:Array)*Dye, 
+                    plot = ~ Block/Plant),
+    data = jr.lay))
+  jr.anat <- designTwophaseAnatomies(formulae = list(array = ~ (Set:Array)*Dye,
+                                                     plot = ~ Block/Plant/Sample,
+                                                     trt = ~ Treat),
+                                     data = jr.lay)  
+  testthat::expect_equal(length(jr.anat), 4)
+  jrfc.anat <- designTwophaseAnatomies(formulae = list(array = ~ (Set:Array)*Dye,
+                                                       plot = ~ Block/Plant/Sample,
+                                                       trt = ~ Treat),
+                                       which.designs = c("first", "cross"), data = jr.lay)
+  testthat::expect_equal(length(jrfc.anat), 4)
+  testthat::expect_true(is.null(jrfc.anat[["twophase"]]))
+  testthat::expect_true(!is.null(jrfc.anat[["first"]]))
+  testthat::expect_true(!is.null(jrfc.anat[["cross"]]))
+  testthat::expect_true(is.null(jrfc.anat[["second"]]))
+  
+  testthat::expect_silent(jrfc.anat <- designTwophaseAnatomies(formulae = list(array = ~ (Set:Array)*Dye,
+                                                                               plot = ~ Block/Plant/Sample,
+                                                                               trt = ~ Treat),
+                                                               which.designs = c("first", "cross"), 
+                                                               printAnatomies = FALSE, data = jr.lay))
+})
+
 cat("#### Test for Baby pseudoterm example\n")
 test_that("Baby", {
   skip_on_cran()
@@ -718,7 +760,7 @@ test_that("SpliPlotRowsColumns", {
 })
 
 
-cat("#### Test for EXP249 - a two-phae, p-rep design\n")
+cat("#### Test for EXP249 - a two-phase, p-rep design\n")
 test_that("Exp249", {
   skip_on_cran()
   library(dae)

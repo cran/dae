@@ -1,10 +1,11 @@
 \name{designAnatomy}
 \alias{designAnatomy}
-\title{An anatomy of a design showing the confounding and aliasing inherent 
-       in the design that is obtained via a canonical analysis of its projectors.}
+\title{Given the layout for a design, obtain its anatomy via the canonical analysis 
+       of its projectors to show the confounding and 
+       aliasing inherent in the design.}
 \description{Computes the canonical efficiency factors for the joint 
        decomposition of two or more structures or sets of mutually orthogonally 
-       projectors (Brien and Bailey, 2009; Brien, 2017a,b), orthogonalizing 
+       projectors (Brien and Bailey, 2009; Brien, 2017; Brien, 2019), orthogonalizing 
        projectors in a set to those earlier in the set of projectors with 
        which they are partially aliased. The results can be summarized in the 
        form of a decomposition table that shows the confounding between sources 
@@ -133,15 +134,12 @@ designAnatomy(formulae, data, keep.order = TRUE, grandMean = FALSE,
          10 or more or the James and Wilkinson (1971) methods fails to produce 
          an idempotent matrix, equation 5.3 of Payne and Tobias (1992) is used 
          to obtain the projection matrices for their joint decompostion.}
-\references{Brien, C. J. (2017a) Multiphase experiments in practice: A look back. 
-            submitted 
-            to the \emph{Australian & New Zealand Journal of Statistics}.
+\references{Brien, C. J. (2017) Multiphase experiments in practice: A look back. 
+            \emph{Australian & New Zealand Journal of Statistics}, \bold{59}, 327-352.
 
-            Brien, C. J. (2016a) Multiphase experiments with at least onne later 
-            laboratory phase . II. Northogonal designs. submitted 
-            to the \emph{Australian & New Zealand Journal of Statistics}.
-
-
+            Brien, C. J. (2019) Multiphase experiments with at least one later 
+            laboratory phase . II. Northogonal designs. 
+            \emph{Australian & New Zealand Journal of Statistics}, accepted for publication.
 
             Brien, C. J. and R. A. Bailey (2009). Decomposition tables for 
             multitiered experiments. I. A chain of randomizations.  

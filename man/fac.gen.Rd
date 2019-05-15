@@ -1,7 +1,7 @@
 \name{fac.gen}
 \alias{fac.gen}
-\title{Generate all combinations of several factors}
-\description{Generate all combinations of several factors.}
+\title{Generate all combinations of several factors and, optionally, replicate them}
+\description{Generate all combinations of several factors and, optionally, replicate them.}
 \usage{fac.gen(generate, each=1, times=1, order="standard")}
 \arguments{
  \item{generate}{A \code{\link{list}} of named objects and numbers that specify the 

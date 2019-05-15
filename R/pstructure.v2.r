@@ -500,261 +500,158 @@ formSources <- function(term.names, marginality, grandMean = FALSE)
   Q.G = projector(matrix(1, nrow=n, ncol=n)/n)
   aliasing <- NULL
   
-  #get terms, check all factors/variates in data
-  terms <- attr(terms(formula, keep.order = keep.order, ...), which="term.labels")
-  nterms <- length(terms)
-  fac.list <- lapply(terms, fac.getinTerm)
-  names(fac.list) <- terms
-  #Find all the factors
-  facs <- unique(unlist(fac.list))
-  if (!all(facs %in% names(data)))
-    stop("Some factor/covariates missing from data")
-  
-  #form mean operators for each term
-  fac.modl <- model.frame(formula, data=data)
-  if (grandMean)  #add grand mean term if grandMean is TRUE
+  #check for ~1 and create pstructure
+  if (formula == ~1)
   {
-    Q <- vector("list", length=nterms+1)
-    names(Q) <- c("Mean", terms)
-    Q[["Mean"]] <- Q.G
-  } else
+    if (!grandMean) 
+      warning("formula is for grand mean, yet grandMean is FALSE; it will be saved")
+    terms <- "Mean"
+    nterms <- 1
+    Q <- list(Mean = Q.G)
+    marginality <- diag(1, nrow = nterms, ncol = nterms)
+    rownames(marginality) <- terms
+    colnames(marginality) <- terms
+    sources <- terms
+  } else #formula is not ~1
   {
-    Q <- vector("list", length=nterms)
-    names(Q) <- terms
-  }
-  for (k in 1:nterms)
-  { 
-    Q[[terms[k]]] <- model.matrix(as.formula(paste("~ ",terms[k])), data=fac.modl)
-    Q[[terms[k]]] <- Q[[terms[k]]] %*% ginv(t(Q[[terms[k]]]) %*% Q[[terms[k]]]) %*% t(Q[[terms[k]]])
-    Q[[terms[k]]] <- projector(Q[[terms[k]]] - Q.G)
-  }
-
-  #check marginality matrix when it is supplied
-  if (!is.null(marginality))
-  {
-    if (nrow(marginality) != nterms | ncol(marginality) != nterms)
-      stop(paste("The number of rows and columns in the supplied marginality matrix must be ",
-                 "the same as the number of terms in the supplied formula"))
-    if (!all(rownames(marginality) == terms) | !all(colnames(marginality) == terms))
-      warning("Not all row and column names for the supplied marginality are the same as the expanded set of term names")
-    if (!all(marginality == 1 | marginality ==  0))
-      stop("All elements of the supplied marginality matrix must be 0 or 1")
-  }
-
-  #initialize marginality matrix
-  marg.mat <- diag(1, nrow = nterms, ncol = nterms)
-  rownames(marg.mat) <- terms
-  colnames(marg.mat) <- terms
-
-  #form projection matrices of the structure
-  if (length(terms) == 1)
-  {
-    marginality <- as.matrix(c(1))
-    rownames(marginality) <- colnames(marginality) <- terms
-    sources <- terms <- names(Q)
-    aliasing <- NULL
-  } else
-  { 
-    if (orthogonalize == "hybrid") #by difference
-    { 
-      #set up aliasing summary
-      nc <- 3 + length(criteria)
-      aliasing <- data.frame(matrix(nrow = 0, ncol=nc))
-      colnames(aliasing) <- c("Source", "df", "Alias", criteria)
-      eff.crit <- vector(mode="list",length=length(criteria))
-      names(eff.crit) <- criteria
-
-      #Loop over terms
-      for (i in 2:length(terms))
-      { 
-        Q.work <- Q[[terms[i]]]
-        #loop over terms to see if any are marginal to term i
-        for (j in 1:(i-1))
-        { 
-          if (marg.mat[i, i] == 1)
-          {
-            Qji <- Q[[terms[j]]] %*% Q.work
-            if (!is.allzero(Qji)) # if not orthogonal then have to orthogonalize
-            {
-              if (is.allzero(Qji-Q[[terms[j]]])) #test marginality
-              {
-                if (is.allzero(Q[[terms[j]]] - Q.work)) #are terms equal?
-                {
-                  marg.mat[terms[i], terms[i]] <- 0
-                  warning(paste(terms[[i]],"is aliased with previous terms in the formula",
-                                "and has been removed", sep=" "))
-                  eff.crit[criteria] <- 0
-                  aliasing <- rbind(aliasing, 
-                                    data.frame(c(list(Source = terms[[i]], df = 0, 
-                                                      Alias = terms[[j]]), 
-                                                 eff.crit), 
-                                               stringsAsFactors = FALSE))
-                } else # i is a marginal term to j - difference
-                {
-                  marg.mat[terms[j], terms[i]] <- 1
-                  Q.work <- projector(Q.work - Q[[terms[j]]])
-                }
-              } else
-              {
-                if (is.allzero(Qji - Q.work)) #i is aliased with j
-                {
-                  marg.mat[terms[i], terms[i]] <- 0
-                  warning(paste(terms[[i]],"is aliased with previous terms in the formula",
-                                "and has been removed", sep=" "))
-                  eff.crit[criteria] <- 0
-                  aliasing <- rbind(aliasing, 
-                                    data.frame(c(list(Source = terms[[i]], 
-                                                      df = 0, 
-                                                      Alias = terms[[j]]), 
-                                                 eff.crit), 
-                                               stringsAsFactors = FALSE))
-                } else #partial aliasing of j with i - orthogonalize
-                {
-                  R <- projector(diag(1, nrow = n, ncol = n) - Q[[terms[j]]])
-                  decomp <- proj2.combine(R, Q.work)
-                  Q.work <- decomp$Qconf
-                  keff.crit <- efficiency.criteria(decomp$efficiencies)
-                  aliasing <- rbind(aliasing, 
-                                    data.frame(c(list(Source = terms[[i]], 
-                                                      df = degfree(Q.work),
-                                                      Alias = terms[[j]]), 
-                                                 keff.crit[criteria]), 
-                                               stringsAsFactors = FALSE))
-                }
-              }
-            }
-          }
-        }
-        
-        #Check that this term is orthogonal to previous projectors - necessary?
-        # if (degfree(Q.work) != 0) 
-        # { 
-        #   i1 <- i - 1 
-        #   if (i1 > 0)
-        #     for (j in 1:i1)
-        #       if (!is.allzero(Q.work %*% Q[[terms[j]]]))
-        #       { 
-        #         warning(paste("** Projection matrices for ",terms[i], " and ", terms[j], 
-        #                       " are not orthogonal", sep=""))
-        #       }
-        # }
-        Q[[terms[i]]] <- Q.work
-      }
-      
-      #Print out the aliasing summary if any aliasing
-      if (nrow(aliasing) > 0)
-      { 
-        rownames(aliasing) <- NULL
-        class(aliasing) <- c("aliasing", "data.frame")
-        #Change terms in aliasing to sources, if appropriate 
-        if (lab.opt == "sources")
-        {
-          tmp <- marg.mat
-          diag(tmp) <- 1
-          sources <- formSources(terms, tmp, grandMean = grandMean)
-          which.sources <- aliasing$Source %in% names(sources)
-          if (any(which.sources))
-            aliasing$Source[which.sources] <- sources[aliasing$Source[which.sources]]
-          which.sources <- aliasing$Alias %in% names(sources)
-          if (any(which.sources))
-            aliasing$Alias <- sources[aliasing$Alias]
-        }
-        attr(aliasing, which = "title") <- 
-          "\nTable of (partial) aliasing between terms within a structure\n\n"
-        
-        #Print aliasing
-        if (aliasing.print)
-        {
-          if (anycriteria)
-            print(aliasing, which = kcriteria)
-          else
-            print(aliasing, which = "none")
-        }
-      } else
-      {
-        aliasing <- NULL
-      }
-      
-      #Remove aliased terms
-      aliased <- (diag(marg.mat) == 0)
-      if (any(aliased))
-      {
-        marg.mat <- marg.mat[!aliased, !aliased]
-        Q <- Q[!aliased]
-      }
-      terms <- names(Q)
-      if (is.null(marginality))
-      {
-        sources <- formSources(terms, marg.mat, grandMean = grandMean)
-        marginality <- marg.mat
-      }
-      else
-      {
-        if (check.marginality & all(marg.mat == marginality))
-          warning("Supplied marginality matrix differs from that computed by pstructure formula")
-        sources <- formSources(terms, marginality, grandMean = grandMean)
-      }
-      if (lab.opt == "sources")
-        names(Q) <- sources
+    #get terms, check all factors/variates in data
+    terms <- attr(terms(formula, keep.order = keep.order, ...), which="term.labels")
+    nterms <- length(terms)
+    fac.list <- lapply(terms, fac.getinTerm)
+    names(fac.list) <- terms
+    #Find all the factors
+    facs <- unique(unlist(fac.list))
+    if (!all(facs %in% names(data)))
+      stop("Some factor/covariates missing from data")
+    
+    #form mean operators for each term
+    fac.modl <- model.frame(formula, data=data)
+    if (grandMean)  #add grand mean term if grandMean is TRUE
+    {
+      Q <- vector("list", length=nterms+1)
+      names(Q) <- c("Mean", terms)
+      Q[["Mean"]] <- Q.G
     } else
     {
-      if (orthogonalize == "differencing") #by difference
+      Q <- vector("list", length=nterms)
+      names(Q) <- terms
+    }
+    for (k in 1:nterms)
+    { 
+      Q[[terms[k]]] <- model.matrix(as.formula(paste("~ ",terms[k])), data=fac.modl)
+      Q[[terms[k]]] <- Q[[terms[k]]] %*% ginv(t(Q[[terms[k]]]) %*% Q[[terms[k]]]) %*% t(Q[[terms[k]]])
+      Q[[terms[k]]] <- projector(Q[[terms[k]]] - Q.G)
+    }
+    
+    #check marginality matrix when it is supplied
+    if (!is.null(marginality))
+    {
+      if (nrow(marginality) != nterms | ncol(marginality) != nterms)
+        stop(paste("The number of rows and columns in the supplied marginality matrix must be ",
+                   "the same as the number of terms in the supplied formula"))
+      if (!all(rownames(marginality) == terms) | !all(colnames(marginality) == terms))
+        warning("Not all row and column names for the supplied marginality are the same as the expanded set of term names")
+      if (!all(marginality == 1 | marginality ==  0))
+        stop("All elements of the supplied marginality matrix must be 0 or 1")
+    }
+    
+    #initialize marginality matrix
+    marg.mat <- diag(1, nrow = nterms, ncol = nterms)
+    rownames(marg.mat) <- terms
+    colnames(marg.mat) <- terms
+    
+    #form projection matrices of the structure
+    if (length(terms) == 1)
+    {
+      marginality <- as.matrix(c(1))
+      rownames(marginality) <- colnames(marginality) <- terms
+      sources <- terms <- names(Q)
+      aliasing <- NULL
+    } else
+    { 
+      if (orthogonalize == "hybrid") #by difference
       { 
         #set up aliasing summary
-        nc <- 3
+        nc <- 3 + length(criteria)
         aliasing <- data.frame(matrix(nrow = 0, ncol=nc))
-        colnames(aliasing) <- c("Source", "df", "Alias")
-        class(aliasing) <- c("aliasing", "data.frame")
+        colnames(aliasing) <- c("Source", "df", "Alias", criteria)
         eff.crit <- vector(mode="list",length=length(criteria))
         names(eff.crit) <- criteria
         
-        orthogonal <- TRUE
-        fac.mat <- attr(terms(formula, keep.order = keep.order, ...), which="factors")
+        #Loop over terms
         for (i in 2:length(terms))
         { 
           Q.work <- Q[[terms[i]]]
-          for (j in 1:length(terms))
+          #loop over terms to see if any are marginal to term i
+          for (j in 1:(i-1))
           { 
-            if (i != j)
-            { 
-              if (all((fac.mat[,j] != 0) == (fac.mat[,j] & fac.mat[,i])))
+            if (marg.mat[i, i] == 1)
+            {
+              Qji <- Q[[terms[j]]] %*% Q.work
+              if (!is.allzero(Qji)) # if not orthogonal then have to orthogonalize
               {
-                Q.work <- Q.work - Q[[terms[j]]]
-                marg.mat[terms[j], terms[i]] <- 1
+                if (is.allzero(Qji-Q[[terms[j]]])) #test marginality
+                {
+                  if (is.allzero(Q[[terms[j]]] - Q.work)) #are terms equal?
+                  {
+                    marg.mat[terms[i], terms[i]] <- 0
+                    warning(paste(terms[[i]],"is aliased with previous terms in the formula",
+                                  "and has been removed", sep=" "))
+                    eff.crit[criteria] <- 0
+                    aliasing <- rbind(aliasing, 
+                                      data.frame(c(list(Source = terms[[i]], df = 0, 
+                                                        Alias = terms[[j]]), 
+                                                   eff.crit), 
+                                                 stringsAsFactors = FALSE))
+                  } else # i is a marginal term to j - difference
+                  {
+                    marg.mat[terms[j], terms[i]] <- 1
+                    Q.work <- projector(Q.work - Q[[terms[j]]])
+                  }
+                } else
+                {
+                  if (is.allzero(Qji - Q.work)) #i is aliased with j
+                  {
+                    marg.mat[terms[i], terms[i]] <- 0
+                    warning(paste(terms[[i]],"is aliased with previous terms in the formula",
+                                  "and has been removed", sep=" "))
+                    eff.crit[criteria] <- 0
+                    aliasing <- rbind(aliasing, 
+                                      data.frame(c(list(Source = terms[[i]], 
+                                                        df = 0, 
+                                                        Alias = terms[[j]]), 
+                                                   eff.crit), 
+                                                 stringsAsFactors = FALSE))
+                  } else #partial aliasing of j with i - orthogonalize
+                  {
+                    R <- projector(diag(1, nrow = n, ncol = n) - Q[[terms[j]]])
+                    decomp <- proj2.combine(R, Q.work)
+                    Q.work <- decomp$Qconf
+                    keff.crit <- efficiency.criteria(decomp$efficiencies)
+                    aliasing <- rbind(aliasing, 
+                                      data.frame(c(list(Source = terms[[i]], 
+                                                        df = degfree(Q.work),
+                                                        Alias = terms[[j]]), 
+                                                   keff.crit[criteria]), 
+                                                 stringsAsFactors = FALSE))
+                  }
+                }
               }
             }
           }
-          Q.work <- projector(Q.work)
-          if (degfree(Q.work) == 0)
-          {
-            marg.mat[terms[i], terms[i]] <- 0
-            warning(paste(terms[[i]],"is aliased with previous terms in the formula",
-                          "and has been removed", sep=" "))
-            eff.crit[criteria] <- 0
-            aliasing <- rbind(aliasing, 
-                              data.frame(list(Source = terms[[i]], df = 0, 
-                                                Alias = "unknown"), 
-                                         eff.crit,
-                                         stringsAsFactors = FALSE))
-          }
-          else #Check that this term is orthogonal to previous projectors
-          { 
-            i1 <- i - 1 
-            if (i1 > 0)
-              for (j in 1:i1)
-                if (!is.allzero(Q.work %*% Q[[terms[j]]]))
-                { 
-                  warning(paste("** Projection matrices for ",terms[i], " and ", terms[j], 
-                                ' are not orthogonal\n',
-                                '   Try orthogonalize = "hybrid" or "eigenmethods"', sep=""))
-                  eff.crit[criteria] <- NA
-                  aliasing <- rbind(aliasing, 
-                                    data.frame(list(Source = terms[[i]], df = NA, 
-                                                    Alias = terms[[j]]),
-                                               eff.crit, 
-                                               stringsAsFactors = FALSE))
-                }
-          }
+          
+          #Check that this term is orthogonal to previous projectors - necessary?
+          # if (degfree(Q.work) != 0) 
+          # { 
+          #   i1 <- i - 1 
+          #   if (i1 > 0)
+          #     for (j in 1:i1)
+          #       if (!is.allzero(Q.work %*% Q[[terms[j]]]))
+          #       { 
+          #         warning(paste("** Projection matrices for ",terms[i], " and ", terms[j], 
+          #                       " are not orthogonal", sep=""))
+          #       }
+          # }
           Q[[terms[i]]] <- Q.work
         }
         
@@ -781,12 +678,17 @@ formSources <- function(term.names, marginality, grandMean = FALSE)
           
           #Print aliasing
           if (aliasing.print)
-            print(aliasing, which = "none")
+          {
+            if (anycriteria)
+              print(aliasing, which = kcriteria)
+            else
+              print(aliasing, which = "none")
+          }
         } else
         {
           aliasing <- NULL
         }
- 
+        
         #Remove aliased terms
         aliased <- (diag(marg.mat) == 0)
         if (any(aliased))
@@ -808,31 +710,144 @@ formSources <- function(term.names, marginality, grandMean = FALSE)
         }
         if (lab.opt == "sources")
           names(Q) <- sources
-      } else  #by recursive orthogonalization
-      { 
-        R <- projector(diag(1, nrow = n, ncol = n) - Q[[terms[1]]] - Q.G)
-        if (length(terms) > 1)
-        {
-          Qorth <- projs.jandw(R, Q[terms[2:length(terms)]], which.criteria = kcriteria,
-                               aliasing.print = aliasing.print)
-          Q <- c(Q[1:match(terms[1], names(Q))], Qorth$Q)
-          aliasing <- Qorth$aliasing
-        }
-        terms <- names(Q)
-        if (is.null(marginality))
-        {
-          sources <- terms
-          lab.opt <- "terms"
-        }
-        else
-        {
-          aliased <- !(terms %in% names(Q))
-          if (grandMean)
-            aliased <- aliased[-1]
-          marginality <- marginality[!aliased, !aliased]
-          sources <- formSources(terms, marginality, grandMean = grandMean)
-          names(Q) <- sources
-          lab.opt <- "sources"
+      } else
+      {
+        if (orthogonalize == "differencing") #by difference
+        { 
+          #set up aliasing summary
+          nc <- 3
+          aliasing <- data.frame(matrix(nrow = 0, ncol=nc))
+          colnames(aliasing) <- c("Source", "df", "Alias")
+          class(aliasing) <- c("aliasing", "data.frame")
+          eff.crit <- vector(mode="list",length=length(criteria))
+          names(eff.crit) <- criteria
+          
+          orthogonal <- TRUE
+          fac.mat <- attr(terms(formula, keep.order = keep.order, ...), which="factors")
+          for (i in 2:length(terms))
+          { 
+            Q.work <- Q[[terms[i]]]
+            for (j in 1:length(terms))
+            { 
+              if (i != j)
+              { 
+                if (all((fac.mat[,j] != 0) == (fac.mat[,j] & fac.mat[,i])))
+                {
+                  Q.work <- Q.work - Q[[terms[j]]]
+                  marg.mat[terms[j], terms[i]] <- 1
+                }
+              }
+            }
+            Q.work <- projector(Q.work)
+            if (degfree(Q.work) == 0)
+            {
+              marg.mat[terms[i], terms[i]] <- 0
+              warning(paste(terms[[i]],"is aliased with previous terms in the formula",
+                            "and has been removed", sep=" "))
+              eff.crit[criteria] <- 0
+              aliasing <- rbind(aliasing, 
+                                data.frame(list(Source = terms[[i]], df = 0, 
+                                                Alias = "unknown"), 
+                                           eff.crit,
+                                           stringsAsFactors = FALSE))
+            }
+            else #Check that this term is orthogonal to previous projectors
+            { 
+              i1 <- i - 1 
+              if (i1 > 0)
+                for (j in 1:i1)
+                  if (!is.allzero(Q.work %*% Q[[terms[j]]]))
+                  { 
+                    warning(paste("** Projection matrices for ",terms[i], " and ", terms[j], 
+                                  ' are not orthogonal\n',
+                                  '   Try orthogonalize = "hybrid" or "eigenmethods"', sep=""))
+                    eff.crit[criteria] <- NA
+                    aliasing <- rbind(aliasing, 
+                                      data.frame(list(Source = terms[[i]], df = NA, 
+                                                      Alias = terms[[j]]),
+                                                 eff.crit, 
+                                                 stringsAsFactors = FALSE))
+                  }
+            }
+            Q[[terms[i]]] <- Q.work
+          }
+          
+          #Print out the aliasing summary if any aliasing
+          if (nrow(aliasing) > 0)
+          { 
+            rownames(aliasing) <- NULL
+            class(aliasing) <- c("aliasing", "data.frame")
+            #Change terms in aliasing to sources, if appropriate 
+            if (lab.opt == "sources")
+            {
+              tmp <- marg.mat
+              diag(tmp) <- 1
+              sources <- formSources(terms, tmp, grandMean = grandMean)
+              which.sources <- aliasing$Source %in% names(sources)
+              if (any(which.sources))
+                aliasing$Source[which.sources] <- sources[aliasing$Source[which.sources]]
+              which.sources <- aliasing$Alias %in% names(sources)
+              if (any(which.sources))
+                aliasing$Alias <- sources[aliasing$Alias]
+            }
+            attr(aliasing, which = "title") <- 
+              "\nTable of (partial) aliasing between terms within a structure\n\n"
+            
+            #Print aliasing
+            if (aliasing.print)
+              print(aliasing, which = "none")
+          } else
+          {
+            aliasing <- NULL
+          }
+          
+          #Remove aliased terms
+          aliased <- (diag(marg.mat) == 0)
+          if (any(aliased))
+          {
+            marg.mat <- marg.mat[!aliased, !aliased]
+            Q <- Q[!aliased]
+          }
+          terms <- names(Q)
+          if (is.null(marginality))
+          {
+            sources <- formSources(terms, marg.mat, grandMean = grandMean)
+            marginality <- marg.mat
+          }
+          else
+          {
+            if (check.marginality & all(marg.mat == marginality))
+              warning("Supplied marginality matrix differs from that computed by pstructure formula")
+            sources <- formSources(terms, marginality, grandMean = grandMean)
+          }
+          if (lab.opt == "sources")
+            names(Q) <- sources
+        } else  #by recursive orthogonalization
+        { 
+          R <- projector(diag(1, nrow = n, ncol = n) - Q[[terms[1]]] - Q.G)
+          if (length(terms) > 1)
+          {
+            Qorth <- projs.jandw(R, Q[terms[2:length(terms)]], which.criteria = kcriteria,
+                                 aliasing.print = aliasing.print)
+            Q <- c(Q[1:match(terms[1], names(Q))], Qorth$Q)
+            aliasing <- Qorth$aliasing
+          }
+          terms <- names(Q)
+          if (is.null(marginality))
+          {
+            sources <- terms
+            lab.opt <- "terms"
+          }
+          else
+          {
+            aliased <- !(terms %in% names(Q))
+            if (grandMean)
+              aliased <- aliased[-1]
+            marginality <- marginality[!aliased, !aliased]
+            sources <- formSources(terms, marginality, grandMean = grandMean)
+            names(Q) <- sources
+            lab.opt <- "sources"
+          }
         }
       }
     }

@@ -35,11 +35,14 @@
 \code{\link{McIntyreTMV.dat}}
  \tab The design and data from McIntyre (1955) two-phase \cr
  \tab experiment \cr
+\code{\link{Oats.dat}}
+ \tab Data for an experiment to investigate nitrogen response \cr
+ \tab of 3 oats varieties    \cr 
 \code{\link{Sensory3Phase.dat}}
- \tab Data for the three-pahse sensory evaluation \cr
+ \tab Data for the three-phahse sensory evaluation \cr
  \tab experiment in Brien, C.J. and Payne, R.W. (1999)\cr
 \code{\link{Sensory3PhaseShort.dat}}
- \tab Data for the three-pahse sensory evaluation \cr
+ \tab Data for the three-phase sensory evaluation \cr
  \tab experiment in Brien, C.J. and Payne, R.W. (1999), \cr
  \tab but with short factor names \cr
 \code{\link{SPLGrass.dat}}
@@ -56,7 +59,8 @@
 \code{\link{fac.divide}}
   \tab Divides a factor into several individual factors\cr
 \code{\link{fac.gen}}
-  \tab Generate all combinations of several factors\cr
+  \tab Generate all combinations of several factors and, \cr
+  \tab optionally, replicate them\cr
 \code{\link{fac.match}}
   \tab Match, for each combination of a set of columns \cr
   \tab in 'x', the row that has the same combination\cr
@@ -82,9 +86,9 @@
   \tab variance matrix for predictions that can be obtained \cr 
   \tab using mat.Vpredicts\cr
 \code{\link{designAnatomy}}
-  \tab An anatomy of a design showing the confounding and \cr
-  \tab aliasing inherent in the design that is obtained \cr
-  \tab via a canonical analysis of its projectors.\cr
+  \tab Given the layout for a design, obtain its anatomy via \cr 
+  \tab the canonical analysis of its projectors to show the \cr
+  \tab confounding and aliasing inherent in the design.\cr
 \code{\link{designLatinSqrSys}}
   \tab Generate a systematic plan for a Latin Square design.\cr
 \code{\link{designPlot}}
@@ -96,6 +100,10 @@
 \code{\link{designRandomize}}
   \tab Randomize allocated to recipient factors to produce  \cr 
   \tab a layout for an experiment. It supersedes \code{fac.layout}. \cr
+\code{\link{designTwophaseAnatomies}}
+  \tab Given the layout for a design and three structure formulae, \cr
+  \tab obtain the anatomies for the two-phase, first-phase,        \cr
+  \tab cross-phase and second-phase designs.   \cr
 \code{\link{marginality.pstructure}} 
   \tab Extracts the marginality matrix from a \cr
   \tab \code{\link{pstructure.object}} \cr

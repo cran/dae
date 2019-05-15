@@ -1,7 +1,8 @@
 \name{summary.pcanon}
 \alias{summary.pcanon}
 \alias{summary,pcanon-method}
-\title{Summarizes the anatomy of a design, being the decomposition of the sample space based on its canonical analysis}
+\title{Summarizes the anatomy of a design, being the decomposition of the sample space based on its 
+             canonical analysis, as produced by designAnatomy}
 \description{Gives the anatomy of a design in a table; it summarizes the joint decomposition of two or 
              more sets of projectors (Brien and Bailey, 2009) obtained using 
              \code{\link{designAnatomy}}. It includes the efficiency criteria computed 

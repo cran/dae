@@ -14,6 +14,7 @@ export(Ameasures,
        designPlot,
        designPlotlabels,
        designRandomize,
+       designTwophaseAnatomies,
        design.plot,
        detect.diff,
        efficiencies,
@@ -96,6 +97,7 @@ exportClasses(projector)
 importFrom("graphics", "abline", "identify", "lines", "mtext", "par",
              "plot", "polygon", "text")
 importFrom("methods", "as", "new", "setMethod", "validObject")
+importFrom("plyr", "is.formula")
 importFrom("stats", "aov", "as.formula", "coef", "fitted", "formula",
              "lm", "model.frame", "model.matrix", "na.omit", "optimize",
              "pf", "ppoints", "proj", "qf", "qnorm", "qqplot",

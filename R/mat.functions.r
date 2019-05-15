@@ -434,7 +434,9 @@ Zncsspline <- function(knot.points, Gpower = 0, print = FALSE)
   {
     if (!missing(G))
       stop("A G matrix has been specified without random having been set; perhaps it is the random matrix")
-  } else #rocess the random argument
+    else
+      Vu <- matrix(0, nrow = nrow(W), ncol = nrow(W))
+  } else #process the random argument
   {
     if (inherits(random, what = "matrix"))
     {
@@ -501,7 +503,7 @@ Zncsspline <- function(knot.points, Gpower = 0, print = FALSE)
   
   if (method == "onestep")
   {
-    #set W or X to a column vector of 0s and Gt or Vu to a matrix of 0s if not effects for them not random
+    #Now compute the variance matrix of the predictions
     Gt.zero <- all(Gt < 1e-08)
     if (Gt.zero)
       Gtinv <- Gt
@@ -568,7 +570,6 @@ Zncsspline <- function(knot.points, Gpower = 0, print = FALSE)
   }
   return(Vpred)
 }
-
 
 ### Function to calculate 
 "designAmeasures" <- function(Vpred, groupsizes = NULL, groups = NULL)

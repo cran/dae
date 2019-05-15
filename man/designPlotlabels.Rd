@@ -7,6 +7,7 @@
 \usage{
 designPlotlabels(data, labels, grid.x = "Columns", grid.y = "Rows", 
                  colour.column=NULL, colour.values=NULL, 
+                 reverse.x = FALSE, reverse.y = TRUE, 
                  xlab, ylab, title, printPlot = TRUE, ggplotFuncs = NULL, ...)}
 \arguments{
  \item{data}{A \code{\link{data.frame}} containing \code{labels}, \code{grid.x}, 
@@ -17,6 +18,10 @@ designPlotlabels(data, labels, grid.x = "Columns", grid.y = "Rows",
                specifies the x-coordinates of the plot grid.}
  \item{grid.y}{A \code{character} giving the name of the column in \code{data} that 
                specifies the y-coordinates of the plot grid.}
+ \item{reverse.x}{A \code{logical} which, if true, causes the order of values on the 
+              x-axis to be reversed.}
+ \item{reverse.y}{A \code{logical} which, if true, causes the order of values on the 
+              y-axis to be reversed.}
  \item{colour.column}{A \code{character} giving the name of the column in \code{data} that 
                is to be used to colour the values plotted on the grid.}
  \item{colour.values}{A \code{character} giving the name of the column in \code{data} that 
