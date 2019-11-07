@@ -94,15 +94,25 @@
     facrecip
   }
 
-"fac.recip.nest" <- 
-  function(recipient, rec.names, rec.levels, nested.recipients=NULL, except=NULL, 
-           allocated, seed=NULL)
+#Returns a permutation of the standard order of the recipient factors
+"fac.recip.nest" <- function(recipient, rec.names, rec.levels, nested.recipients=NULL, 
+                             except=NULL, allocated, seed=NULL)
+{ 
+  nnested <- length(nested.recipients)
+  names.nested <- names(nested.recipients)
+  if (!all(names.nested %in% names(rec.names)))
+    stop("The following nested recipients are not in the set of recipient factors: ",
+         paste(names.nested[!(names.nested %in% names(rec.names))], 
+               collapse = ", "),"\n\n")
+  #check nested factors for transitivity
+  for (i in 1:nnested)
   { 
-    nnested <- length(nested.recipients)
-    names.nested <- names(nested.recipients)
-    #check nested factors for transitivity
-    for (i in 1:nnested)
-    { nnest <- length(nested.recipients[[i]])
+    if (!all(nested.recipients[[i]] %in% names(rec.names)))
+      stop("The following nesting recipients are not in the set of recipient factors: ",
+           paste(nested.recipients[[i]][!(nested.recipients[[i]] %in% names(rec.names))], 
+                 collapse = ", "),"\n\n")
+    nnest <- length(nested.recipients[[i]])
+    
     for (j in 1:nnest)
     { 
       knested <- match(nested.recipients[[i]][j], names.nested)
@@ -115,141 +125,141 @@
         }
       }
     }
-    }
-    #order the recipient factors so that any subsets of the generalized factor
-    #formed from the nesting factors of a nested factor are to the left of the 
-    #nested factor. Also sort numbers of levels in levels and form vector 
-    #rec.denestord giving location of recipient factors in nestord.
-    #first a list of all non-nested factors
-    if (is.null(allocated))
-    {
-      n <- prod(rec.levels)
-    } else
-    {
-      if (is.data.frame(allocated))
-        n <- nrow(allocated)
-      else
-        n <- length(allocated)
-    }
-    which.unr <- 0
-    if(is.data.frame(recipient)) #for data.frame
-    { 
-      which.unr <- 1
-      nunr <- ncol(recipient)
-    }
-    else 
-      nunr <- length(rec.names)
-    kunr <- 0
-    rec.levels.nestord <- rep(1, length=nunr)
-    rec.denestord <- rep(NA, length=nunr)
-    for(i in 1:nunr)
-    { 
-      if(is.na(match(names(rec.names)[i], names.nested)))
-      { 
-        kunr <- kunr+1
-        rec.denestord[i] <- kunr
-        rec.levels.nestord[kunr] <- rec.levels[i]
-        if(kunr == 1)
-        { 
-          rec.nestord <- list(rec.names[[i]])
-          names(rec.nestord) <- names(rec.names)[i]
-        }
-        else
-        { 
-          knames <- list(rec.names[[i]])
-          names(knames) <- names(rec.names)[i]
-          rec.nestord <- c(rec.nestord, knames)
-        }
-      }
-    } 
-    #now sort nested factors for number of nesting factors and add to list in this order
-    if(!is.null(nested.recipients))
-    { 
-      nested.sort <- sort(sapply(nested.recipients, FUN=length))
-      for (i in 1:nnested)
-      { 
-        kunr <- kunr+1
-        krec.name <- names(nested.sort)[i]
-        kno <- match(krec.name, names(rec.names))
-        rec.denestord[kno] <- kunr
-        rec.levels.nestord[kunr] <- rec.levels[kno]
-        if(kunr == 1)
-        { 
-          rec.nestord <- list(rec.names[[kno]])
-          names(rec.nestord) <- names(rec.names)[kno]
-        }
-        else
-        { 
-          knames <- list(rec.names[[kno]])
-          names(knames) <- names(rec.names)[kno]
-          rec.nestord <- c(rec.nestord, knames)
-        }
-      }
-    }
-    #generate random factor values with the factors in nested order
-    facgen <- fac.gen(generate=rec.nestord)
-    for(i in 1:nunr)
-    { 
-      if (names(rec.nestord)[i] %in% except)
-        rno <- as.integer(facgen[[i]])
-      else
-      { 
-        knest <- match(names(rec.nestord)[i], names.nested)
-        if(is.na(knest))   #nonnested factor
-        { 
-          rno <- runif(rec.levels.nestord[i])[as.integer(facgen[[i]])]
-        }
-        else     #nested factor
-        { 
-          kfac <- length(nested.recipients[[knest]])+1
-          kfacnos <- rep(1, length=kfac)
-          kfacnos[1] <- i
-          for (j in 1:(kfac-1))
-          { 
-            kfacnos[j+1] <- match(nested.recipients[[knest]][j], names(rec.nestord))
-            if(is.na(kfacnos[j+1]))
-              stop("Nesting factor not in list of recipient factors.")
-          }
-          sort(kfacnos)
-          #determine number of random nos required and 
-          #generate radix to expand to n-vector
-          radix <- rep(1, length=n)
-          each <- 1
-          for (j in kfac:1)
-          { 
-            radix <- radix + (as.integer(facgen[[kfacnos[j]]])-1)*each
-            each <- each*rec.levels.nestord[kfacnos[j]]
-          }
-          rno <- runif(each)[radix]
-        }
-      }
-      if(i == 1)
-        facrecip <- data.frame(rno)
-      else
-        facrecip <- data.frame(facrecip,rno)
-    }
-    names(facrecip) <- names(rec.nestord)
-    facrecip.ord <- 1:n
-    facrecip.ord[do.call(order, facrecip)] <- facrecip.ord
-    facrecip <- fac.divide(facrecip.ord, rec.nestord)
-    #reorder facrecip so that the factors and their values are in an appropriate 
-    #order for the original factor order i.e. in rec.names
-    facgen <- fac.gen(generate=rec.names)
-    #form radix from facgen, numbers in radix labelling the levels of the factors
-    #in order as for rec.nestord
-    radix <- rep(1, length=n)
-    each <- 1
-    #loop over factors in rec.nestord
-    for (j in nunr:1)
-    { 
-      kno <- match(names(rec.nestord)[j], names(rec.names))
-      radix <- radix + (as.integer(facgen[[kno]])-1)*each
-      each <- each*rec.levels[kno]
-    }
-    facrecip <- facrecip[radix,]
-    facrecip <- facrecip[, rec.denestord]
-    facrecip
   }
+  #order the recipient factors so that any subsets of the generalized factor
+  #formed from the nesting factors of a nested factor are to the left of the 
+  #nested factor. Also sort numbers of levels in levels and form vector 
+  #rec.denestord giving location of recipient factors in nestord.
+  #first a list of all non-nested factors
+  if (is.null(allocated))
+  {
+    n <- prod(rec.levels)
+  } else
+  {
+    if (is.data.frame(allocated))
+      n <- nrow(allocated)
+    else
+      n <- length(allocated)
+  }
+  which.unr <- 0
+  if(is.data.frame(recipient)) #for data.frame
+  { 
+    which.unr <- 1
+    nunr <- ncol(recipient)
+  }
+  else 
+    nunr <- length(rec.names)
+  kunr <- 0
+  rec.levels.nestord <- rep(1, length=nunr)
+  rec.denestord <- rep(NA, length=nunr)
+  for(i in 1:nunr)
+  { 
+    if(is.na(match(names(rec.names)[i], names.nested)))
+    { 
+      kunr <- kunr+1
+      rec.denestord[i] <- kunr
+      rec.levels.nestord[kunr] <- rec.levels[i]
+      if(kunr == 1)
+      { 
+        rec.nestord <- list(rec.names[[i]])
+        names(rec.nestord) <- names(rec.names)[i]
+      }
+      else
+      { 
+        knames <- list(rec.names[[i]])
+        names(knames) <- names(rec.names)[i]
+        rec.nestord <- c(rec.nestord, knames)
+      }
+    }
+  } 
+  #now sort nested factors for number of nesting factors and add to list in this order
+  if(!is.null(nested.recipients))
+  { 
+    nested.sort <- sort(sapply(nested.recipients, FUN=length))
+    for (i in 1:nnested)
+    { 
+      kunr <- kunr+1
+      krec.name <- names(nested.sort)[i]
+      kno <- match(krec.name, names(rec.names))
+      rec.denestord[kno] <- kunr
+      rec.levels.nestord[kunr] <- rec.levels[kno]
+      if(kunr == 1)
+      { 
+        rec.nestord <- list(rec.names[[kno]])
+        names(rec.nestord) <- names(rec.names)[kno]
+      }
+      else
+      { 
+        knames <- list(rec.names[[kno]])
+        names(knames) <- names(rec.names)[kno]
+        rec.nestord <- c(rec.nestord, knames)
+      }
+    }
+  }
+  #generate random factor values with the factors in nested order
+  facgen <- fac.gen(generate=rec.nestord)
+  for(i in 1:nunr)
+  { 
+    if (names(rec.nestord)[i] %in% except)
+      rno <- as.integer(facgen[[i]])
+    else
+    { 
+      knest <- match(names(rec.nestord)[i], names.nested)
+      if(is.na(knest))   #nonnested factor
+      { 
+        rno <- runif(rec.levels.nestord[i])[as.integer(facgen[[i]])]
+      }
+      else     #nested factor
+      { 
+        kfac <- length(nested.recipients[[knest]])+1
+        kfacnos <- rep(1, length=kfac)
+        kfacnos[1] <- i
+        for (j in 1:(kfac-1))
+        { 
+          kfacnos[j+1] <- match(nested.recipients[[knest]][j], names(rec.nestord))
+          if(is.na(kfacnos[j+1]))
+            stop("Nesting factor not in list of recipient factors.")
+        }
+        sort(kfacnos)
+        #determine number of random nos required and 
+        #generate radix to expand to n-vector
+        radix <- rep(1, length=n)
+        each <- 1
+        for (j in kfac:1)
+        { 
+          radix <- radix + (as.integer(facgen[[kfacnos[j]]])-1)*each
+          each <- each*rec.levels.nestord[kfacnos[j]]
+        }
+        rno <- runif(each)[radix]
+      }
+    }
+    if(i == 1)
+      facrecip <- data.frame(rno)
+    else
+      facrecip <- data.frame(facrecip,rno)
+  }
+  names(facrecip) <- names(rec.nestord)
+  facrecip.ord <- 1:n
+  facrecip.ord[do.call(order, facrecip)] <- facrecip.ord
+  facrecip <- fac.divide(facrecip.ord, rec.nestord)
+  #reorder facrecip so that the factors and their values are in an appropriate 
+  #order for the original factor order i.e. in rec.names
+  facgen <- fac.gen(generate=rec.names)
+  #form radix from facgen, numbers in radix labelling the levels of the factors
+  #in order as for rec.nestord
+  radix <- rep(1, length=n)
+  each <- 1
+  #loop over factors in rec.nestord
+  for (j in nunr:1)
+  { 
+    kno <- match(names(rec.nestord)[j], names(rec.names))
+    radix <- radix + (as.integer(facgen[[kno]])-1)*each
+    each <- each*rec.levels[kno]
+  }
+  facrecip <- facrecip[radix,]
+  facrecip <- facrecip[, rec.denestord]
+  return(facrecip)
+}
 
 "designRandomize" <- function(allocated = NULL, recipient, nested.recipients=NULL, 
                               except=NULL, seed=NULL, unit.permutation = FALSE, ...)
@@ -283,10 +293,13 @@
   {
     if(!is.data.frame(allocated) & !is.factor(allocated))
       stop("allocated must be a factor or data frame.")
-    if (is.data.frame(allocated))
-      n <- nrow(allocated)
-    else
-      n <- length(allocated)
+    if (is.factor(allocated))
+    {
+      allocname <- deparse(substitute(allocated))
+      allocated <- data.frame(allocated)
+      names(allocated) <- allocname
+    }
+    n <- nrow(allocated)
   } else
     n <- 0
   #process seed argument
@@ -382,6 +395,20 @@
       attributes(facrecip[[i]]) <- attributes(recipient[[i]])
     faclay <- facrecip
     faclay[perm.recip, ] <- facrecip
+ 
+    # Check that recipient is in data.frame order; if not put allocated into standard order
+    if (all(perm.recip == 1:length(perm.recip)))
+    {
+      if (is.data.frame(allocated))
+      {
+        allocnames <- names(allocated)
+        allocated <- as.data.frame(allocated[perm.recip, ])
+        names(allocated) <- allocnames
+      }
+       else
+         stop("allocated has not been converted to a data.frame")
+    }
+      
     #compute randomization for data.frame order
     perm.dat <- vector("numeric", length=n)
     #order to put permuted data frame into standard order
@@ -390,6 +417,7 @@
     perm.dat[perm.recip] <- perm.dat
     perm.derand.dat <- vector("numeric", length=n)
     perm.derand.dat[perm.dat] <- 1:n
+    
     #join facrecip with allocated factors
     if (is.null(allocated))
     {
@@ -426,9 +454,7 @@
         faclay <- faclay[perm.derand, ]
     }
   }
-  if (!(is.null(allocated)) & is.factor(allocated))
-    names(faclay)[length(faclay)] <- deparse(substitute(allocated))
   rownames(faclay) <- 1:n
-  faclay
+  return(faclay)
 }
 

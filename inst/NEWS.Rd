@@ -1,5 +1,38 @@
 \name{news}
 \title{News for Package dae}
+\section{Changes in dae version 3.1-16 (2019-11-07)}{
+  \itemize{
+    \item{Correct type and re-upload to CRAN.}
+}}
+\section{Changes in dae version 3.1-15 (2019-11-07)}{
+  \itemize{
+    \item{Prepare for upload to CRAN.}
+}}
+\section{Changes in dae version 3.1-14 (2019-10-29)}{
+  \itemize{
+    \item{Add the capability to mat.Vpredicts to return either the variance or the information matrix. Also, add the rank of the matrix as an attribute of the matrix.}
+}}
+\section{Changes in dae version 3.1-13 (2019-10-27)}{
+  \itemize{
+    \item{Revise DesignNotes vignette.}
+    \item{Further debug designRandomize for either \code{data.frame} not in standard order or column order inconsistencies.}
+    \item{Rename name of data set \code{Exp249.mplot.des} to \code{Exp249.munit.des}.}
+}}
+\section{Changes in dae version 3.1-12 (2019-10-20)}{
+  \itemize{
+    \item{Include check for names supplied in \code{nested.recipients} are in the names in  \code{recipients}.}
+}}
+\section{Changes in dae version 3.1-11 (2019-10-10)}{
+  \itemize{
+    \item{Fix bug in designRandomize that occurs when a supplied \code{data.frame} is not in standard order.}
+    \item{Deprecate fac.layout}
+    \item{Update the DesignNotes vignette.}
+    }}
+\section{Changes in dae version 3.1-10 (2019-09-29)}{
+  \itemize{
+    \item{Merge features of designPlot and designPlotlabels into a new function designGGPlot and replace blockboundaryPlot with designBlocksGGPlot. The functions designPlot, blockboundaryPlot and designPlotlabels have been marked for future deprecation.}
+    \item{Update the DesignNotes vignette.}
+    }}
 \section{Changes in dae version 3.0-32 (2019-05-15)}{
   \itemize{
     \item{Rebuild under version 3.6.0 prior to resubmission to CRAN.}
