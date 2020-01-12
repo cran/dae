@@ -35,7 +35,7 @@ designGGPlot(design, labels = NULL,
                direction, based on all but the last name. The \code{\link{factor}} 
                corresponding to the last name will index the columns in each \code{facet}.}
  \item{reverse.x}{A \code{logical} which, if true, causes the order of values on the 
-              x-axis to be reversed, the natural order being to increas from left to right.}
+              x-axis to be reversed, the natural order being to increase from left to right.}
  \item{reverse.y}{A \code{logical} which, if true, causes the order of values on the 
               y-axis to be reversed, the natural order being to increase from bottom to top.}
  \item{cellfillcolour.column}{A \code{character} giving the name of the column in 

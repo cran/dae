@@ -1,8 +1,31 @@
 \name{news}
 \title{News for Package dae}
+\section{Changes in dae version 3.1-21 (2020-01-12)}{
+  \itemize{
+    \item{Reduce example for fac.multinested and build for CRAN resubmission.}
+}}
+\section{Changes in dae version 3.1-20 (2020-01-11)}{
+  \itemize{
+    \item{Rebuild for CRAN submission.}
+}}
+\section{Changes in dae version 3.1-19 (2019-12-30)}{
+  \itemize{
+    \item{Add names of countries to Countries factor in Casuarina.dat.}
+    \item{Make additions to the DesignNotes vignette.}
+}}
+\section{Changes in dae version 3.1-18 (2019-12-27)}{
+  \itemize{
+    \item{Add names of missing factor/covariate to error message in pstructure.}
+    \item{Add function fac.multinested}
+}}
+\section{Changes in dae version 3.1-17 (2019-11-23)}{
+  \itemize{
+    \item{Revise the DesignNotes vignette.}
+    \item{Further debug designRandomize for some \code{data.frame}s not in standard order.}
+}}
 \section{Changes in dae version 3.1-16 (2019-11-07)}{
   \itemize{
-    \item{Correct type and re-upload to CRAN.}
+    \item{Correct typo and re-upload to CRAN.}
 }}
 \section{Changes in dae version 3.1-15 (2019-11-07)}{
   \itemize{
