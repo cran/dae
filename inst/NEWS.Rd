@@ -1,5 +1,23 @@
 \name{news}
 \title{News for Package dae}
+\section{Changes in dae version 3.1-27 (2020-07-09)}{
+  \itemize{
+    \item{Rebuild vignettes and and package for R 4.0.2 and CRAN submissions.}
+}}
+\section{Changes in dae version 3.1-26 (2020-06-15)}{
+  \itemize{
+    \item{Add \code{x.axis.position} argument to designGGPlot, making \code{top} the default.}
+}}
+\section{Changes in dae version 3.1-25 (2020-05-12)}{
+  \itemize{
+    \item{Rebuild for R version 4.0.0.}
+    \item{Minor revisions to \code{DesignNotes} vignette.}
+}}
+\section{Changes in dae version 3.1-24 (2020-03-23)}{
+  \itemize{
+    \item{Change the Maintainer email address.}
+    \item{Add function mat.vcomp.}
+}}
 \section{Changes in dae version 3.1-23 (2020-03-16)}{
   \itemize{
     \item{Add the function rep.data.frame.}

@@ -90,8 +90,7 @@
   \tab blockboundary.plot. \cr
 \code{\link{designAmeasures}}
   \tab Calculates the A-optimality measures from the \cr
-  \tab variance matrix for predictions that can be obtained \cr 
-  \tab using mat.Vpredicts\cr
+  \tab variance matrix for predictions.\cr
 \code{\link{designAnatomy}}
   \tab Given the layout for a design, obtain its anatomy via \cr 
   \tab the canonical analysis of its projectors to show the \cr
@@ -205,6 +204,10 @@
   \tab Forms the direct product of two matrices\cr
 \code{\link{mat.dirsum}}
   \tab Forms the direct sum of a list of matrices\cr
+\code{\link{mat.random}}
+  \tab Calculates the variance matrix for the \cr
+  \tab random effects from a mixed model, based  \cr
+  \tab on a formula or a supplied matrix  \cr
 \code{\link{mat.Vpred}}
   \tab Forms the variance matrix of predictions\cr
 \code{\link{mat.Vpredicts}}
