@@ -1,8 +1,28 @@
 \name{news}
 \title{News for Package dae}
+\section{Changes in dae version 3.1-32 (2020-11-11)}{
+  \itemize{
+    \item{Rebuild vignettes and and package for R 4.0.3 and CRAN submission.}
+}}
+\section{Changes in dae version 3.1-31 (2020-09-21)}{
+  \itemize{
+    \item{Fix a bug in print.summary.pcanon that resulted in incorrect consecutive repetitions of sources within a column.}
+}}
+\section{Changes in dae version 3.1-30 (2020-09-15)}{
+  \itemize{
+    \item{Check that at least one of \code{labels} and \code{cellfillcolour.column} is set in a call to designGGPlot.}
+}}
+\section{Changes in dae version 3.1-29 (2020-08-05)}{
+  \itemize{
+    \item{Add \code{label.size} and \code{labeller} arguments to designGGPlot.}
+}}
+\section{Changes in dae version 3.1-28 (2020-07-20)}{
+  \itemize{
+    \item{Re-implement fac.nested so that it is much more efficient.}
+}}
 \section{Changes in dae version 3.1-27 (2020-07-09)}{
   \itemize{
-    \item{Rebuild vignettes and and package for R 4.0.2 and CRAN submissions.}
+    \item{Rebuild vignettes and and package for R 4.0.2 and CRAN submission.}
 }}
 \section{Changes in dae version 3.1-26 (2020-06-15)}{
   \itemize{
