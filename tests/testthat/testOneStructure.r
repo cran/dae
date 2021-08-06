@@ -90,7 +90,7 @@ test_that("pstucture_fac.multinested", {
         which = "proj")
   testthat::expect_true(all(names(trt.str$Q) == c("OaVsRest", "OaTreat[OaVsRest]", "Treatment", 
                                                   "Line[OaVsRest]", "Treatment#Line")))
-  testthat::expect_true(all(trt.str$aliasing$Source == "Treatment"))
+  testthat::expect_true(all(trt.str$aliasing$Source == c("Treatment", "Treatment")))
   testthat::expect_true(all(trt.str$aliasing$Alias == c("OaTreat[OaVsRest]", 
                                                         "## Information remaining")))
   
@@ -102,8 +102,8 @@ test_that("pstucture_fac.multinested", {
   testthat::expect_true(all(names(trt.str$Q) == c("OaVsRest", "OaTreat[OaVsRest]", "Treatment", 
                                                   "LineControl[Treatment]", "LineDr[Treatment]", 
                                                   "LineLN[Treatment]", "LineNa[Treatment]")))
-  testthat::expect_true(all(trt.str$aliasing$df == c(3,3, rep(c(1,3,7), times = 4))))
-  testthat::expect_true(all(trt.str$aliasing$Alias[c(2,5,8,11,14)] == "## Information remaining"))
+  testthat::expect_true(all(trt.str$aliasing$df == c(3,3, rep(c(1,1,1,7), times = 4))))
+  testthat::expect_true(all(trt.str$aliasing$Alias[c(2,6,10,14,18)] == "## Information remaining"))
   
   #'### Treaments pooled over ALL lines but then separation of O. aust from remaining Lines, both nested within Treats
   print(trt.str <- pstructure(~ Treatment/(OaControl + LineControl + OaDr + LineDr +
@@ -116,6 +116,27 @@ test_that("pstucture_fac.multinested", {
                                                   "OaNa[Treatment]", "LineNa[Treatment:OaNa]")))
   testthat::expect_true(all(trt.str$aliasing$df == c(3, rep(c(1,7), times = 4))))
   testthat::expect_true(is.null(trt.str$aliasing))
+})
+
+
+
+cat("#### Test for partially aliased terms\n")
+test_that("AliasStructure", {
+  skip_on_cran()
+  library(dae)
+  
+  nblks <- 7
+  nclones <- 3
+  nsoils <- 3
+  
+  # Generate a systematic design
+  Trts.sys <- fac.gen(list(Clone=1:nclones, Soil=nsoils), times = nblks-1)
+  Trts.sys <- rbind(Trts.sys, Trts.sys[setdiff(1:9, c(2,4,9)),]) # treats absent from partial rep (final block)
+  pstr <- pstructure(formula = ~ Clone*Soil, data = Trts.sys)
+  testthat::expect_equal(nrow(pstr$aliasing),2)
+  testthat::expect_true((all(pstr$aliasing$Alias == c("Clone", "## Information remaining"))))
+  testthat::expect_true(all(abs(pstr$aliasing$aefficiency - c(0.0024,0.9975)) < 1e-04))
+  testthat::expect_true(all( pstr$marginality[upper.tri(pstr$marginality, diag = TRUE)] == c(1,0,1,1,1,1)))
 })
 
 cat("#### Test for pstructure with generalized factors\n")
@@ -136,7 +157,7 @@ test_that("pstucture_genfac", {
                                          "Plate#Boxrow[Rep]", "Plate#(Shelf:Side)[Rep:Boxrow]")))
 })
 
-cat("#### Test for pstructure with difficult marginalitysingle structure\n")
+cat("#### Test for pstructure with difficult marginality single structure\n")
 test_that("PlaidInteractions", {
   skip_on_cran()
   library(dae)
@@ -168,7 +189,7 @@ test_that("PlaidInteractions", {
   testthat::expect_equal(length(terms), 13)
 
   alloc.canon <- designAnatomy(list(alloc = ~ T * M * E + T:M:E:P + R:(M * (E / P))), 
-                               data = ph2.L.lay)
+                               keep.order = TRUE, data = ph2.L.lay)
   testthat::expect_true(all(alloc.canon$terms$alloc %in% terms))
   testthat::expect_true(all(names(alloc.canon$sources$alloc) %in% terms))
   testthat::expect_true(all(alloc.canon$sources$alloc %in% c("T", "M", "T#M", "E", "T#E", 

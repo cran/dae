@@ -1,6 +1,6 @@
 Package: dae
-Version: 3.1-37
-Date: 2021-03-17
+Version: 3.2-10
+Date: 2021-08-6
 Title: Functions Useful in the Design and ANOVA of Experiments
 Authors@R: person("Chris","Brien", role = c("aut","cre"),
          comment = c(ORCID = "0000-0003-0581-1817"),
@@ -22,8 +22,8 @@ License: GPL (>= 2)
 URL: http://chris.brien.name
 RoxygenNote: 5.0.1
 NeedsCompilation: no
-Packaged: 2021-03-17 11:20:52 UTC; briencj
+Packaged: 2021-08-06 00:43:02 UTC; briencj
 Author: Chris Brien [aut, cre] (<https://orcid.org/0000-0003-0581-1817>)
 Maintainer: Chris Brien <chris.brien@adelaide.edu.au>
 Repository: CRAN
-Date/Publication: 2021-03-17 12:30:02 UTC
+Date/Publication: 2021-08-06 04:50:13 UTC

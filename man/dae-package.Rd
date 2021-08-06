@@ -61,6 +61,9 @@
 \code{\link{fac.gen}}
   \tab Generate all combinations of several factors and, \cr
   \tab optionally, replicate them\cr
+\code{\link{fac.gen}}
+  \tab Generate all combinations of the levels of the supplied \cr
+  \tab factors, without replication \cr
 \code{\link{fac.match}}
   \tab Match, for each combination of a set of columns \cr
   \tab in 'x', the row that has the same combination\cr
@@ -73,9 +76,16 @@
 \code{\link{fac.nested}}
   \tab Creates a factor, the nested factor, whose values are \cr
   \tab generated within those of a nesting factor\cr
+\code{\link{fac.recast}}
+  \tab Recasts a factor by modifying the values in the factor vector\cr 
+  \tab and/or the levels attribute, possibly combining \cr 
+  \tab some levels into a single level. \cr
 \code{\link{fac.recode}}
   \tab Recodes factor 'levels' using possibly nonunique \cr
-  \tab values in a vector. \cr
+  \tab values in a vector. (May be deprecated in future.)\cr
+\code{\link{fac.split}}
+  \tab Splits a factor whose levels consist of several delimited \cr
+  \tab strings into several factors.   \cr
 \code{\link{fac.uselogical}}
   \tab Forms a two-level factor from a logical object \cr
 \code{\link{mpone}}
