@@ -1,4 +1,4 @@
-3adea50e984d012af5d1015c334a1d45 *DESCRIPTION
+3ec3afbd254d7cc4984bed93c0dda892 *DESCRIPTION
 62cdfa7d4def72a898f89b9a1dde9141 *NAMESPACE
 c1be3ca8ff7ee8febfc5c5b8a4d4738c *R/Interaction.ABC.Plot.r
 39004c8ebb752c94dbc1b6882da41cac *R/NoReps.r
@@ -11,7 +11,7 @@ cc1deb0453dc5cd64101be82b047d347 *R/design.r
 ce6585ce0ceb1bba20b24ac828ae5939 *R/designRandomize.v2.r
 44f017a626252a3266fe6bdfb9f43d96 *R/diagnostic.checking.r
 a90ecb8b4fd7ee4539ef05fca3420263 *R/extab.r
-f510ec7d40964008f818ba62118a52a3 *R/fac.functions.r
+ff7643e597176ccd28dfe2edafd6bc59 *R/fac.functions.r
 d2a2c1779bac028e3458cb72f736df51 *R/fac.gen.r
 38f86e4c72ce9b5718405778ac858128 *R/fac.match.r
 efa0dcb53627172aef78808eaddc2828 *R/fac.matop.r
@@ -25,8 +25,8 @@ f51ffb67d483a44841d289208ccc897a *R/projs2.canon.v5.r
 c61ba72a062bc843ac5af124f584a2d4 *R/qqyeffects.r
 66116f959a9d740dbbb684cb84dd847e *R/strength.r
 fe611a98a5d6b785e3be93a3b6c1996c *R/twophAnatomies.r
-3328da03913896a59ff24fe406566aeb *build/partial.rdb
-8962d721327eeeee0633dfbceca414a9 *build/vignette.rds
+5974fc6d758cf7c750e566edd150076c *build/partial.rdb
+cc613b3ee9834afa8851ae4a026bdd72 *build/vignette.rds
 27fd86be68e8cd86baa3daaab9be4c1f *data/ABC.Interact.dat.rda
 ba414603eb42b829e63ff8814ecc3a34 *data/BIBDWheat.dat.rda
 411d5a9d98f67128781ce6ca648d954a *data/Cabinet1.des.rda
@@ -39,10 +39,10 @@ be9d86a20a8dd8165b1e1e0814c97d60 *data/Oats.dat.rda
 1f7e340518adc38ce2d8c46cd3797b58 *data/SPLGrass.dat.rda
 7953dc8b4436a4f5c2b6b844362ba164 *data/Sensory3Phase.dat.rda
 437ac2517e8341d18c7062482838e4c6 *data/Sensory3PhaseShort.dat.rda
-5925a38f23424bb06414e55d613ae8d5 *inst/NEWS.Rd
-eaf406d1054b82e27d386be8b3f3aa98 *inst/doc/DesignNotes.pdf
+4920ac290487eeecb5d332209730467d *inst/NEWS.Rd
+64176da84461adbbb4ef417c4340495f *inst/doc/DesignNotes.pdf
 642f9547c0a51b03f20ef8b18134dea2 *inst/doc/DesignNotes.pdf.asis
-8e0daee82c7c3d67f9a7366d3d112b15 *inst/doc/dae-manual.pdf
+2362c5a710596d2b52a566383505980b *inst/doc/dae-manual.pdf
 c4a39da9e42b2ad262004a912bd2a2e6 *inst/doc/dae-manual.pdf.asis
 0b149dc9866d9867265d7ee1b00a2fbc *man/ABC.Interact.dat.Rd
 c45d4b894f402b145366c628e5116ef8 *man/BIBDWheat.dat.Rd
@@ -86,7 +86,7 @@ e8f797b6d7971c7a52dec9499076ac22 *man/fac.ar1mat.Rd
 75d5c9ca43b8f121ef25e085ae8b0dc7 *man/fac.genfactors.Rd
 d9e3793ba52e1b6372af58ee0c3536a5 *man/fac.match.Rd
 a70688f87babc57c92f7833722034486 *man/fac.meanop.Rd
-bc655ea8a8dd3c4680df7d83ea0409fc *man/fac.multinested.Rd
+010caaea8987ff5ae31979ed54ff8cbe *man/fac.multinested.Rd
 192316be770950fd725f152127e58c43 *man/fac.nested.Rd
 a8dcf96b02ee21cfdccd90e91749875d *man/fac.recast.Rd
 9785a00842776b26d63a4a2534d6c8d3 *man/fac.recode.Rd
@@ -173,7 +173,7 @@ b898e2b1c380bd12a038793d4fda6de5 *tests/testthat/data/gwall.lay.rda
 01eb2ad48cca735f30587510ebbc9404 *tests/testthat/testInteractionABCplot.r
 b4f67a2df5e5afb742f6735777a2ff59 *tests/testthat/testMarginal.r
 5ab91075419b7d3655c35cb5c8b159e9 *tests/testthat/testNestedFacs.r
-71c46a14873d25c8074de061a6ffa579 *tests/testthat/testOneStructure.r
+28e569e054059dcde0aa39f88d09f445 *tests/testthat/testOneStructure.r
 fedda59946a48e96710a8957e83e508c *tests/testthat/testProj.r
 b7f9d34a1d3674af9880f3860420a719 *tests/testthat/testRandomize.r
 056536ca1a1d742ac045509e87221307 *tests/testthat/testSources.r
