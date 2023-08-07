@@ -1,5 +1,23 @@
 \name{news}
 \title{News for Package dae}
+\section{Changes in dae version 3.2.19 (2023-08-08)}{
+  \itemize{
+    \item{Fix CRAN errors and increment version number.}
+}}
+\section{Changes in dae version 3.2.18 (2023-08-07)}{
+  \itemize{
+    \item{Correct the DesignNotes vignette.}
+    \item{Add \code{facetstrips.switch} argument to designGGPlot and the \code{facetstrips.placement} argument to designGGPlot and designBlocksGGPlot.}
+}}
+\section{Changes in dae version 3.2.17 (2023-03-30)}{
+  \itemize{
+    \item{Correct the DesignNotes vignette.}
+    \item{Add a check for a term that is equivalent to the grand mean term in designAnatomy.}
+}}
+\section{Changes in dae version 3.2.16 (2023-03-26)}{
+  \itemize{
+    \item{Revise the DesignNotes vignette.}
+}}
 \section{Changes in dae version 3.2.15 (2023-03-10)}{
   \itemize{
     \item{Update ggplot2 functions to use tidy evaluation.}
