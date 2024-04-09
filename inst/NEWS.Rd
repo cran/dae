@@ -1,5 +1,22 @@
 \name{news}
 \title{News for Package dae}
+\section{Changes in dae version 3.2.25 (2024-04-09)}{
+  \itemize{
+  \item Update for submission to CRAN.
+}}
+\section{Changes in dae version 3.2.24 (2024-03-19)}{
+  \itemize{
+  \item Fixed bug in pstructure, also affecting designAnatomy, that resulted aliasing of two terms going undetected, nesting of sources was not being correctly determined when aliasing was present, and computed marginality relationships not being transitive.
+}}
+\section{Changes in dae version 3.2.23 (2024-02-25)}{
+  \itemize{
+  \item Added trap for svd error so that only a warning will be given and an NA returned. 
+}}
+\section{Changes in dae version 3.2.22 (2024-02-13)}{
+  \itemize{
+  \item Add link to GitHub issues page for BugReports in DESCRIPTION file. 
+  \item Fixed problem in mat.ginv for inverting matrices of rank one that led to a conformability error caused by R returning a single column matrix as a vector. 
+}}
 \section{Changes in dae version 3.2.21 (2024-01-14)}{
   \itemize{
     \item Corrects some minor issues in the manual.
