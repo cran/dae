@@ -1,14 +1,14 @@
-2ec144907d63a469c60310fcc40c4d76 *DESCRIPTION
-8afc925c05f45a5c519121b7b7d4a51b *NAMESPACE
+0845bdb5a17e5a23538ad94c13ba4608 *DESCRIPTION
+34b1ed4d67e9a113555371c6d52bc82a *NAMESPACE
 52ed55d040e0d99fa4a1188462ff6036 *R/Interaction.ABC.Plot.r
 39004c8ebb752c94dbc1b6882da41cac *R/NoReps.r
 86035f8abf69025c94c710bca35e5337 *R/S3methodsDeprecations.r
-527359ed15ea367ce7c7ea11cfde45e3 *R/dae.utilties.r
+86e46088d04326cdb194908fc2c4eccc *R/dae.utilties.r
 8901ad77f61ada530b9cb1e4aa2f4055 *R/daeAttach.r
 cc1deb0453dc5cd64101be82b047d347 *R/design.r
 0f4c7014d723d8cfc79b77ae4a412815 *R/designGGPlot.v1.r
 6254a6b482ef2635e199284f99fa2856 *R/designPlot.v2.r
-ce6585ce0ceb1bba20b24ac828ae5939 *R/designRandomize.v2.r
+06535d301dd7dacce6336205c906ef84 *R/designRandomize.v2.r
 44f017a626252a3266fe6bdfb9f43d96 *R/diagnostic.checking.r
 a90ecb8b4fd7ee4539ef05fca3420263 *R/extab.r
 ff7643e597176ccd28dfe2edafd6bc59 *R/fac.functions.r
@@ -17,7 +17,7 @@ ff7643e597176ccd28dfe2edafd6bc59 *R/fac.functions.r
 efa0dcb53627172aef78808eaddc2828 *R/fac.matop.r
 a990375b6d54f625089680ab5389be5f *R/mat.functions.r
 d4131449720749d6f58db3549058445f *R/misc.r
-66d4a551f24656051d5973b1a9bb6f15 *R/proj.r
+58ae8048829bcd32a6352afcc65e367b *R/proj.r
 055fa56b1229879271f49e99d9c667a8 *R/projs.canon.v5.r
 4a41365987c037bcffe59f7ed2663ad9 *R/projs2.canon.v5.r
 ed4c1ce98ae984e18f880afa7d719109 *R/pstructure.v4.r
@@ -25,8 +25,8 @@ ed4c1ce98ae984e18f880afa7d719109 *R/pstructure.v4.r
 c61ba72a062bc843ac5af124f584a2d4 *R/qqyeffects.r
 66116f959a9d740dbbb684cb84dd847e *R/strength.r
 fe611a98a5d6b785e3be93a3b6c1996c *R/twophAnatomies.r
-c8ae8b03b4c41c77889d4e7ecce8f589 *build/partial.rdb
-67bf32bcf446e8d9ab5df7e95a1fb66a *build/vignette.rds
+986f310239e869db69f9dab91052d37b *build/partial.rdb
+bb22994821eba7c0d804a5a20c3fbf03 *build/vignette.rds
 ca0cd8f95062a65e4a1c758ce9b6554c *data/ABC.Interact.dat.rda
 16a8e4fed52667824dc96fa7f22a58d9 *data/BIBDWheat.dat.rda
 488980f23b458890f33f8ad027fd00da *data/Cabinet1.des.rda
@@ -39,10 +39,10 @@ ca0cd8f95062a65e4a1c758ce9b6554c *data/ABC.Interact.dat.rda
 d5905daa2926ca87d0d2fa042f53d4cf *data/SPLGrass.dat.rda
 4a4c27da5972b8f8267c2a99ccebf5a8 *data/Sensory3Phase.dat.rda
 8e1ae3a6ead313713c318734a4b7df1c *data/Sensory3PhaseShort.dat.rda
-87986689bd3cb39bc4dd806c83f1a551 *inst/NEWS.Rd
-e34004b8a3cc8ce799f421cb9d3994d6 *inst/doc/DesignNotes.pdf
+b227fe43ea91b9849c417b3274b2a5b3 *inst/NEWS.Rd
+f3889e229995e244746c3c1e41e4c880 *inst/doc/DesignNotes.pdf
 642f9547c0a51b03f20ef8b18134dea2 *inst/doc/DesignNotes.pdf.asis
-3f10fb39df9dd0348c8f0f3e24a018b7 *inst/doc/dae-manual.pdf
+c77ed6a89cd4f1414f17c717eaf7f1d9 *inst/doc/dae-manual.pdf
 c4a39da9e42b2ad262004a912bd2a2e6 *inst/doc/dae-manual.pdf.asis
 0b149dc9866d9867265d7ee1b00a2fbc *man/ABC.Interact.dat.Rd
 a79a3dd035c087e729b9a1959a0c3486 *man/BIBDWheat.dat.Rd
@@ -61,7 +61,7 @@ ec5cdc91e61550511d4cb181453f81e0 *man/Oats.dat.Rd
 a090c21271b3ee5c1a0dbe8942d20f71 *man/blockboundaryPlot.Rd
 7b7102519cebd232e2a4a267526b383b *man/correct.degfree.Rd
 4a57ec2491b93b0a7e5c6ad076d5e161 *man/dae-deprecated.Rd
-8db5ad67257171f7f4f46b725808fa1a *man/dae-package.Rd
+75acb5367a495a386987259e8e6943f9 *man/dae-package.Rd
 4822166bc65800e5529485d90cc43b9a *man/daeTips.Rd
 f529ad75890723f6dcb10273931a37e9 *man/decomp.relate.Rd
 1ea096daedffae21a6acab1f56bf2ee9 *man/degfree.Rd
@@ -97,6 +97,7 @@ dfc870b805ff1835711494e7b08eb3b0 *man/fac.uselogical.Rd
 13058f3627354cd1fc3b9aa02ec96e8d *man/fac.vcmat.Rd
 c54802885152b757637fdf7dd38f75b9 *man/fitted.aovlist.Rd
 be7c9118178e185769c1f8905152b9e8 *man/fitted.errors.Rd
+13c75b8a9330c9633cb67f77c6bf4204 *man/get.daeRNGkind.Rd
 cd9d4e4b7fe9477ea4e897d7b4d8f76d *man/get.daeTolerance.Rd
 d36f81584ef6c2c9918418cf56f53e1e *man/harmonic.mean.Rd
 f7ac7b68e115b332d0a57f9656ac90db *man/interaction.ABC.plot.Rd
@@ -151,6 +152,7 @@ c7bef86b576c2555f4e2f4210c24b1f3 *man/qqyeffects.Rd
 77327ad40a1deaf03154665a2736db34 *man/resid.errors.Rd
 f44e30fbd8c20776ea2af58c5459e074 *man/residuals.aovlist.Rd
 471c1c9392536f7bdca3cbf5ef4c2c04 *man/rmvnorm.Rd
+e2ce5926d5b3a229b3401b4a644e5dc7 *man/set.daeRNGkind.Rd
 17ad7261719dd3826c2eb1c43f92d2d3 *man/set.daeTolerance.Rd
 684b4a37a1df810f55f21d2ccb88533d *man/show-methods.Rd
 09451366b742f9941d5a6e86a5a2922a *man/strength.Rd
@@ -191,7 +193,7 @@ e8fa7b391ef8cca10f3b1c40a7a79b30 *tests/testthat/data/TagDay.rda
 5ab91075419b7d3655c35cb5c8b159e9 *tests/testthat/testNestedFacs.r
 28e569e054059dcde0aa39f88d09f445 *tests/testthat/testOneStructure.r
 fedda59946a48e96710a8957e83e508c *tests/testthat/testProj.r
-b7f9d34a1d3674af9880f3860420a719 *tests/testthat/testRandomize.r
+576301b6b69c6c7fe8155877d4cc7864 *tests/testthat/testRandomize.r
 0ef7139c0f644bdd35d5a3ed2db873f5 *tests/testthat/testSources.r
 46b99851bbb6844403967da7c13c8ac6 *tests/testthat/testthat-problems.rds
 642f9547c0a51b03f20ef8b18134dea2 *vignettes/DesignNotes.pdf.asis
