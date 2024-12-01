@@ -56,11 +56,6 @@ Forms a new or revised factor: \cr\cr
 
 \code{\link{fac.combine}}
   \tab Combines several factors into one \cr
-\code{\link{fac.multinested}}
-  \tab Creates several factors, one for each level of a nesting.fac \cr
-  \tab and each of whose values are either generated within \cr 
-  \tab those of the level of nesting.fac or using the values \cr
-  \tab of a nested.fac\cr
 \code{\link{fac.nested}}
   \tab Creates a factor, the nested factor, whose values are \cr
   \tab generated within those of a nesting factor\cr
@@ -73,9 +68,6 @@ Forms a new or revised factor: \cr\cr
   \tab values in a vector. (May be deprecated in future.)\cr
 \code{\link{fac.uselogical}}
   \tab Forms a two-level factor from a logical object \cr
-\code{\link{mpone}}
-  \tab Converts the first two levels of a factor into\cr
-  \tab the numeric values -1 and +1\cr
 \cr
 Forms multiple new factors:\cr\cr
 
@@ -87,6 +79,11 @@ Forms multiple new factors:\cr\cr
 \code{\link{fac.genfactors}}
   \tab Generate all combinations of the levels of the supplied \cr
   \tab factors, without replication \cr
+\code{\link{fac.multinested}}
+  \tab Creates several factors, one for each level of the nesting factor \cr
+  \tab and each of whose values are either generated within those of \cr
+  \tab a level of the nesting factor or using the values of the nested \cr
+  \tab factor within  the levels of the nesting factor. \cr
 \code{\link{fac.split}}
   \tab Splits a factor whose levels consist of several delimited \cr
   \tab strings into several factors.   \cr
@@ -97,7 +94,11 @@ Forms multiple new factors:\cr\cr
 Operates on factors:\cr\cr
 
 \code{\link{as.numfac}}             
- \tab Convert a factor to a numeric vector \cr
+ \tab Convert a factor to a numeric vector, possibly centering or \cr
+ \tab scaling the values \cr
+\code{\link{mpone}}
+  \tab Converts the first two levels of a factor into\cr
+  \tab the numeric values -1 and +1\cr
 \code{\link{fac.match}}
   \tab Match, for each combination of a set of columns \cr
   \tab in 'x', the row that has the same combination\cr
@@ -127,14 +128,14 @@ Plotting designs:\cr\cr
 \code{\link{designBlocksGGPlot}}
   \tab Adds block boundaries to a plot produced by \code{\link{designGGPlot}}. \cr
 \code{\link{designGGPlot}}
-  \tab Plots labels on a two-way grid of coloured cells using \code{ggplot2} \cr
+  \tab Plots labels on a two-way grid of coloured cells using \pkg{ggplot2} \cr
   \tab to represent an experimental design. \cr
 \code{\link{designPlot}}
   \tab A graphical representation of an experimental design \cr 
   \tab using labels stored in a matrix. \cr
   \tab It superseded design.plot.\cr
 \code{\link{designPlotlabels}}
-  \tab Plots labels on a two-way grid using \code{ggplot2}. \cr
+  \tab Plots labels on a two-way grid using \pkg{ggplot2}. \cr
 \cr
 Assessing designs:\cr\cr
 
